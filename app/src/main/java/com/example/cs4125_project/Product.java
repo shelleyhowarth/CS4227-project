@@ -22,4 +22,6 @@ public interface Product {
     String getColour();
 
     String getStyle();
+
+    String getImageURL();
 }
