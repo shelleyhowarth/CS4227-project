@@ -15,6 +15,7 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 public class Database {
@@ -76,7 +77,37 @@ public class Database {
     }
 
     public void POST(String collection, Map<String, Object> data) {
-        
+        CollectionReference colRef = db.collection(collection);
+        colRef.add(data)
+            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                @Override
+                public void onSuccess(DocumentReference documentReference) {
+                    Log.d(LogTags.DB_POST, "DocumentSnapshot written with ID: " + documentReference.getId());
+                }
+            })
+            .addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.w(LogTags.DB_POST, "Error adding document", e);
+                }
+            });
+    }
+
+    public void POST(String collection, Object data) {
+        db.collection(collection)
+            .add(data)
+            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                @Override
+                public void onSuccess(DocumentReference documentReference) {
+                    Log.d(LogTags.DB_POST, "DocumentSnapshot written with ID: " + documentReference.getId());
+                }
+            })
+            .addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.w(LogTags.DB_POST, "Error adding document", e);
+                }
+            });
     }
 
     public void PUT() {
