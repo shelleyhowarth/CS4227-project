@@ -21,4 +21,18 @@
         android:text="Home Screen"
         android:textAlignment="center"/>
 
+    <Button
+        android:id="@+id/logInBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="300dp"
+        android:text="Log in" />
+
+    <FrameLayout
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="2dp">
+    </FrameLayout>
+
 </RelativeLayout>
