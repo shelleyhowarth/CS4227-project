@@ -3,14 +3,14 @@ package com.example.cs4125_project;
 public class Clothes implements Product {
     public String name;
     public double price;
-    public int size;
+    public String size;
     public int quantity;
     public String brand;
     public String colour;
     public String style;
     public String imageURL;
 
-    Clothes(String name, double price, int size, int quantity, String brand, String colour, String style, String imageURL){
+    Clothes(String name, double price, String size, int quantity, String brand, String colour, String style, String imageURL){
         this.name = name;
         this.price = price;
         this.size = size;
@@ -21,6 +21,10 @@ public class Clothes implements Product {
         this.imageURL = imageURL;
     }
 
+    Clothes(){
+
+    }
+
     public String getName(){
         return name;
     }
@@ -29,7 +33,7 @@ public class Clothes implements Product {
         return price;
     }
 
-    public int getSize(){
+    public String getSize(){
         return size;
     }
 
