@@ -14,7 +14,6 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -31,20 +30,21 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter {
     public ProductInterfaceAdapter() {
         Product top = new Clothes("Long sleeve", 10.0, "M", 2, "Pennys", "red", "v-neck", "https://firebasestorage.googleapis.com/v0/b/system-analysis-6716f.appspot.com/o/Product%20Pics%2FTops%2Fgreen%20top.jpg?alt=media&token=324b827c-2c2c-4881-b3ef-055bca0daac2");
         Product jeans = new Clothes("Skinny Jeans", 20.0, "S", 4,"New Look", "Blue", "Skinny", "https://firebasestorage.googleapis.com/v0/b/system-analysis-6716f.appspot.com/o/Product%20Pics%2FTops%2Fs01hq351722s.jpg?alt=media&token=e7e2b259-d43d-47c3-8ddc-e904a013affe");
+        Product shoe = new Shoe("Air Force 1's", 110.0, "5.5", 3, "NIKE", "white","Trainer", "https://firebasestorage.googleapis.com/v0/b/system-analysis-6716f.appspot.com/o/Product%20Pics%2FTops%2FAir%20Force.jpg?alt=media&token=fa2fcc3c-a1f4-446c-957e-e7711b131d41");
         List<Product> products = new ArrayList<>();
         products.add(top);
         products.add(jeans);
+        products.add(shoe);
+
         setProductList(products);
-        Log.d("Test", "Did I even make it to hear");
     }
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType){
-        Log.d("Test", "Did I even make it to hear");
         View itemView;
         productDialog = new Dialog(parent.getContext());
-        //setProductList();
+
         itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.product, parent, false);
         return new ProductHolder(itemView);
     }
@@ -77,11 +77,11 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter {
                 public void onClick(View productView) {
                     TextView textViewProductName = productDialog.findViewById(R.id.productName);
                     TextView textViewProductSize = productDialog.findViewById(R.id.productSize);
-                    ImageView imageViewProductImage = productDialog.findViewById(R.id.productViewImage);
+                    ImageView imageViewProductImage = productDialog.findViewById(R.id.productImage);
 
                     textViewProductName.setText(item.getName());
                     textViewProductSize.setText(item.getSize());
-                    //Picasso.get().load(item.getImageURL()).fit().centerCrop().into(imageViewProductImage);
+                    Picasso.get().load(item.getImageURL()).fit().centerCrop().into(imageViewProductImage);
                     productDialog.show();
                 }
             });
