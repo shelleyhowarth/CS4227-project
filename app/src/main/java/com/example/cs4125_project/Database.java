@@ -16,15 +16,18 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class Database {
     private static Database instance = null;
     private FirebaseFirestore db;
+    private static List<Object> data;
 
     //private constructor - singleton dp
     private Database() {
         db = FirebaseFirestore.getInstance();
+        data = new ArrayList<>();
     }
 
     public static Database getInstance() {
@@ -34,46 +37,12 @@ public class Database {
         return instance;
     }
 
-    public void GET(String collection, String document) {
-        DocumentReference docRef = db.collection(collection).document(document);
+    public DocumentReference GET(String collection, String document) {
+        return db.collection(collection).document(document);
     }
 
-    public void GET(String collection) {
-        CollectionReference colRef = db.collection(collection);
-        colRef.get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d(LogTags.DB_GET, document.getId() + " => " + document.getData());
-                            }
-                        } else {
-                            Log.d(LogTags.DB_GET, "Error getting documents: ", task.getException());
-                        }
-                    }
-                });
-    }
-
-    public void GET(String collection, Map<String, Object> parameters) {
-        Query filteredResults = db.collection(collection);
-        for(Map.Entry<String, Object> entry : parameters.entrySet()) {
-            Log.d(LogTags.DB_GET_FILTERED, "Key: "+entry.getKey()+", Value: "+entry.getValue());
-            filteredResults = filteredResults.whereEqualTo(entry.getKey(), entry.getValue());
-        }
-        filteredResults.get()
-            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    if (task.isSuccessful()) {
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            Log.d(LogTags.DB_GET_FILTERED, document.getId() + " => " + document.getData());
-                        }
-                    } else {
-                        Log.d(LogTags.DB_GET_FILTERED, "Error getting documents: ", task.getException());
-                    }
-                }
-            });
+    public CollectionReference GET(String collection) {
+        return db.collection(collection);
     }
 
     public void POST(String collection, Map<String, Object> data) {
@@ -110,8 +79,20 @@ public class Database {
             });
     }
 
-    public void PUT() {
-
+    public void PUT(String collection, String document, Object data) {
+        db.collection(collection).document(document).set(data)
+            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    Log.d(LogTags.DB_PUT, "DocumentSnapshot successfully written!");
+                }
+            })
+            .addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.w(LogTags.DB_PUT, "Error writing document", e);
+                }
+            });
     }
 
     public void DELETE() {
