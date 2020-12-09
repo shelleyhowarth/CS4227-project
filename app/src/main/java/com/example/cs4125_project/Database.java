@@ -80,6 +80,7 @@ public class Database {
     }
 
     public void PUT(String collection, String document, Object data) {
+        Log.d(LogTags.DB_PUT, "Preparing to update document: "+document);
         db.collection(collection).document(document).set(data)
             .addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
@@ -95,8 +96,22 @@ public class Database {
             });
     }
 
-    public void DELETE() {
-
+    public void DELETE(String collection, String document) {
+        Log.d(LogTags.DB_DELETE, "Preparing to delete document: "+document);
+        db.collection(collection).document(document)
+            .delete()
+            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    Log.d(LogTags.DB_DELETE, "DocumentSnapshot successfully deleted!");
+                }
+            })
+            .addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.w(LogTags.DB_DELETE, "Error deleting document", e);
+                }
+            });
     }
 
     public void PATCH() {
