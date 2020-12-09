@@ -114,7 +114,20 @@ public class Database {
             });
     }
 
-    public void PATCH() {
-
+    public void PATCH(String collection, String document, String field, Object value) {
+        Log.d(LogTags.DB_UPDATE, "Preparing to update "+field+" field in document "+document);
+        db.collection(collection).document(document).update(field, value)
+            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    Log.d(LogTags.DB_UPDATE, "DocumentSnapshot successfully updated!");
+                }
+            })
+            .addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.w(LogTags.DB_UPDATE, "Error updating document", e);
+                }
+            });
     }
 }
