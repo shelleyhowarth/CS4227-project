@@ -57,8 +57,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         int i = v.getId();
         if (i == R.id.logInBtn) {
-            //Log in method logIn();
             goToLogIn(v);
         }
+        else if (i == R.id.goBack) {}
     }
 }
