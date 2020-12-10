@@ -18,16 +18,21 @@ import java.util.List;
 import java.util.Map;
 
 public class ProductDatabaseController {
-    private static Database db = Database.getInstance();
-    private static List<Product> data = new ArrayList<>();
-    private static ProductType type;
+    private Database db = Database.getInstance();
+    private List<Product> data = new ArrayList<>();
+    private ProductType type;
+    private MyEventListener myEventL;
+
+    ProductDatabaseController(MyEventListener ml){
+        this.myEventL = ml;
+    }
 
     /**
      * Adds a product to the selected product collection in the db
      * @author Carla Warde
      * @param product
      */
-    public static void addProductToDB(Product product) {
+    public void addProductToDB(Product product) {
         db.POST(type.getValue(), product);
     }
 
@@ -35,7 +40,7 @@ public class ProductDatabaseController {
      * Retrieves a collection from the database which it then reads into the data List
      * @author Carla Warde
      */
-    public static void getProductCollection() {
+    public void getProductCollection() {
         data.clear();
         //get reference to collection from database
         CollectionReference colRef = db.GET(type.getValue());
@@ -49,6 +54,7 @@ public class ProductDatabaseController {
                             //convert document to Product and add to List of data
                             readProductIntoList(document);
                         }
+                        myEventL.callback("success");
                         Log.d(LogTags.DB_GET, "Number of products: " +data.size());
                     } else {
                         Log.d(LogTags.DB_GET, "Error getting documents: ", task.getException());
@@ -62,7 +68,7 @@ public class ProductDatabaseController {
      * @author Carla Warde
      * @param filters - filters and selected values E.g.: size : M
      */
-    public static void getFilteredProducts(Map<String, Object> filters) {
+    public void getFilteredProducts(Map<String, Object> filters) {
         data.clear();
         Query filteredResults = db.GET(type.getValue());
         String key;
@@ -91,6 +97,7 @@ public class ProductDatabaseController {
                             //convert document to Product and add to List data
                             readProductIntoList(document);
                         }
+                        myEventL.callback("success");
                         Log.d(LogTags.DB_GET_FILTERED, "Number of products: " +data.size());
                     } else {
                         Log.d(LogTags.DB_GET_FILTERED, "Error getting documents: ", task.getException());
@@ -104,7 +111,7 @@ public class ProductDatabaseController {
      * @author Carla Warde
      * @param productId - id of the product to be deleted
      */
-    public static void removeProductFromDB(String productId) {
+    public void removeProductFromDB(String productId) {
         db.DELETE(type.getValue(),productId);
     }
 
@@ -115,7 +122,7 @@ public class ProductDatabaseController {
      * @param field - the database field to be update (check ProductDatabaseEnums for possible values)
      * @param newValue - the new value
      */
-    public static void updateProductField(String productId, ProductDatabaseFields field, Object newValue) {
+    public void updateProductField(String productId, ProductDatabaseFields field, Object newValue) {
         db.PATCH(type.getValue(), productId, field.getValue(), newValue);
     }
 
@@ -124,14 +131,18 @@ public class ProductDatabaseController {
      * @author Carla Warde
      * @return List<Product>
      */
-    public static List<Product> getProducts() { return data; }
+    public List<Product> getProducts() {
+        Log.d(LogTags.DB_GET, "Number of products: " +data.size());
+        return data;
+    }
 
     /**
      * Sets the type of product
      * @author Carla Warde
      * @param product - ProductType (CLOTHES, ACCESSORIES, SHOES)
      */
-    public static void setType(ProductType product) {
+    public void setType(ProductType product) {
+        Log.d(LogTags.DB_GET, "Setting Type");
         type = product;
     }
 
@@ -140,7 +151,7 @@ public class ProductDatabaseController {
      * @author Carla Warde
      * @param document
      */
-    public static void readProductIntoList(QueryDocumentSnapshot document) {
+    public void readProductIntoList(QueryDocumentSnapshot document) {
         //Generate product from product factory
         Product p = ProductFactory.getProduct(type, document.getData());
         //locally sets the id attribute of the product

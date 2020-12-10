@@ -27,9 +27,6 @@ public class Shoe implements Product {
         this.imageURL = imageURL;
     }
 
-    Shoe(){
-
-    }
     Shoe(String id, String name, double price, List<String> sizes, List<Integer> quantity, String brand, String colour, String style){
         this.id = id;
         this.name = name;

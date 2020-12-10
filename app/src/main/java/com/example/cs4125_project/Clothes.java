@@ -27,6 +27,17 @@ public class Clothes implements Product {
         this.imageURL = imageURL;
     }
 
+    Clothes(String id, String name, double price, List<String> sizes, List<Integer> quantity, String brand, String colour, String style){
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.sizes = sizes;
+        this.sizeQuantities = quantity;
+        this.brand = brand;
+        this.colour = colour;
+        this.style = style;
+    }
+
     public void setId(String id) {
         this.id = id;
     }
