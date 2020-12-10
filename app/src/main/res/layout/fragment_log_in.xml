@@ -35,4 +35,10 @@
 
         android:text="Sign in" />
 
+    <Button
+        android:id="@+id/goBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Go back" />
+
 </RelativeLayout>
