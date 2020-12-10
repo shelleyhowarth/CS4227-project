@@ -1,7 +1,5 @@
 package com.example.cs4125_project.enums;
 
-import androidx.annotation.NonNull;
-
 public enum ProductEnums {
     ACCESSORIES("accessories"),
     CLOTHES("clothes"),

@@ -1,13 +1,17 @@
 package com.example.cs4125_project.enums;
 
-import androidx.annotation.NonNull;
-
 public enum Colour {
     RED("Red"),
     BLUE("Blue"),
     GREEN("Green"),
     YELLOW("Yellow"),
-    PINK("Pink");
+    PINK("Pink"),
+    ORANGE("Orange"),
+    PURPLE("Purple"),
+    BROWN("Brown"),
+    GREY("Grey"),
+    WHITE("White"),
+    BLACK("Black");
 
     private final String stringValue;
 
