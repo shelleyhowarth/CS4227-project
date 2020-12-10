@@ -1,21 +1,26 @@
 package com.example.cs4125_project;
 
+import com.example.cs4125_project.enums.Brand;
+import com.example.cs4125_project.enums.Colour;
+import com.example.cs4125_project.enums.Size;
+
+import java.util.List;
+
 public interface Product {
-    String name = "";
-    double price = 0.0;
-    int size = 0;
-    int quantity = 0;
-    String brand = "";
-    String colour = "";
-    String style = "";
+
+    void setId(String id);
+
+    String getId();
+
+    String getImageURL();
 
     String getName();
 
     double getPrice();
 
-    int getSize();
+    List<String> getSizes();
 
-    int getQuantity();
+    List<Integer> getSizeQuantities();
 
     String getBrand();
 
