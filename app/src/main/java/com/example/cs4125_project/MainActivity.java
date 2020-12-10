@@ -116,6 +116,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if(i == R.id.clothesButton){
             selected = "clothes";
             Log.d(LogTags.CHECK_CARD, "Card view selected " + selected);
+            Fragment fragment = new ViewProductsFragment();
+            FragmentManager fm = getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fm.beginTransaction();
+            fragmentTransaction.replace(R.id.content, fragment);
+            fragmentTransaction.commit();
         }
 
         if(i == R.id.accButton){
@@ -123,10 +128,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Log.d(LogTags.CHECK_CARD, "Card view selected " + selected);
         }
 
-        if(i == R.id.shoeButton){
+        if(i == R.id.shoeButton) {
             selected = "shoes";
             Log.d(LogTags.CHECK_CARD, "Card view selected " + selected);
-        else if (i == R.id.goBack) {
+        }
+
+        if (i == R.id.goBack) {
             getFragmentManager().popBackStack();
         }
     }
