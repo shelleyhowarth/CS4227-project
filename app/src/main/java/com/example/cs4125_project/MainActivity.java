@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.util.Log;
+
+import com.example.cs4125_project.enums.ProductEnums;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -28,13 +30,13 @@ public class MainActivity extends AppCompatActivity {
         testShoes.put("brand","Doc Martins");
         testShoes.put("colour","black");
         testShoes.put("style","leather boots");
-        db.POST("shoes",testShoes);
+        db.POST(ProductEnums.SHOE.getValue(),testShoes);
 
         db.GET("clothes");
         Map<String, Object> testParams = new HashMap<>();
         testParams.put("colour","blue");
         //testParams.put("style","mom");
         testParams.put("size","S");
-        db.GET("clothes",testParams);
+        //db.GET("clothes",testParams);
     }
 }

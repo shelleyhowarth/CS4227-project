@@ -3,15 +3,19 @@ package com.example.cs4125_project.enums;
 import androidx.annotation.NonNull;
 
 public enum Colour {
-    RED,
-    BLUE,
-    GREEN,
-    YELLOW,
-    PINK;
+    RED("Red"),
+    BLUE("Blue"),
+    GREEN("Green"),
+    YELLOW("Yellow"),
+    PINK("Pink");
 
-    @NonNull
-    @Override
-    public String toString() {
-        return super.toString();
+    private final String stringValue;
+
+    private Colour(String stringValue) {
+        this.stringValue = stringValue;
+    }
+
+    public String getValue() {
+        return this.stringValue;
     }
 }
