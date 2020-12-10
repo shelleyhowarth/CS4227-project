@@ -1,13 +1,13 @@
 package com.example.cs4125_project.enums;
 
-public enum ProductEnums {
+public enum ProductType {
     ACCESSORIES("accessories"),
     CLOTHES("clothes"),
     SHOE("shoes");
 
     private final String stringValue;
 
-    private ProductEnums(String stringValue) {
+    private ProductType(String stringValue) {
         this.stringValue = stringValue;
     }
 

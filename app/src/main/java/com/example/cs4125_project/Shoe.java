@@ -1,20 +1,26 @@
 package com.example.cs4125_project;
 
-public class Shoe implements Product {
-    public String name;
-    public double price;
-    public String size;
-    public int quantity;
-    public String brand;
-    public String colour;
-    public String style;
-    public String imageURL;
+import java.util.ArrayList;
+import java.util.List;
 
-    Shoe(String name, double price, String size, int quantity, String brand, String colour, String style, String imageURL){
+public class Shoe implements Product {
+    private String id = "";
+    private String name = "";
+    private double price = (long) 0.0;
+    private List<String> sizes = new ArrayList<>();
+    private List<Integer> sizeQuantities = new ArrayList<>();
+    private String brand = "";
+    private String colour = "";
+    private String style = null;
+    private String imageURL = "";
+
+    Shoe() { }
+
+    Shoe(String name, double price, List<String> sizes, List<Integer> quantity, String brand, String colour, String style){
         this.name = name;
         this.price = price;
-        this.size = size;
-        this.quantity = quantity;
+        this.sizes = sizes;
+        this.sizeQuantities = quantity;
         this.brand = brand;
         this.colour = colour;
         this.style = style;
@@ -24,37 +30,36 @@ public class Shoe implements Product {
     Shoe(){
 
     }
-
-    public String getName(){
-        return name;
+    Shoe(String id, String name, double price, List<String> sizes, List<Integer> quantity, String brand, String colour, String style){
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.sizes = sizes;
+        this.sizeQuantities = quantity;
+        this.brand = brand;
+        this.colour = colour;
+        this.style = style;
     }
 
-    public double getPrice(){
-        return price;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public String getSize(){
-        return size;
-    }
+    public String getId() {return this.id;}
 
-    public int getQuantity(){
-        return quantity;
-    }
+    public String getImageURL() {return this.imageURL;}
 
-    public String getBrand(){
-        return brand;
-    }
+    public String getName() {return this.name;}
 
-    public String getColour(){
-        return colour;
-    }
+    public double getPrice() {return this.price;}
 
-    public String getStyle(){
-        return style;
-    }
+    public List<String> getSizes() {return this.sizes;}
 
-    public String getImageURL(){
-        return imageURL;
-    }
+    public List<Integer> getSizeQuantities() {return this.sizeQuantities;}
 
+    public String getBrand() {return this.brand;}
+
+    public String getColour() {return this.colour;}
+
+    public String getStyle() {return this.style;}
 }
