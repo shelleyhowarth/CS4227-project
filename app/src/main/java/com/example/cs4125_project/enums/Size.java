@@ -1,7 +1,5 @@
 package com.example.cs4125_project.enums;
 
-import androidx.annotation.NonNull;
-
 public enum Size {
     SMALL("Small"),
     MEDIUM("Medium"),
