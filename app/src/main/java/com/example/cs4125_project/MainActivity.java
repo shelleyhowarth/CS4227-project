@@ -10,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -22,6 +24,7 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,15 +32,29 @@ import java.util.List;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-    private ProductInterfaceAdapter adapter;
+    ImageButton clothesButton;
+    ImageButton accButton;
+    ImageButton shoeButton;
+
+    String selected;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        setUpRecyclerView();
+        //setUpRecyclerView();
         findViewById(R.id.logInBtn).setOnClickListener(this);
+        clothesButton = findViewById(R.id.clothesButton);
+        accButton = findViewById(R.id.accButton);
+        shoeButton = findViewById(R.id.shoeButton);
+
+        //clothesView.setOnClickListener();
+        LoadImages();
+        clothesButton.setOnClickListener(this);
+        shoeButton.setOnClickListener(this);
+        accButton.setOnClickListener(this);
+
         Database db = Database.getInstance();
 
         Product testClothes = new Clothes("Nike tick long sleeve", 40.0, "12", 2, "Nike", "red", "v-neck", "");
@@ -58,15 +75,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //testParams.put("style","mom");
         testParams.put("size","S");
         //db.GET("clothes",testParams);
+
+
     }
 
-    private void setUpRecyclerView() {
+    private void LoadImages(){
+        //Load Image
+        String clothesUrl = "https://firebasestorage.googleapis.com/v0/b/system-analysis-6716f.appspot.com/o/Product%20Pics%2FTops%2Fjeans.jpg?alt=media&token=670863da-1f9f-427f-833c-cfc1f2c4b6a9";
+        String accUrl = "https://firebasestorage.googleapis.com/v0/b/system-analysis-6716f.appspot.com/o/Product%20Pics%2FTops%2Fhandbag.jpg?alt=media&token=c304abaf-fe0b-4703-8488-2e8140d9a78f";
+        String shoeUrl = "https://firebasestorage.googleapis.com/v0/b/system-analysis-6716f.appspot.com/o/Product%20Pics%2FTops%2FAir%20Force.jpg?alt=media&token=fa2fcc3c-a1f4-446c-957e-e7711b131d41";
+        Picasso.get().load(clothesUrl).fit().centerCrop().into(clothesButton);
+        Picasso.get().load(accUrl).fit().centerCrop().into(accButton);
+        Picasso.get().load(shoeUrl).fit().centerCrop().into(shoeButton);
+    }
+
+    /*private void setUpRecyclerView() {
         adapter = new ProductInterfaceAdapter();
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
-    }
+    }*/
 
     public void goToLogIn(View v)
     {
@@ -82,6 +111,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (i == R.id.logInBtn) {
             //Log in method logIn();
             goToLogIn(v);
+        }
+
+        if(i == R.id.clothesButton){
+            selected = "clothes";
+            Log.d(LogTags.CHECK_CARD, "Card view selected " + selected);
+        }
+
+        if(i == R.id.accButton){
+            selected = "accessories";
+            Log.d(LogTags.CHECK_CARD, "Card view selected " + selected);
+        }
+
+        if(i == R.id.shoeButton){
+            selected = "shoes";
+            Log.d(LogTags.CHECK_CARD, "Card view selected " + selected);
         }
     }
 }
