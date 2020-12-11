@@ -28,13 +28,13 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter {
     Dialog productDialog;
 
     public ProductInterfaceAdapter() {
-        Product top = new Clothes("Long sleeve", 10.0, "M", 2, "Pennys", "red", "v-neck", "https://firebasestorage.googleapis.com/v0/b/system-analysis-6716f.appspot.com/o/Product%20Pics%2FTops%2Fgreen%20top.jpg?alt=media&token=324b827c-2c2c-4881-b3ef-055bca0daac2");
-        Product jeans = new Clothes("Skinny Jeans", 20.0, "S", 4,"New Look", "Blue", "Skinny", "https://firebasestorage.googleapis.com/v0/b/system-analysis-6716f.appspot.com/o/Product%20Pics%2FTops%2Fs01hq351722s.jpg?alt=media&token=e7e2b259-d43d-47c3-8ddc-e904a013affe");
-        Product shoe = new Shoe("Air Force 1's", 110.0, "5.5", 3, "NIKE", "white","Trainer", "https://firebasestorage.googleapis.com/v0/b/system-analysis-6716f.appspot.com/o/Product%20Pics%2FTops%2FAir%20Force.jpg?alt=media&token=fa2fcc3c-a1f4-446c-957e-e7711b131d41");
+        //Product top = new Clothes("Long sleeve", 10.0, "M", 2, "Pennys", "red", "v-neck", "https://firebasestorage.googleapis.com/v0/b/system-analysis-6716f.appspot.com/o/Product%20Pics%2FTops%2Fgreen%20top.jpg?alt=media&token=324b827c-2c2c-4881-b3ef-055bca0daac2");
+        //Product jeans = new Clothes("Skinny Jeans", 20.0, "S", 4,"New Look", "Blue", "Skinny", "https://firebasestorage.googleapis.com/v0/b/system-analysis-6716f.appspot.com/o/Product%20Pics%2FTops%2Fs01hq351722s.jpg?alt=media&token=e7e2b259-d43d-47c3-8ddc-e904a013affe");
+        //Product shoe = new Shoe("Air Force 1's", 110.0, "5.5", 3, "NIKE", "white","Trainer", "https://firebasestorage.googleapis.com/v0/b/system-analysis-6716f.appspot.com/o/Product%20Pics%2FTops%2FAir%20Force.jpg?alt=media&token=fa2fcc3c-a1f4-446c-957e-e7711b131d41");
         List<Product> products = new ArrayList<>();
-        products.add(top);
-        products.add(jeans);
-        products.add(shoe);
+        //products.add(top);
+        //products.add(jeans);
+        //products.add(shoe);
 
         setProductList(products);
     }
@@ -66,7 +66,7 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter {
         void bindView(int pos){
             final Product item = productList.get(pos);
             textViewProductName.setText(item.getName());
-            textViewProductSize.setText((item.getSize()));
+            //textViewProductSize.setText((item.getSize()));
             Picasso.get().load(item.getImageURL()).fit().centerCrop().into(imageViewProductPic);
 
             productDialog.setContentView(R.layout.product_detail_page);
@@ -80,7 +80,7 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter {
                     ImageView imageViewProductImage = productDialog.findViewById(R.id.productImage);
 
                     textViewProductName.setText(item.getName());
-                    textViewProductSize.setText(item.getSize());
+                    //textViewProductSize.setText(item.getSize());
                     Picasso.get().load(item.getImageURL()).fit().centerCrop().into(imageViewProductImage);
                     productDialog.show();
                 }
