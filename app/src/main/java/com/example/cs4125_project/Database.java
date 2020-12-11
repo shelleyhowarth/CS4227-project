@@ -37,14 +37,33 @@ public class Database {
         return instance;
     }
 
+    /**
+     * Returns a specified document from the db
+     * @author Carla Warde
+     * @param collection - db collection to read
+     * @param document - document to retreive
+     * @return DocumentReference
+     */
     public DocumentReference GET(String collection, String document) {
         return db.collection(collection).document(document);
     }
 
+    /**
+     * Returns a specified collection from the db
+     * @author Carla Warde
+     * @param collection - db collection to read
+     * @return CollectionReference
+     */
     public CollectionReference GET(String collection) {
         return db.collection(collection);
     }
 
+    /**
+     * Adds data from the input map to a document in the db
+     * @author Carla Warde
+     * @param collection - db collection to write to
+     * @param data - data to write
+     */
     public void POST(String collection, Map<String, Object> data) {
         CollectionReference colRef = db.collection(collection);
         colRef.add(data)
@@ -62,6 +81,12 @@ public class Database {
             });
     }
 
+    /**
+     * Writes a specified Object to a collection in the db
+     * @author Carla Warde
+     * @param collection
+     * @param data
+     */
     public void POST(String collection, Object data) {
         db.collection(collection)
             .add(data)
@@ -79,7 +104,13 @@ public class Database {
             });
     }
 
-    //Create new object in database
+    /**
+     * Overwrites an existing document or add sit if it doesn't exist
+     * @author Carla Warde
+     * @param collection
+     * @param document
+     * @param data
+     */
     public void PUT(String collection, String document, Object data) {
         Log.d(LogTags.DB_PUT, "Preparing to update document: "+document);
         db.collection(collection).document(document).set(data)
@@ -97,6 +128,13 @@ public class Database {
             });
     }
 
+    /**
+     * Deletes a specified document from a collection in the db
+     * @author Carla Warde
+     * @param collection
+     * @param document
+     * @throws Exception
+     */
     public void DELETE(String collection, String document) {
         Log.d(LogTags.DB_DELETE, "Preparing to delete document: "+document);
         db.collection(collection).document(document)

@@ -1,11 +1,11 @@
 package com.example.cs4125_project.enums;
 
 public enum Size {
-    SMALL("Small"),
-    MEDIUM("Medium"),
-    LARGE("Large"),
-    X_SMALL("X Small"),
-    X_LARGE("X Large");
+    SMALL("S"),
+    MEDIUM("M"),
+    LARGE("L"),
+    X_SMALL("XS"),
+    X_LARGE("XL");
 
     private final String stringValue;
 
