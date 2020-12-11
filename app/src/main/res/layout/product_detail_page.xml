@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center">
+
+    <LinearLayout
+        android:layout_marginTop="140dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#232323"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:id="@+id/layout">
+
+        <TextView
+            android:id="@+id/productName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:textAlignment="center"
+            android:textStyle="bold"
+            android:textSize="28sp"
+            android:layout_marginTop="120dp"
+            />
+
+        <TextView
+            android:id="@+id/productPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textColor="@android:color/white"
+            android:textStyle="normal"
+            android:textSize="24sp"/>
+
+        <TextView
+            android:id="@+id/productSizes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sizes:"
+            android:textAlignment="center"
+            android:textColor="@android:color/white"
+            android:textStyle="normal"
+            android:textSize="24sp"/>
+
+        <Button
+            android:id="@+id/buyProduct"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Add to Cart"/>
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/productImage"
+        android:layout_width="231dp"
+        android:layout_height="241dp"
+        tools:srcCompat="@tools:sample/avatars"
+        android:padding = "10dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"/>
+
+</RelativeLayout>

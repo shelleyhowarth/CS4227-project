@@ -153,6 +153,7 @@ public class Database {
             });
     }
 
+    //Can update object in database
     public void PATCH(String collection, String document, String field, Object value) {
         Log.d(LogTags.DB_UPDATE, "Preparing to update "+field+" field in document "+document);
         db.collection(collection).document(document).update(field, value)
