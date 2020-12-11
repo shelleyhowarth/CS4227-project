@@ -4,6 +4,8 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.text.TextUtils;
 import android.util.Log;
@@ -36,7 +38,6 @@ public class LogInFragment extends Fragment implements View.OnClickListener {
     private FirebaseAuth mAuth;
     private EditText mEmailField;
     private EditText mPasswordField;
-    private Button signUp;
 
 
     public LogInFragment() {
@@ -65,9 +66,9 @@ public class LogInFragment extends Fragment implements View.OnClickListener {
         // Views
         mEmailField = rootView.findViewById(R.id.fieldEmail);
         mPasswordField = rootView.findViewById(R.id.fieldPassword);
-        signUp = rootView.findViewById(R.id.register);
         rootView.findViewById(R.id.register).setOnClickListener(this);
         rootView.findViewById(R.id.signIn).setOnClickListener(this);
+        rootView.findViewById(R.id.goBack).setOnClickListener(this);
 
         return rootView;
     }
@@ -120,6 +121,10 @@ public class LogInFragment extends Fragment implements View.OnClickListener {
                 });
     }
 
+    public void closeFragment() {
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        fm.popBackStack("login", fm.POP_BACK_STACK_INCLUSIVE);
+    }
 
     private void signIn(String email, String password) {
         Log.d(TAG, "signIn:" + email);
@@ -151,6 +156,11 @@ public class LogInFragment extends Fragment implements View.OnClickListener {
         }
         if (i == R.id.register) {
             register(mEmailField.getText().toString(), mPasswordField.getText().toString());
+        }
+        if (i == R.id.goBack) {
+            closeFragment();
+            Toast.makeText(getContext(), "Go back clicked",
+                    Toast.LENGTH_SHORT).show();
         }
     }
 }
