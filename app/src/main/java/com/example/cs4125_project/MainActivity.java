@@ -52,7 +52,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //setUpRecyclerView();
         findViewById(R.id.logInBtn).setOnClickListener(this);
         clothesButton = findViewById(R.id.clothesButton);
         accButton = findViewById(R.id.accButton);
@@ -110,14 +109,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Picasso.get().load(accUrl).fit().centerCrop().into(accButton);
         Picasso.get().load(shoeUrl).fit().centerCrop().into(shoeButton);
     }
-
-    /*private void setUpRecyclerView() {
-        adapter = new ProductInterfaceAdapter();
-        RecyclerView recyclerView = findViewById(R.id.recycler_view);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(adapter);
-    }*/
 
     public void goToLogIn(View v)
     {

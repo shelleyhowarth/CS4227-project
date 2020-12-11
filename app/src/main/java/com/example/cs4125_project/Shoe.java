@@ -16,7 +16,7 @@ public class Shoe implements Product {
 
     Shoe() { }
 
-    Shoe(String name, double price, List<String> sizes, List<Integer> quantity, String brand, String colour, String style){
+    Shoe(String name, double price, List<String> sizes, List<Integer> quantity, String brand, String colour, String style, String imageUrl){
         this.name = name;
         this.price = price;
         this.sizes = sizes;
@@ -24,10 +24,10 @@ public class Shoe implements Product {
         this.brand = brand;
         this.colour = colour;
         this.style = style;
-        this.imageURL = imageURL;
+        this.imageURL = imageUrl;
     }
 
-    Shoe(String id, String name, double price, List<String> sizes, List<Integer> quantity, String brand, String colour, String style){
+    Shoe(String id, String name, double price, List<String> sizes, List<Integer> quantity, String brand, String colour, String style, String imageUrl){
         this.id = id;
         this.name = name;
         this.price = price;
@@ -36,6 +36,7 @@ public class Shoe implements Product {
         this.brand = brand;
         this.colour = colour;
         this.style = style;
+        this.imageURL = imageUrl;
     }
 
     public void setId(String id) {

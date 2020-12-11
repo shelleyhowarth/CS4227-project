@@ -62,7 +62,7 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter {
             final Product item = productList.get(pos);
             textViewProductName.setText(item.getName());
             textViewProductPrice.setText("€" + String.valueOf(item.getPrice()));
-            //Picasso.get().load(item.getImageURL()).fit().centerCrop().into(imageViewProductPic);
+            Picasso.get().load(item.getImageURL()).fit().centerCrop().into(imageViewProductPic);
 
             productDialog.setContentView(R.layout.product_detail_page);
             productDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -87,7 +87,7 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter {
                     textViewProductName.setText(item.getName());
                     textViewProductPrice.setText("€" + String.valueOf(item.getPrice()));
                     textViewProductSizes.setText(result);
-                    //Picasso.get().load(item.getImageURL()).fit().centerCrop().into(imageViewProductImage);
+                    Picasso.get().load(item.getImageURL()).fit().centerCrop().into(imageViewProductImage);
                     productDialog.show();
                 }
             });
