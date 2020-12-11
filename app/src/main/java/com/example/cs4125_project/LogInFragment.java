@@ -66,17 +66,6 @@ public class LogInFragment extends Fragment implements View.OnClickListener {
         rootView.findViewById(R.id.goBack).setOnClickListener(this);
         rootView.findViewById(R.id.signIn).setOnClickListener(this);
 
-
-        signInBtn = (Button) rootView.findViewById(R.id.signIn); // you have to use rootview object..
-        signInBtn.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v)
-            {
-                Toast.makeText(getActivity(), "Hello World", Toast.LENGTH_LONG).show();
-            }
-        });
-
         return rootView;
     }
 
@@ -104,7 +93,7 @@ public class LogInFragment extends Fragment implements View.OnClickListener {
         Log.d(TAG, "signIn:" + email);
 
         mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener((Executor) getActivity(), new OnCompleteListener<AuthResult>() {
+                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
@@ -129,11 +118,10 @@ public class LogInFragment extends Fragment implements View.OnClickListener {
 
     public void onClick(View v) {
         int i = v.getId();
-        /*
         if (i == R.id.signIn) {
             signIn(mEmailField.getText().toString(), mPasswordField.getText().toString());
         }
-        */
+
         if (i == R.id.goBack) {
             register(mEmailField.getText().toString(), mPasswordField.getText().toString());
             Toast.makeText(getContext(), "Go back clicked",
