@@ -19,7 +19,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cs4125_project.enums.ProductType;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -40,10 +39,6 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private ProductInterfaceAdapter adapter;
-    private FirebaseAuth mAuth;
-    private Button logIn;
-    private Button signOut;
-
 
 
     @Override
@@ -52,12 +47,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         setUpRecyclerView();
         findViewById(R.id.logInBtn).setOnClickListener(this);
-        findViewById(R.id.signOut).setOnClickListener(this);
-
-        logIn = findViewById(R.id.logInBtn);
-        signOut = findViewById(R.id.signOut);
         Database db = Database.getInstance();
 
+<<<<<<< HEAD
         mAuth = FirebaseAuth.getInstance();
         isLoggedIn();
 
@@ -91,6 +83,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //Example of removing a product from a collection (grab an id from the db and put it in productId parameter)
         //ProductDatabaseController.removeProductFromDB("hottZJJwoB4hsKeGM0yC");
+=======
+        Product testClothes = new Clothes("Nike tick long sleeve", 40.0, "12", 2, "Nike", "red", "v-neck", "");
+        db.POST("clothes", testClothes);
+
+        //Create a Map used to filter Objects return from database
+        Map<String, Object> testShoes = new HashMap<>();
+        testShoes.put("name","Doc Martins 1890");
+        testShoes.put("price",180.99);
+        testShoes.put("brand","Doc Martins");
+        testShoes.put("colour","black");
+        testShoes.put("style","leather boots");
+        db.POST(ProductEnums.SHOE.getValue(),testShoes);
+>>>>>>> parent of f284958... log in/sign out button half working
 
         //Gathers all the clothes items
         ProductDatabaseController.getProductCollection();
@@ -114,24 +119,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fragmentTransaction.commit();
     }
 
-    private void isLoggedIn() {
-        if(mAuth.getCurrentUser() != null) {
-            logIn.setVisibility(View.INVISIBLE);
-            signOut.setVisibility((View.VISIBLE));
-        } else {
-            logIn.setVisibility(View.VISIBLE);
-            signOut.setVisibility((View.INVISIBLE));
-        }
-    }
-
     public void onClick(View v) {
         int i = v.getId();
         if (i == R.id.logInBtn) {
+            //Log in method logIn();
             goToLogIn(v);
-        }
-        if (i == R.id.signOut) {
-            mAuth.signOut();
-            isLoggedIn();
         }
     }
 }
