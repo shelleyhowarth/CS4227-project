@@ -23,6 +23,10 @@ public class ProductDatabaseController {
     private ProductType type;
     private MyEventListener myEventL;
 
+    ProductDatabaseController(){
+
+    }
+
     ProductDatabaseController(MyEventListener ml){
         this.myEventL = ml;
     }

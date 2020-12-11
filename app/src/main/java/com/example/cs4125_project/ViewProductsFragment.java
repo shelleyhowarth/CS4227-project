@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 
 import com.example.cs4125_project.enums.ProductType;
 
+import java.util.ArrayList;
+
 
 public class ViewProductsFragment extends Fragment {
 
@@ -37,10 +39,11 @@ public class ViewProductsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        ArrayList<Product> products = (ArrayList<Product>)getArguments().getSerializable("Products");
         View view = inflater.inflate(R.layout.fragment_view_products, container, false);
 
 
-        adapter = new ProductInterfaceAdapter();
+        adapter = new ProductInterfaceAdapter(products);
         Log.d(LogTags.CHECK_CARD, "" + adapter);
         // Add the following lines to create RecyclerView
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view);

@@ -129,17 +129,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void getProductList(ProductType type) {
-        ProductDatabaseController.setType(type);
+        productDataC.setType(type);
         productDataC.getProductCollection();
     }
 
     @Override
     public void callback(String result) {
-        goToFrag();
+        List<Product> products = new ArrayList<>();
+        products = productDataC.getProducts();
+        goToFrag(products);
     }
 
-    public void goToFrag(){
+    public void goToFrag(List<Product> products){
+        ArrayList<Product> alProd = new ArrayList<>(products.size());
+        alProd.addAll(products);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("Products", alProd);
         ViewProductsFragment fragment = new ViewProductsFragment();
+        fragment.setArguments(bundle);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.content, fragment);
         transaction.commit();

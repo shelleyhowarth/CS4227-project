@@ -16,7 +16,7 @@ public class Clothes implements Product {
 
     Clothes() { }
 
-    Clothes(String name, double price, List<String> sizes, List<Integer> quantity, String brand, String colour, String style){
+    Clothes(String name, double price, List<String> sizes, List<Integer> quantity, String brand, String colour, String style, String imageURL){
         this.name = name;
         this.price = price;
         this.sizes = sizes;

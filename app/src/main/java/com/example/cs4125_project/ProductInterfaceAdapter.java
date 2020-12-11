@@ -23,13 +23,13 @@ import java.util.List;
 public class ProductInterfaceAdapter extends RecyclerView.Adapter {
     List<Product> productList;
     TextView textViewProductName;
+    TextView textViewProductPrice;
     TextView textViewProductSize;
     ImageView imageViewProductPic;
     CardView cardViewProduct;
     Dialog productDialog;
 
-    public ProductInterfaceAdapter() {
-        List<Product> products = ProductDatabaseController.getProducts();
+    public ProductInterfaceAdapter(ArrayList<Product> products) {
         Log.d(LogTags.CHECK_CARD, products.toString());
         setProductList(products);
     }
@@ -53,7 +53,7 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter {
         public ProductHolder(View itemView) {
             super(itemView);
             textViewProductName = itemView.findViewById(R.id.productName);
-            textViewProductSize = itemView.findViewById(R.id.productSize);
+            textViewProductPrice = itemView.findViewById(R.id.productPrice);
             imageViewProductPic = itemView.findViewById(R.id.productViewImage);
             cardViewProduct = itemView.findViewById(R.id.productCard);
         }
@@ -61,7 +61,7 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter {
         void bindView(int pos){
             final Product item = productList.get(pos);
             textViewProductName.setText(item.getName());
-            //textViewProductSize.setText((item.getSize()));
+            textViewProductPrice.setText("€" + String.valueOf(item.getPrice()));
             //Picasso.get().load(item.getImageURL()).fit().centerCrop().into(imageViewProductPic);
 
             productDialog.setContentView(R.layout.product_detail_page);
@@ -71,11 +71,22 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter {
                 @Override
                 public void onClick(View productView) {
                     TextView textViewProductName = productDialog.findViewById(R.id.productName);
-                    TextView textViewProductSize = productDialog.findViewById(R.id.productSize);
-                    //ImageView imageViewProductImage = productDialog.findViewById(R.id.productImage);
-
+                    TextView textViewProductPrice = productDialog.findViewById(R.id.productPrice);
+                    TextView textViewProductSizes = productDialog.findViewById(R.id.productSizes);
+                    ImageView imageViewProductImage = productDialog.findViewById(R.id.productImage);
+                    List<String> sizes = item.getSizes();
+                    String result="";
+                    if(sizes.size() > 0) {
+                        result ="Available Sizes:\n";
+                        for (int i = 0; i < sizes.size(); i++) {
+                            result += "  " + sizes.get(i) + "  ";
+                        }
+                    }else{
+                        result = "No products in stock";
+                    }
                     textViewProductName.setText(item.getName());
-                    //textViewProductSize.setText(item.getSize());
+                    textViewProductPrice.setText("€" + String.valueOf(item.getPrice()));
+                    textViewProductSizes.setText(result);
                     //Picasso.get().load(item.getImageURL()).fit().centerCrop().into(imageViewProductImage);
                     productDialog.show();
                 }
@@ -92,7 +103,7 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter {
         }
     }
 
-    public void setProductList(List<? extends Product> productList) {
+    public void setProductList(ArrayList<? extends Product> productList) {
         if (this.productList == null){
             this.productList = new ArrayList<>();
         }
