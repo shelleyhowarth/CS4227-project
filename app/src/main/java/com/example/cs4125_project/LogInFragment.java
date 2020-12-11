@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,7 +39,7 @@ public class LogInFragment extends Fragment implements View.OnClickListener {
     private FirebaseAuth mAuth;
     private EditText mEmailField;
     private EditText mPasswordField;
-
+    private RelativeLayout layout;
 
     public LogInFragment() {
         // Required empty public constructor
@@ -69,6 +70,7 @@ public class LogInFragment extends Fragment implements View.OnClickListener {
         rootView.findViewById(R.id.register).setOnClickListener(this);
         rootView.findViewById(R.id.signIn).setOnClickListener(this);
         rootView.findViewById(R.id.goBack).setOnClickListener(this);
+        layout = rootView.findViewById(R.id.fragment_log_in);
 
         return rootView;
     }
@@ -121,12 +123,11 @@ public class LogInFragment extends Fragment implements View.OnClickListener {
                 });
     }
 
-    public void closeFragment() {
-        FragmentManager fm = getActivity().getSupportFragmentManager();
-        fm.popBackStack("login", fm.POP_BACK_STACK_INCLUSIVE);
+    public void closeFragment(View v) {
+        layout.setVisibility(v.INVISIBLE);
     }
 
-    private void signIn(String email, String password) {
+    private void signIn(String email, String password, final View v) {
         Log.d(TAG, "signIn:" + email);
 
         mAuth.signInWithEmailAndPassword(email, password)
@@ -137,8 +138,10 @@ public class LogInFragment extends Fragment implements View.OnClickListener {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
+                            closeFragment(v);
                             Toast.makeText(getContext(), "Authentication success.",
                                     Toast.LENGTH_SHORT).show();
+
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
@@ -152,15 +155,13 @@ public class LogInFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         int i = v.getId();
         if (i == R.id.signIn) {
-            signIn(mEmailField.getText().toString(), mPasswordField.getText().toString());
+            signIn(mEmailField.getText().toString(), mPasswordField.getText().toString(), v);
         }
         if (i == R.id.register) {
             register(mEmailField.getText().toString(), mPasswordField.getText().toString());
         }
         if (i == R.id.goBack) {
-            closeFragment();
-            Toast.makeText(getContext(), "Go back clicked",
-                    Toast.LENGTH_SHORT).show();
+            closeFragment(v);
         }
     }
 }
