@@ -83,8 +83,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             //Log in method logIn();
             goToLogIn(v);
         }
-        else if (i == R.id.goBack) {
-            getFragmentManager().popBackStack();
-        }
     }
 }
