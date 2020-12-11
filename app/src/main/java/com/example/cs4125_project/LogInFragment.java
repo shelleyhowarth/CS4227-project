@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,17 +29,12 @@ import java.util.concurrent.Executor;
 
 import static android.content.ContentValues.TAG;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link LogInFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class LogInFragment extends Fragment implements View.OnClickListener {
 
     private FirebaseAuth mAuth;
     private EditText mEmailField;
     private EditText mPasswordField;
-
+    private RelativeLayout layout;
 
     public LogInFragment() {
         // Required empty public constructor
@@ -53,7 +49,6 @@ public class LogInFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         mAuth = FirebaseAuth.getInstance();
     }
 
@@ -63,9 +58,14 @@ public class LogInFragment extends Fragment implements View.OnClickListener {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_log_in, container, false);
 
-        // Views
+        //Layout
+        layout = rootView.findViewById(R.id.fragment_log_in);
+
+        //Text fields
         mEmailField = rootView.findViewById(R.id.fieldEmail);
         mPasswordField = rootView.findViewById(R.id.fieldPassword);
+
+        //Listeners
         rootView.findViewById(R.id.register).setOnClickListener(this);
         rootView.findViewById(R.id.signIn).setOnClickListener(this);
         rootView.findViewById(R.id.goBack).setOnClickListener(this);
@@ -73,7 +73,9 @@ public class LogInFragment extends Fragment implements View.OnClickListener {
         return rootView;
     }
 
+    //Checks to make sure login credentials are valid
     private boolean validateForm(String email, String password){
+        //Initially set to true and if form is invalid, boolean changes to false
         boolean valid = true;
 
         if(TextUtils.isEmpty(email)) {
@@ -98,7 +100,9 @@ public class LogInFragment extends Fragment implements View.OnClickListener {
         return valid;
     }
 
+    //Method to register an account
     private void register(String email, String password) {
+        //Checks credentials first
         if (!validateForm(email, password)) {
             return;
         }
@@ -108,40 +112,40 @@ public class LogInFragment extends Fragment implements View.OnClickListener {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "createUserWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
+                            Toast.makeText(getContext(), "Sign up successful.",
+                                    Toast.LENGTH_LONG).show();
                         } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithEmail:failure", task.getException());
-                            Toast.makeText(getContext(), "Authentication failed." + task.getException().getMessage(),
+                            Toast.makeText(getContext(), "Sign up failed. " + task.getException().getMessage(),
                                     Toast.LENGTH_LONG).show();
                         }
                     }
                 });
     }
 
-    public void closeFragment() {
-        FragmentManager fm = getActivity().getSupportFragmentManager();
-        fm.popBackStack("login", fm.POP_BACK_STACK_INCLUSIVE);
+    //Hides fragment
+    public void closeFragment(View v) {
+        layout.setVisibility(v.INVISIBLE);
     }
 
-    private void signIn(String email, String password) {
-        Log.d(TAG, "signIn:" + email);
-
+    //Firebase sign in method
+    private void signIn(String email, String password, final View v) {
+        //Checks credentials first
+        if (!validateForm(email, password)) {
+            return;
+        }
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            Toast.makeText(getContext(), "Authentication success.",
+                            //Close fragment when successfully logged in
+                            closeFragment(v);
+                            Toast.makeText(getContext(), "Successfully signed in.",
                                     Toast.LENGTH_SHORT).show();
+
                         } else {
                             // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithEmail:failure", task.getException());
                             Toast.makeText(getContext(), "Authentication failed." + task.getException().getMessage(),
                                     Toast.LENGTH_LONG).show();
                         }
@@ -152,15 +156,13 @@ public class LogInFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         int i = v.getId();
         if (i == R.id.signIn) {
-            signIn(mEmailField.getText().toString(), mPasswordField.getText().toString());
+            signIn(mEmailField.getText().toString(), mPasswordField.getText().toString(), v);
         }
         if (i == R.id.register) {
             register(mEmailField.getText().toString(), mPasswordField.getText().toString());
         }
         if (i == R.id.goBack) {
-            closeFragment();
-            Toast.makeText(getContext(), "Go back clicked",
-                    Toast.LENGTH_SHORT).show();
+            closeFragment(v);
         }
     }
 }

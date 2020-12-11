@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cs4125_project.enums.ProductType;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -46,23 +47,40 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ImageButton shoeButton;
     String selected;
     ProductDatabaseController productDataC;
+    private ProductInterfaceAdapter adapter;
+    private FirebaseAuth mAuth;
+    private Button logInButton;
+    private Button signOutButton;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        findViewById(R.id.logInBtn).setOnClickListener(this);
+
+        //Instances
+        mAuth = FirebaseAuth.getInstance();
+        productDataC = new ProductDatabaseController(this);
+
+        //Buttons
         clothesButton = findViewById(R.id.clothesButton);
         accButton = findViewById(R.id.accButton);
         shoeButton = findViewById(R.id.shoeButton);
-        productDataC = new ProductDatabaseController(this);
+        logInButton = findViewById(R.id.logInBtn);
+        signOutButton = findViewById(R.id.signOut);
 
-        //clothesView.setOnClickListener();
+        //Checking to see if user is logged in
+        isLoggedIn();
+
+        //Load images for home screen
         LoadImages();
+
+        //Listeners
         clothesButton.setOnClickListener(this);
         shoeButton.setOnClickListener(this);
         accButton.setOnClickListener(this);
+        logInButton.setOnClickListener(this);
+        signOutButton.setOnClickListener(this);
 
         String[]sizes = {Size.X_SMALL.getValue(),Size.SMALL.getValue(),Size.MEDIUM.getValue(), Size.LARGE.getValue(), Size.X_LARGE.getValue()};
 
@@ -83,7 +101,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //Uncomment when you want to actually add this item to the db
         // ProductDatabaseController.addProductToDB(p);
 
-        db.GET("clothes");
         Map<String, Object> testParams = new HashMap<>();
         testParams.put(ProductDatabaseFields.SIZES.getValue(), Size.X_LARGE.getValue());
         //testParams.put(ProductDatabaseFields.COLOUR.getValue(), Colour.BLUE.getValue());
@@ -100,6 +117,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    //Changes button to log in or sign out depending on whether the user is logged in
+    private void isLoggedIn() {
+        if(mAuth.getCurrentUser() != null) {
+            logInButton.setVisibility(View.INVISIBLE);
+            signOutButton.setVisibility((View.VISIBLE));
+        } else {
+            logInButton.setVisibility(View.VISIBLE);
+            signOutButton.setVisibility((View.INVISIBLE));
+        }
+    }
+
+
     private void LoadImages(){
         //Load Image
         String clothesUrl = "https://firebasestorage.googleapis.com/v0/b/system-analysis-6716f.appspot.com/o/Product%20Pics%2FTops%2Fjeans.jpg?alt=media&token=670863da-1f9f-427f-833c-cfc1f2c4b6a9";
@@ -110,6 +139,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Picasso.get().load(shoeUrl).fit().centerCrop().into(shoeButton);
     }
 
+    //Opens login fragment
     public void goToLogIn(View v)
     {
         Fragment fr = new LogInFragment();
@@ -147,7 +177,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         int i = v.getId();
         if (i == R.id.logInBtn) {
-            //Log in method logIn();
             goToLogIn(v);
         }
 
@@ -169,8 +198,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             getProductList(ProductType.SHOE);
         }
 
-        if (i == R.id.goBack) {
-            getFragmentManager().popBackStack();
+        if (i == R.id.signOut) {
+            //Signs user out
+            mAuth.signOut();
+            //Updates buttons
+            isLoggedIn();
         }
     }
 }
