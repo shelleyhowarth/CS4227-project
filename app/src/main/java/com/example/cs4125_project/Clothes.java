@@ -14,7 +14,9 @@ public class Clothes implements Product {
     private String style = "";
     private String imageURL = "";
 
-    Clothes(String name, double price, List<String> sizes, List<Integer> quantity, String brand, String colour, String style, String imageURL){
+    Clothes() { }
+
+    Clothes(String name, double price, List<String> sizes, List<Integer> quantity, String brand, String colour, String style, String imageUrl){
         this.name = name;
         this.price = price;
         this.sizes = sizes;
@@ -22,10 +24,8 @@ public class Clothes implements Product {
         this.brand = brand;
         this.colour = colour;
         this.style = style;
-        this.imageURL = imageURL;
+        this.imageURL = imageUrl;
     }
-
-    Clothes(){}
 
     Clothes(String id, String name, double price, List<String> sizes, List<Integer> quantity, String brand, String colour, String style){
         this.id = id;

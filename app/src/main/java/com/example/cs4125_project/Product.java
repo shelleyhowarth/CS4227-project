@@ -12,6 +12,8 @@ public interface Product {
 
     String getId();
 
+    String getImageURL();
+
     String getName();
 
     double getPrice();
@@ -25,6 +27,4 @@ public interface Product {
     String getColour();
 
     String getStyle();
-
-    String getImageURL();
 }

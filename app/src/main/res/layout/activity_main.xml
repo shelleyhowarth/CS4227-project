@@ -7,32 +7,50 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="52dp" />
+ <TextView
+     android:id="@+id/textView"
+     android:layout_width="match_parent"
+     android:layout_height="wrap_content"
+     android:layout_marginTop="20dp"
+     android:text="Home Screen"
+     android:textAlignment="center"/>
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="Home Screen"
-        android:textAlignment="center"/>
+ <Button
+     android:id="@+id/logInBtn"
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+     android:layout_marginLeft="300dp"
+     android:text="Log in" />
 
-    <Button
-        android:id="@+id/logInBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="300dp"
-        android:text="Log in" />
+ <ImageButton
+     android:id="@+id/clothesButton"
+     android:layout_width="300dp"
+     android:layout_height="150dp"
+     android:layout_marginTop="80dp"
+     android:layout_centerHorizontal="true"
+     app:srcCompat="@drawable/fui_ic_twitter_bird_white_24dp" />
 
-    <FrameLayout
-        android:id="@+id/content"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:elevation="2dp">
-    </FrameLayout>
+ <ImageButton
+     android:id="@+id/shoeButton"
+     android:layout_width="300dp"
+     android:layout_height="150dp"
+     android:layout_marginTop="250dp"
+     android:layout_centerHorizontal="true"
+     app:srcCompat="@drawable/fui_ic_twitter_bird_white_24dp" />
+
+ <ImageButton
+     android:id="@+id/accButton"
+     android:layout_width="300dp"
+     android:layout_height="150dp"
+     android:layout_marginTop="420dp"
+     android:layout_centerHorizontal="true"
+     app:srcCompat="@drawable/fui_ic_twitter_bird_white_24dp"/>
+
+ <FrameLayout
+     android:id="@+id/content"
+     android:layout_width="match_parent"
+     android:layout_height="match_parent"
+     android:elevation="2dp">
+ </FrameLayout>
 
 </RelativeLayout>
