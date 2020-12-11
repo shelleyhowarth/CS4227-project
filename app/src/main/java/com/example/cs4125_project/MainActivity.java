@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Database db = Database.getInstance();
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         mAuth = FirebaseAuth.getInstance();
         isLoggedIn();
 
@@ -84,6 +85,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //Example of removing a product from a collection (grab an id from the db and put it in productId parameter)
         //ProductDatabaseController.removeProductFromDB("hottZJJwoB4hsKeGM0yC");
 =======
+=======
+>>>>>>> parent of f284958... log in/sign out button half working
         Product testClothes = new Clothes("Nike tick long sleeve", 40.0, "12", 2, "Nike", "red", "v-neck", "");
         db.POST("clothes", testClothes);
 
@@ -95,6 +98,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         testShoes.put("colour","black");
         testShoes.put("style","leather boots");
         db.POST(ProductEnums.SHOE.getValue(),testShoes);
+<<<<<<< HEAD
+>>>>>>> parent of f284958... log in/sign out button half working
+=======
 >>>>>>> parent of f284958... log in/sign out button half working
 
         //Gathers all the clothes items
