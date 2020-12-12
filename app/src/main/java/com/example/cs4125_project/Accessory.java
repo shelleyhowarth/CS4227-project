@@ -1,10 +1,5 @@
 package com.example.cs4125_project;
 
-import com.example.cs4125_project.enums.AccessoryStyles;
-import com.example.cs4125_project.enums.Brand;
-import com.example.cs4125_project.enums.Colour;
-import com.example.cs4125_project.enums.Size;
-
 import java.util.ArrayList;
 import java.util.List;
 

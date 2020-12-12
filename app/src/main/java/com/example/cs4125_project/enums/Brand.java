@@ -8,6 +8,7 @@ public enum Brand {
     CALVINKLEIN("Calvin Klein"),
     FRENCHCONNECTION("French Connection"),
     TOMMYHILFIGER("Tommy Hilfiger"),
+    GUCCI("Gucci"),
     DOCMARTINS("Doc Martins"),
     VANS("Vans"),
     CONVERSE("Converse"),

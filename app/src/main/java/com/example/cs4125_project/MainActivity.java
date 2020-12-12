@@ -1,29 +1,16 @@
 package com.example.cs4125_project;
 
-import androidx.cardview.widget.CardView;
 import androidx.fragment.app.FragmentManager;
-import android.content.Intent;
-import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cs4125_project.enums.ProductType;
-import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -32,8 +19,7 @@ import com.example.cs4125_project.enums.Brand;
 import com.example.cs4125_project.enums.ClothesStyles;
 import com.example.cs4125_project.enums.Colour;
 import com.example.cs4125_project.enums.ProductDatabaseFields;
-import com.example.cs4125_project.enums.ProductType;
-import com.example.cs4125_project.enums.Size;
+import com.example.cs4125_project.enums.AlphaSize;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -44,9 +30,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ImageButton clothesButton;
     ImageButton accButton;
     ImageButton shoeButton;
-    String selected;
+    ProductType productType;
     ProductDatabaseController productDataC;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         shoeButton.setOnClickListener(this);
         accButton.setOnClickListener(this);
 
-        String[]sizes = {Size.X_SMALL.getValue(),Size.SMALL.getValue(),Size.MEDIUM.getValue(), Size.LARGE.getValue(), Size.X_LARGE.getValue()};
+        String[]sizes = {AlphaSize.X_SMALL.getValue(), AlphaSize.SMALL.getValue(), AlphaSize.MEDIUM.getValue(), AlphaSize.LARGE.getValue(), AlphaSize.X_LARGE.getValue()};
 
         //pretend that user has clicked clothing tab
         //ProductDatabaseController.setType(ProductType.CLOTHES);
@@ -85,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //Example of querying filtered products
         Map<String, Object> testParams = new HashMap<>();
-        testParams.put(ProductDatabaseFields.SIZES.getValue(), Size.X_LARGE.getValue());
+        testParams.put(ProductDatabaseFields.SIZES.getValue(), AlphaSize.X_LARGE.getValue());
         //testParams.put(ProductDatabaseFields.COLOUR.getValue(), Colour.BLUE.getValue());
         //ProductDatabaseController.getFilteredProducts(testParams);
 
@@ -126,8 +111,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void callback(String result) {
-        List<Product> products = new ArrayList<>();
-        products = productDataC.getProducts();
+        List<Product> products = productDataC.getProducts();
         goToFrag(products);
     }
 
@@ -136,6 +120,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         alProd.addAll(products);
         Bundle bundle = new Bundle();
         bundle.putSerializable("Products", alProd);
+        bundle.putSerializable("Type", productType);
         ViewProductsFragment fragment = new ViewProductsFragment();
         fragment.setArguments(bundle);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -151,20 +136,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         if(i == R.id.clothesButton){
-            selected = "clothes";
-            Log.d(LogTags.CHECK_CARD, "Card view selected " + selected);
+            productType = ProductType.CLOTHES;
+            Log.d(LogTags.CHECK_CARD, "Card view selected " + productType.getValue());
             getProductList(ProductType.CLOTHES);
         }
 
         if(i == R.id.accButton){
-            selected = "accessories";
-            Log.d(LogTags.CHECK_CARD, "Card view selected " + selected);
+            productType = ProductType.ACCESSORIES;
+            Log.d(LogTags.CHECK_CARD, "Card view selected " + productType.getValue());
             getProductList(ProductType.ACCESSORIES);
         }
 
         if(i == R.id.shoeButton) {
-            selected = "shoes";
-            Log.d(LogTags.CHECK_CARD, "Card view selected " + selected);
+            productType = ProductType.SHOE;
+            Log.d(LogTags.CHECK_CARD, "Card view selected " + productType.getValue());
             getProductList(ProductType.SHOE);
         }
 
