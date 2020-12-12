@@ -1,16 +1,21 @@
 package com.example.cs4125_project;
 
 import androidx.fragment.app.FragmentManager;
+
 import android.os.Bundle;
 import android.util.Log;
+
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.cs4125_project.enums.AlphaSize;
 import com.example.cs4125_project.enums.ProductType;
+import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -19,7 +24,6 @@ import com.example.cs4125_project.enums.Brand;
 import com.example.cs4125_project.enums.ClothesStyles;
 import com.example.cs4125_project.enums.Colour;
 import com.example.cs4125_project.enums.ProductDatabaseFields;
-import com.example.cs4125_project.enums.AlphaSize;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -27,29 +31,47 @@ import java.util.List;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, MyEventListener {
-    ImageButton clothesButton;
-    ImageButton accButton;
-    ImageButton shoeButton;
-    ProductType productType;
-    ProductDatabaseController productDataC;
+    private ImageButton clothesButton;
+    private ImageButton accButton;
+    private ImageButton shoeButton;
+    private ProductType selected;
+    private ProductDatabaseController productDataC;
+    private ProductInterfaceAdapter adapter;
+    FirebaseAuth mAuth;
+    private Button logInButton;
+    private Button signOutButton;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        findViewById(R.id.logInBtn).setOnClickListener(this);
+
+        //Instances
+        mAuth = FirebaseAuth.getInstance();
+        productDataC = new ProductDatabaseController(this);
+
+        //Buttons
         clothesButton = findViewById(R.id.clothesButton);
         accButton = findViewById(R.id.accButton);
         shoeButton = findViewById(R.id.shoeButton);
-        productDataC = new ProductDatabaseController(this);
+        logInButton = findViewById(R.id.logInBtn);
+        signOutButton = findViewById(R.id.signOut);
 
-        //clothesView.setOnClickListener();
+        //Checking to see if user is logged in
+        isLoggedIn();
+
+        //Load images for home screen
         LoadImages();
+
+        //Listeners
         clothesButton.setOnClickListener(this);
         shoeButton.setOnClickListener(this);
         accButton.setOnClickListener(this);
+        logInButton.setOnClickListener(this);
+        signOutButton.setOnClickListener(this);
 
-        String[]sizes = {AlphaSize.X_SMALL.getValue(), AlphaSize.SMALL.getValue(), AlphaSize.MEDIUM.getValue(), AlphaSize.LARGE.getValue(), AlphaSize.X_LARGE.getValue()};
+        String[]sizes = {AlphaSize.X_SMALL.getValue(),AlphaSize.SMALL.getValue(),AlphaSize.MEDIUM.getValue(), AlphaSize.LARGE.getValue(), AlphaSize.X_LARGE.getValue()};
 
         //pretend that user has clicked clothing tab
         //ProductDatabaseController.setType(ProductType.CLOTHES);
@@ -68,7 +90,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //Uncomment when you want to actually add this item to the db
         // ProductDatabaseController.addProductToDB(p);
 
-        //Example of querying filtered products
         Map<String, Object> testParams = new HashMap<>();
         testParams.put(ProductDatabaseFields.SIZES.getValue(), AlphaSize.X_LARGE.getValue());
         //testParams.put(ProductDatabaseFields.COLOUR.getValue(), Colour.BLUE.getValue());
@@ -85,6 +106,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    //Changes button to log in or sign out depending on whether the user is logged in
+    private void isLoggedIn() {
+        if(mAuth.getCurrentUser() != null) {
+            logInButton.setVisibility(View.INVISIBLE);
+            signOutButton.setVisibility((View.VISIBLE));
+        } else {
+            logInButton.setVisibility(View.VISIBLE);
+            signOutButton.setVisibility((View.INVISIBLE));
+        }
+    }
+
+
     private void LoadImages(){
         //Load Image
         String clothesUrl = "https://firebasestorage.googleapis.com/v0/b/system-analysis-6716f.appspot.com/o/Product%20Pics%2FTops%2Fjeans.jpg?alt=media&token=670863da-1f9f-427f-833c-cfc1f2c4b6a9";
@@ -95,12 +128,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Picasso.get().load(shoeUrl).fit().centerCrop().into(shoeButton);
     }
 
+    //Opens login fragment
     public void goToLogIn(View v)
     {
         Fragment fr = new LogInFragment();
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
         fragmentTransaction.replace(R.id.content, fr);
+        fragmentTransaction.addToBackStack("login");
         fragmentTransaction.commit();
     }
 
@@ -120,7 +155,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         alProd.addAll(products);
         Bundle bundle = new Bundle();
         bundle.putSerializable("Products", alProd);
-        bundle.putSerializable("Type", productType);
+        bundle.putSerializable("Type", selected);
         ViewProductsFragment fragment = new ViewProductsFragment();
         fragment.setArguments(bundle);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -131,30 +166,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         int i = v.getId();
         if (i == R.id.logInBtn) {
-            //Log in method logIn();
             goToLogIn(v);
         }
 
         if(i == R.id.clothesButton){
-            productType = ProductType.CLOTHES;
-            Log.d(LogTags.CHECK_CARD, "Card view selected " + productType.getValue());
+            selected = ProductType.CLOTHES;
+            Log.d(LogTags.CHECK_CARD, "Card view selected " + selected);
             getProductList(ProductType.CLOTHES);
         }
 
         if(i == R.id.accButton){
-            productType = ProductType.ACCESSORIES;
-            Log.d(LogTags.CHECK_CARD, "Card view selected " + productType.getValue());
+            selected = ProductType.ACCESSORIES;
+            Log.d(LogTags.CHECK_CARD, "Card view selected " + selected);
             getProductList(ProductType.ACCESSORIES);
         }
 
         if(i == R.id.shoeButton) {
-            productType = ProductType.SHOE;
-            Log.d(LogTags.CHECK_CARD, "Card view selected " + productType.getValue());
+            selected = ProductType.SHOE;
+            Log.d(LogTags.CHECK_CARD, "Card view selected " + selected);
             getProductList(ProductType.SHOE);
         }
 
-        if (i == R.id.goBack) {
-            getFragmentManager().popBackStack();
+        if (i == R.id.signOut) {
+            //Signs user out
+            mAuth.signOut();
+            //Updates buttons
+            isLoggedIn();
         }
     }
 }
