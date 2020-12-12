@@ -17,6 +17,16 @@
         android:ems="10"
         android:inputType="textEmailAddress" />
 
+    <Button
+        android:id="@+id/goBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="500dp"
+
+
+        android:text="Go Back" />
+
     <EditText
         android:id="@+id/fieldPassword"
         android:layout_width="match_parent"
@@ -36,9 +46,12 @@
         android:text="Sign in" />
 
     <Button
-        android:id="@+id/goBack"
+        android:id="@+id/register"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Go back" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="450dp"
+
+        android:text="Register" />
 
 </RelativeLayout>
