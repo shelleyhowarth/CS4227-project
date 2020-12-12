@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ImageButton shoeButton;
     String selected;
     ProductDatabaseController productDataC;
+    private ViewProductsFragment fragment;
 
 
     @Override
@@ -136,7 +137,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         alProd.addAll(products);
         Bundle bundle = new Bundle();
         bundle.putSerializable("Products", alProd);
-        ViewProductsFragment fragment = new ViewProductsFragment();
+        fragment = new ViewProductsFragment();
         fragment.setArguments(bundle);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.content, fragment);
@@ -171,5 +172,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (i == R.id.goBack) {
             getFragmentManager().popBackStack();
         }
+    }
+
+    public void onClickAddToCart(View v) {
+        //final Product item = productList.get(currentPosition);
+        //cart.addProductToCart(item);
+        Log.d(LogTags.CHECK_CARD, "Are we working slutties");
+        fragment.onClickAddToCart(v);
     }
 }

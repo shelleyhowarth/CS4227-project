@@ -46,11 +46,12 @@
             android:textSize="24sp"/>
 
         <Button
-            android:id="@+id/buyProduct"
+            android:id="@+id/addToCart"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="Add to Cart"/>
+            android:text="Add to Cart"
+            android:onClick="onClickAddToCart"/>
 
     </LinearLayout>
 

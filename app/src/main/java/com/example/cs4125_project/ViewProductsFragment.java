@@ -1,9 +1,14 @@
 package com.example.cs4125_project;
 
+import android.app.Activity;
 import android.os.Bundle;
+
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,14 +22,15 @@ import android.widget.FrameLayout;
 import com.example.cs4125_project.enums.ProductType;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class ViewProductsFragment extends Fragment {
 
-    private RecyclerView recyclerView;
-    private ProductInterfaceAdapter adapter;
-    ConstraintLayout fLayout;
-    Button btn;
+    RecyclerView recyclerView;
+    ProductInterfaceAdapter adapter;
+    private ConstraintLayout fLayout;
+    private FragmentActivity myContext;
 
     public ViewProductsFragment() {
         // Required empty public constructor
@@ -41,17 +47,30 @@ public class ViewProductsFragment extends Fragment {
     }
 
     @Override
+    public void onAttach(Activity activity) {
+        myContext=(FragmentActivity) activity;
+        super.onAttach(activity);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         ArrayList<Product> products = (ArrayList<Product>)getArguments().getSerializable("Products");
         View view = inflater.inflate(R.layout.fragment_view_products, container, false);
         fLayout = view.findViewById(R.id.fragment_view_products);
-        btn = view.findViewById(R.id.back);
-        btn.setOnClickListener(new View.OnClickListener() {
+        Button backBtn = view.findViewById(R.id.back);
+        backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 fLayout.setVisibility(View.INVISIBLE);
+            }
+        });
+        Button cartBtn = view.findViewById(R.id.cart);
+        cartBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToFrag();
             }
         });
         adapter = new ProductInterfaceAdapter(products);
@@ -63,5 +82,24 @@ public class ViewProductsFragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
         return view;
+    }
+
+    public void goToFrag(){
+        Cart cart = Cart.getInstance();
+        ArrayList<Product> products = cart.getCart();
+        ArrayList<Product> alProd = new ArrayList<>(products.size());
+        alProd.addAll(products);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("Products", alProd);
+        ViewCartFragment fragment = new ViewCartFragment();
+        fragment.setArguments(bundle);
+        FragmentTransaction transaction = myContext.getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.content, fragment);
+        transaction.commit();
+    }
+
+    public void onClickAddToCart(View v) {
+        Log.d(LogTags.CHECK_CARD, "Are we working slutties");
+        adapter.onClickAddToCart(v);
     }
 }
