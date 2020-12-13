@@ -1,5 +1,6 @@
 package com.example.cs4125_project;
 
+import androidx.annotation.ContentView;
 import androidx.fragment.app.FragmentManager;
 
 import android.os.Bundle;
@@ -7,6 +8,7 @@ import android.util.Log;
 
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -38,7 +40,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ProductDatabaseController productDataC;
     FirebaseAuth mAuth;
     private Button logInButton;
-    private Button signOutButton;
+
+    private final String login = "Log In";
+    private  final String logout = "Log Out";
 
 
     @Override
@@ -55,7 +59,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         accButton = findViewById(R.id.accButton);
         shoeButton = findViewById(R.id.shoeButton);
         logInButton = findViewById(R.id.logInBtn);
-        signOutButton = findViewById(R.id.signOut);
 
         //Checking to see if user is logged in
         isLoggedIn();
@@ -68,7 +71,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         shoeButton.setOnClickListener(this);
         accButton.setOnClickListener(this);
         logInButton.setOnClickListener(this);
-        signOutButton.setOnClickListener(this);
 
         //listener for when back stack is changed
         getSupportFragmentManager().addOnBackStackChangedListener(
@@ -117,14 +119,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //Changes button to log in or sign out depending on whether the user is logged in
     private void isLoggedIn() {
         if(mAuth.getCurrentUser() != null) {
-            logInButton.setVisibility(View.INVISIBLE);
-            signOutButton.setVisibility((View.VISIBLE));
+            logInButton.setText(logout);
         } else {
-            logInButton.setVisibility(View.VISIBLE);
-            signOutButton.setVisibility((View.INVISIBLE));
+            logInButton.setText(login);
         }
     }
-
 
     private void LoadImages(){
         //Load Image
@@ -166,7 +165,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ViewProductsFragment fragment = new ViewProductsFragment();
         fragment.setArguments(bundle);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.content, fragment);
+        transaction.replace(R.id.contentWithToolbar, fragment);
         transaction.addToBackStack("viewProducts");
         transaction.commit();
     }
@@ -174,7 +173,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         int i = v.getId();
         if (i == R.id.logInBtn) {
-            goToLogIn(v);
+            if(logInButton.getText().equals(login)) {
+                goToLogIn(v);
+            } else {
+                //Signs user out
+                mAuth.signOut();
+                //Updates buttons
+                isLoggedIn();
+            }
         }
 
         if(i == R.id.clothesButton){
@@ -193,13 +199,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             selected = ProductType.SHOE;
             Log.d(LogTags.CHECK_CARD, "Card view selected " + selected);
             getProductList(ProductType.SHOE);
-        }
-
-        if (i == R.id.signOut) {
-            //Signs user out
-            mAuth.signOut();
-            //Updates buttons
-            isLoggedIn();
         }
     }
 }

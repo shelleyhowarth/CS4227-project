@@ -22,12 +22,10 @@ import java.util.Map;
 public class Database {
     private static Database instance = null;
     private FirebaseFirestore db;
-    private static List<Object> data;
 
     //private constructor - singleton dp
     private Database() {
         db = FirebaseFirestore.getInstance();
-        data = new ArrayList<>();
     }
 
     public static Database getInstance() {
