@@ -68,7 +68,6 @@ public class LogInFragment extends Fragment implements View.OnClickListener {
         //Listeners
         rootView.findViewById(R.id.register).setOnClickListener(this);
         rootView.findViewById(R.id.signIn).setOnClickListener(this);
-        rootView.findViewById(R.id.goBack).setOnClickListener(this);
 
         return rootView;
     }
@@ -112,9 +111,11 @@ public class LogInFragment extends Fragment implements View.OnClickListener {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            Log.d(LogTags.REGISTER_ACCOUNT, "Sign-up successful");
                             Toast.makeText(getContext(), "Sign up successful.",
                                     Toast.LENGTH_LONG).show();
                         } else {
+                            Log.d(LogTags.REGISTER_ACCOUNT, "Sign-up failed");
                             Toast.makeText(getContext(), "Sign up failed. " + task.getException().getMessage(),
                                     Toast.LENGTH_LONG).show();
                         }
@@ -139,13 +140,12 @@ public class LogInFragment extends Fragment implements View.OnClickListener {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             FirebaseUser user = mAuth.getCurrentUser();
+                            Log.d(LogTags.LOG_IN, "Logged in with "+user.getEmail());
                             //Close fragment when successfully logged in
-                            closeFragment(v);
-                            Toast.makeText(getContext(), "Successfully signed in.",
-                                    Toast.LENGTH_SHORT).show();
-
+                            getActivity().getSupportFragmentManager().popBackStackImmediate();
                         } else {
                             // If sign in fails, display a message to the user.
+                            Log.d(LogTags.LOG_IN, "Failed to log in");
                             Toast.makeText(getContext(), "Authentication failed." + task.getException().getMessage(),
                                     Toast.LENGTH_LONG).show();
                         }
@@ -160,9 +160,6 @@ public class LogInFragment extends Fragment implements View.OnClickListener {
         }
         if (i == R.id.register) {
             register(mEmailField.getText().toString(), mPasswordField.getText().toString());
-        }
-        if (i == R.id.goBack) {
-            closeFragment(v);
         }
     }
 }

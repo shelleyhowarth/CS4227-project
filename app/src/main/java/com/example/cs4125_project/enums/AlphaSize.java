@@ -1,6 +1,6 @@
 package com.example.cs4125_project.enums;
 
-public enum Size {
+public enum AlphaSize {
     SMALL("S"),
     MEDIUM("M"),
     LARGE("L"),
@@ -9,7 +9,7 @@ public enum Size {
 
     private final String stringValue;
 
-    private Size(String stringValue) {
+    private AlphaSize(String stringValue) {
         this.stringValue = stringValue;
     }
 
