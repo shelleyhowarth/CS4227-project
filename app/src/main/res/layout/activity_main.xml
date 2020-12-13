@@ -1,63 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/log_in_box"
     tools:context=".MainActivity">
 
- <TextView
-     android:id="@+id/textView"
+ <androidx.appcompat.widget.Toolbar
+     android:id="@+id/homeToolbar"
      android:layout_width="match_parent"
      android:layout_height="wrap_content"
-     android:layout_marginTop="20dp"
-     android:text="Home Screen"
-     android:textAlignment="center"/>
+     android:background="#6C8691"
+     android:minHeight="?attr/actionBarSize"
+     android:theme="?attr/actionBarTheme">
 
- <Button
-     android:id="@+id/logInBtn"
+  <Button
+      android:id="@+id/logInBtn"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/login" />
+ </androidx.appcompat.widget.Toolbar>
+
+ <TextView
+     android:id="@+id/clothesTV"
      android:layout_width="wrap_content"
      android:layout_height="wrap_content"
-     android:layout_marginLeft="300dp"
-     android:text="Log in" />
-
- <Button
-     android:id="@+id/signOut"
-     android:layout_width="wrap_content"
-     android:layout_height="wrap_content"
-     android:layout_marginLeft="300dp"
-     android:text="Sign Out" />
+     android:layout_below="@+id/homeToolbar"
+     android:layout_centerHorizontal="true"
+     android:layout_marginTop="30dp"
+     android:layout_marginBottom="5dp"
+     android:text="View Clothes"
+     android:textSize="16sp" />
 
  <ImageButton
      android:id="@+id/clothesButton"
      android:layout_width="300dp"
      android:layout_height="150dp"
-     android:layout_marginTop="80dp"
+     android:layout_below="@+id/clothesTV"
      android:layout_centerHorizontal="true"
+     android:layout_marginBottom="30dp"
      app:srcCompat="@drawable/fui_ic_twitter_bird_white_24dp" />
+
+ <TextView
+     android:id="@+id/shoeTV"
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+     android:layout_below="@+id/clothesButton"
+     android:layout_centerHorizontal="true"
+     android:layout_marginBottom="5dp"
+     android:text="View Shoes"
+     android:textSize="16sp" />
 
  <ImageButton
      android:id="@+id/shoeButton"
      android:layout_width="300dp"
      android:layout_height="150dp"
-     android:layout_marginTop="250dp"
+     android:layout_below="@+id/shoeTV"
      android:layout_centerHorizontal="true"
+     android:layout_marginBottom="30dp"
      app:srcCompat="@drawable/fui_ic_twitter_bird_white_24dp" />
+
+ <TextView
+     android:id="@+id/accTV"
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+     android:layout_below="@+id/shoeButton"
+     android:layout_centerHorizontal="true"
+     android:layout_marginBottom="5dp"
+     android:text="View Accessories"
+     android:textSize="16sp" />
 
  <ImageButton
      android:id="@+id/accButton"
      android:layout_width="300dp"
      android:layout_height="150dp"
-     android:layout_marginTop="420dp"
+     android:layout_below="@+id/accTV"
      android:layout_centerHorizontal="true"
-     app:srcCompat="@drawable/fui_ic_twitter_bird_white_24dp"/>
+     app:srcCompat="@drawable/fui_ic_twitter_bird_white_24dp" />
 
  <FrameLayout
      android:id="@+id/content"
      android:layout_width="match_parent"
      android:layout_height="match_parent"
+     android:elevation="3dp">
+ </FrameLayout>
+
+ <FrameLayout
+     android:id="@+id/contentWithToolbar"
+     android:layout_below="@+id/homeToolbar"
+     android:layout_width="match_parent"
+     android:layout_height="match_parent"
      android:elevation="2dp">
+
  </FrameLayout>
 
 </RelativeLayout>
