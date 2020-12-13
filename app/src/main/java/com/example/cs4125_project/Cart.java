@@ -1,10 +1,12 @@
 package com.example.cs4125_project;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Cart {
     private static Cart instance = null;
-    private ArrayList<Product> products;
+    private final HashMap<Product, String> products;
 
     public static Cart getInstance() {
         if(instance == null) {
@@ -14,20 +16,20 @@ public class Cart {
     }
 
     public Cart() {
-        products = new ArrayList<>();
+        products = new HashMap<>();
     }
 
-    public ArrayList<Product> getCart() {
+    public HashMap<Product, String> getCart() {
         return products;
     }
 
-    public void addProductToCart(Product p) {
-        products.add(p);
+    public void addProductToCart(Product p, String s) {
+        products.put(p,s);
     }
 
     public void removeProductFromCart(Product p) {
-        for(Product x : products) {
-            if(x.equals(p)) {
+        for(Map.Entry<Product,String> entry : products.entrySet()) {
+            if(entry.getKey() == p) {
                 products.remove(p);
                 break;
             }
@@ -36,5 +38,31 @@ public class Cart {
 
     public void removeAllProductsFromCart() {
         products.clear();
+    }
+
+    public boolean inCart(Product p) {
+        for(Map.Entry<Product,String> entry : products.entrySet()) {
+            if(entry.getKey() == p) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public ArrayList<Product> productArrayList(ArrayList<Product> p) {
+        for(Map.Entry<Product,String> entry : products.entrySet()) {
+            p.add(entry.getKey());
+        }
+        return p;
+    }
+
+    public String getSize(Product p) {
+        String s = "";
+        for(Map.Entry<Product,String> entry : products.entrySet()) {
+            if(entry.getKey() == p) {
+                s = entry.getValue();
+            }
+        }
+        return s;
     }
 }

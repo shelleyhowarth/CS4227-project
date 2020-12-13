@@ -69,7 +69,6 @@ public class ViewCheckoutInputFragment extends Fragment {
             public void onClick(View v) {
                 if(townInput.getText().toString().matches("")){
                     Toast.makeText(getActivity(), "Address has not been inputted", Toast.LENGTH_SHORT).show();
-                    townInput.setError(null);
                 }
                 town = townInput.getText().toString();
 

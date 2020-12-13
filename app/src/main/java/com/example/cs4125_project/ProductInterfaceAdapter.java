@@ -8,8 +8,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,13 +21,20 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.cs4125_project.enums.AlphaSize;
+import com.example.cs4125_project.enums.Brand;
+import com.example.cs4125_project.enums.Colour;
+import com.example.cs4125_project.enums.ProductDatabaseFields;
 import com.example.cs4125_project.enums.ProductType;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class ProductInterfaceAdapter extends RecyclerView.Adapter {
+public class ProductInterfaceAdapter extends RecyclerView.Adapter implements AdapterView.OnItemSelectedListener{
+    private Cart cart = Cart.getInstance();
     private List<Product> productList;
     private TextView textViewProductName;
     private TextView textViewProductPrice;
@@ -33,7 +43,13 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter {
     private CardView cardViewProduct;
     private Dialog productDialog;
     private Button addBtn;
-    private final Cart cart = Cart.getInstance();
+    private String chosenSize;
+    private static final String all = "All";
+    private Spinner size;
+    private RecyclerView recyclerView;
+
+    private final String add = "Add to Cart";
+    private  final String remove = "Remove from Cart";
 
     public ProductInterfaceAdapter(ArrayList<Product> products) {
         Log.d(LogTags.CHECK_CARD, products.toString());
@@ -78,29 +94,40 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter {
                 public void onClick(View productView) {
                     TextView textViewProductName = productDialog.findViewById(R.id.productName);
                     TextView textViewProductPrice = productDialog.findViewById(R.id.productPrice);
-                    TextView textViewProductSizes = productDialog.findViewById(R.id.productSizes);
                     ImageView imageViewProductImage = productDialog.findViewById(R.id.productImage);
-                    List<String> sizes = item.getSizes();
-                    String result="";
-                    if(sizes.size() > 0) {
-                        result ="Available Sizes:\n";
-                        for (int i = 0; i < sizes.size(); i++) {
-                            result += "  " + sizes.get(i) + "  ";
-                        }
-                    }else{
-                        result = "No products in stock";
+                    addBtn = productDialog.findViewById(R.id.addToCart);
+                    inCart(item);
+                    size = productDialog.findViewById(R.id.spinner);
+                    size.setOnItemSelectedListener(size.getOnItemSelectedListener());
+                    List<String> sizes = new ArrayList<String>();
+                    if(!(cart.inCart(item))) {
+                        sizes.addAll(item.getSizes());
                     }
+                    else {
+                        sizes.add(cart.getSize(item));
+                    }
+                    ArrayAdapter<String> aa = new ArrayAdapter(productDialog.getContext(), android.R.layout.simple_spinner_item, sizes);
+                    aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     textViewProductName.setText(item.getName());
                     textViewProductPrice.setText("€" + String.valueOf(item.getPrice()));
-                    textViewProductSizes.setText(result);
+                    size.setAdapter(aa);
                     Picasso.get().load(item.getImageURL()).fit().centerCrop().into(imageViewProductImage);
-                    addBtn = productDialog.findViewById(R.id.addToCart);
                     addBtn.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View productView) {
-                            cart.addProductToCart(item);
-                            Log.d(LogTags.CHECK_CARD, "We ain't adding anything");
-                            Toast.makeText(productDialog.getContext(), "Added the item to cart", Toast.LENGTH_SHORT).show();
+                            chosenSize = size.getSelectedItem().toString();
+                            if(!(cart.inCart(item))) {
+                                cart.addProductToCart(item, chosenSize);
+                                Log.d(LogTags.CHECK_CARD, "Added Product to cart");
+                                Toast.makeText(productDialog.getContext(), "Selected size is " + chosenSize, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(productDialog.getContext(), "Added the item to cart", Toast.LENGTH_SHORT).show();
+                            }
+                            else {
+                                cart.removeProductFromCart(item);
+                                Log.d(LogTags.CHECK_CARD, "Added Product to cart");
+                                Toast.makeText(productDialog.getContext(), "Selected size is " + chosenSize, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(productDialog.getContext(), "Removed the item from cart", Toast.LENGTH_SHORT).show();
+                            }
                         }
                     });
                     productDialog.show();
@@ -125,5 +152,24 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter {
         this.productList.clear();
         this.productList.addAll(productList);
         notifyDataSetChanged();
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        String item = adapterView.getItemAtPosition(i).toString();
+        Log.d(LogTags.SELECTED_SIZE, "Selected:" +item);
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+        //part of item selected interface
+    }
+
+    private void inCart(Product p) {
+        if(cart.inCart(p)) {
+            addBtn.setText(remove);
+        } else {
+            addBtn.setText(add);
+        }
     }
 }

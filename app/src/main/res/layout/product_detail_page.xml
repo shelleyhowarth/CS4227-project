@@ -35,15 +35,34 @@
             android:textStyle="normal"
             android:textSize="24sp"/>
 
-        <TextView
-            android:id="@+id/productSizes"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Sizes:"
-            android:textAlignment="center"
-            android:textColor="@android:color/white"
-            android:textStyle="normal"
-            android:textSize="24sp"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:orientation="vertical"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:gravity="center_horizontal"
+                tools:ignore="UselessParent">
+
+                <TextView
+                    android:id="@+id/sizeTV"
+                    android:layout_width="wrap_content"
+                    android:layout_weight=".25"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/white"
+                    android:textSize="24sp"
+                    android:text="@string/size"
+                    android:textAlignment="center"/>
+
+                <Spinner
+                    android:id="@+id/spinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="24sp"
+                    android:textColor="@android:color/white"
+                    android:textAlignment="center"
+                    android:gravity="center_horizontal"/>
+            </LinearLayout>
 
         <Button
             android:id="@+id/addToCart"

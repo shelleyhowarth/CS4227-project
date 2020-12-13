@@ -3,12 +3,13 @@ package com.example.cs4125_project;
 import android.telecom.Call;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Order {
     private static Order instance = null;
     private String customerName;
     private String customerAddress;
-    private ArrayList<Product> purchasedProducts;
+    private HashMap<Product, String> purchasedProducts;
     private String paymentDetails;
 
     public static Order getInstance() {
@@ -21,7 +22,7 @@ public class Order {
     public Order() {
         this.customerName = "";
         this.customerAddress = "";
-        this.purchasedProducts = new ArrayList<>();
+        this.purchasedProducts = new HashMap<>();
         this.paymentDetails = "";
     }
 
@@ -41,11 +42,11 @@ public class Order {
         this.customerAddress = customerAddress;
     }
 
-    public ArrayList<Product> getPurchasedProducts() {
+    public HashMap<Product, String> getPurchasedProducts() {
         return purchasedProducts;
     }
 
-    public void setPurchasedProducts(ArrayList<Product> purchasedProducts) {
+    public void setPurchasedProducts(HashMap<Product, String> purchasedProducts) {
         this.purchasedProducts = purchasedProducts;
     }
 

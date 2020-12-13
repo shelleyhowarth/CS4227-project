@@ -176,7 +176,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void goToCart(){
         Cart cart = Cart.getInstance();
-        ArrayList<Product> products = cart.getCart();
+        ArrayList<Product> products = cart.productArrayList(new ArrayList<Product>());
         ArrayList<Product> alProd = new ArrayList<>(products.size());
         alProd.addAll(products);
         Bundle bundle = new Bundle();
@@ -184,7 +184,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ViewCartFragment fragment = new ViewCartFragment();
         fragment.setArguments(bundle);
         FragmentManager manager = getSupportFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction().replace(R.id.content, fragment);
+        FragmentTransaction transaction = manager.beginTransaction().replace(R.id.contentWithToolbar, fragment);
         transaction.addToBackStack("viewCart");
         transaction.commit();
     }

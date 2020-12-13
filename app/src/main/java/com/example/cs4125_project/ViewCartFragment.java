@@ -16,13 +16,17 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class ViewCartFragment extends Fragment {
     private final Cart cart = Cart.getInstance();
     private RecyclerView recyclerView;
     private ProductInterfaceAdapter adapter;
     private FragmentActivity myContext;
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
     public ViewCartFragment() {
         // Required empty public constructor
@@ -48,7 +52,7 @@ public class ViewCartFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         ArrayList<Product> products = (ArrayList<Product>)getArguments().getSerializable("Products");
-        View view = inflater.inflate(R.layout.fragment_cart, container, false);
+        final View view = inflater.inflate(R.layout.fragment_cart, container, false);
         Button emptyCartBtn = view.findViewById(R.id.clearCart);
         emptyCartBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,13 +63,18 @@ public class ViewCartFragment extends Fragment {
             }
         });
         Button checkoutBtn = view.findViewById(R.id.checkout);
+        final Button btn = view.findViewById(R.id.logInBtn);
         checkoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d(LogTags.CHECK_CARD, "We checkin out");
-                ArrayList<Product> products = cart.getCart();
+                HashMap<Product, String> products = cart.getCart();
                 if (products.isEmpty()){
                     Toast.makeText(getActivity(), "There are no items in your cart", Toast.LENGTH_LONG).show();
+                    Log.d(LogTags.CHECK_CARD, "We ain't checkin out");
+                }
+                else if (mAuth.getCurrentUser() == null) {
+                    Toast.makeText(getActivity(), "You must be logged in to go to checkout", Toast.LENGTH_LONG).show();
                     Log.d(LogTags.CHECK_CARD, "We ain't checkin out");
                 }
                 else {
@@ -86,7 +95,7 @@ public class ViewCartFragment extends Fragment {
     public void emptyCart(){
         //updates the recycler view with the empty cart
         Cart cart = Cart.getInstance();
-        ArrayList<Product> products = cart.getCart();
+        ArrayList<Product> products = cart.productArrayList(new ArrayList<Product>());
         adapter = new ProductInterfaceAdapter(products);
         recyclerView.setAdapter(adapter);
         if(products.size() == 0) {
