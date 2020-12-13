@@ -1,6 +1,7 @@
 package com.example.cs4125_project;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class Order {
     private static Order instance = null;
@@ -23,6 +24,14 @@ public class Order {
         this.customerAddress = "";
         this.purchasedProducts = new HashMap<>();
         this.paymentDetails = "";
+    }
+
+    public Order(String name, String email, String address, HashMap<String, String> purchases, String paymentDetails) {
+        this.customerName = name;
+        this.emailAddress = email;
+        this.customerAddress = address;
+        this.purchasedProducts = purchases;
+        this.paymentDetails = paymentDetails;
     }
 
     public String getCustomerName() {

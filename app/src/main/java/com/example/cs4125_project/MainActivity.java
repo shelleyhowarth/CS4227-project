@@ -42,6 +42,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     FirebaseAuth mAuth;
     private Button logInButton;
     private Button cartButton;
+    private Button ordersButton;
+    private OrderDatabaseController orderDb;
+
 
     private final String login = "Log In";
     private  final String logout = "Log Out";
@@ -55,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //Instances
         mAuth = FirebaseAuth.getInstance();
         productDataC = new ProductDatabaseController(this);
+        orderDb = new OrderDatabaseController(this);
 
         //Buttons
         clothesButton = findViewById(R.id.clothesButton);
@@ -62,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         shoeButton = findViewById(R.id.shoeButton);
         logInButton = findViewById(R.id.logInBtn);
         cartButton = findViewById(R.id.cartBtn);
+        ordersButton = findViewById(R.id.ordersBtn);
 
         //Checking to see if user is logged in
         isLoggedIn();
@@ -75,6 +80,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         accButton.setOnClickListener(this);
         logInButton.setOnClickListener(this);
         cartButton.setOnClickListener(this);
+        ordersButton.setOnClickListener(this);
 
         //listener for when back stack is changed
         getSupportFragmentManager().addOnBackStackChangedListener(
@@ -84,40 +90,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         isLoggedIn();
                     }
                 });
-
-        //String[]sizes = {AlphaSize.X_SMALL.getValue(),AlphaSize.SMALL.getValue(),AlphaSize.MEDIUM.getValue(), AlphaSize.LARGE.getValue(), AlphaSize.X_LARGE.getValue()};
-
-        //pretend that user has clicked clothing tab
-        //ProductDatabaseController.setType(ProductType.CLOTHES);
-
-        //Example usage of creating a product item from the product factory
-        /*Map<String, Object> testClothes = new HashMap<>();
-        testClothes.put(ProductDatabaseFields.NAME.getValue(), "Bumblebee Jumper");
-        testClothes.put(ProductDatabaseFields.PRICE.getValue(), 69.99);
-        testClothes.put(ProductDatabaseFields.SIZES.getValue(), Arrays.asList(sizes));
-        testClothes.put(ProductDatabaseFields.QUANTITIES.getValue(), Arrays.asList(8,1,2,10,13));
-        testClothes.put(ProductDatabaseFields.BRAND.getValue(), Brand.CALVINKLEIN.getValue());
-        testClothes.put(ProductDatabaseFields.COLOUR.getValue(), Colour.YELLOW.getValue());
-        testClothes.put(ProductDatabaseFields.STYLE.getValue(), ClothesStyles.JUMPER.getValue());*/
-        //Generate product from product factory
-        //Product p = ProductFactory.getProduct(ProductType.CLOTHES, testClothes);
-        //Uncomment when you want to actually add this item to the db
-        // ProductDatabaseController.addProductToDB(p);
-
-        //Map<String, Object> testParams = new HashMap<>();
-        //testParams.put(ProductDatabaseFields.SIZES.getValue(), AlphaSize.X_LARGE.getValue());
-        //testParams.put(ProductDatabaseFields.COLOUR.getValue(), Colour.BLUE.getValue());
-        //ProductDatabaseController.getFilteredProducts(testParams);
-
-        //Example of updating a field in a product (grab an id from the db and put it in productId parameter)
-        //ProductDatabaseController.updateProductField("Rv8mIBM5sdYwvRYgouep ", ProductDatabaseFields.PRICE, 60.00);
-
-        //Example of removing a product from a collection (grab an id from the db and put it in productId parameter)
-        //ProductDatabaseController.removeProductFromDB("hottZJJwoB4hsKeGM0yC");
-
-        //Gathers all the clothes items
-        //ProductDatabaseController.getProductCollection();
-
     }
 
     //Changes button to log in or sign out depending on whether the user is logged in
@@ -189,6 +161,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         transaction.commit();
     }
 
+    public void goToOrders() {
+        orderDb.getOrderCollection();
+        ArrayList<Order> orders = new ArrayList<>();
+        orders = orderDb.getAllOrders();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("Orders", orders);
+        ViewOrders fragment = new ViewOrders();
+        fragment.setArguments(bundle);
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction().replace(R.id.contentWithToolbar, fragment);
+        transaction.addToBackStack("viewOrders");
+        transaction.commit();
+    }
+
     public void onClick(View v) {
         int i = v.getId();
         if (i == R.id.logInBtn) {
@@ -222,6 +208,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if(i == R.id.cartBtn){
             goToCart();
+        }
+
+        if(i == R.id.ordersBtn) {
+            goToOrders();
         }
     }
 }
