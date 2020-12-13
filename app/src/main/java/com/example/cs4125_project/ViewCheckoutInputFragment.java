@@ -15,12 +15,18 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentTransaction;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 public class ViewCheckoutInputFragment extends Fragment {
     private final Cart cart = Cart.getInstance();
@@ -33,6 +39,8 @@ public class ViewCheckoutInputFragment extends Fragment {
     private Button nextButton;
 
     private FragmentActivity myContext;
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private OrderDatabaseController orderDatabaseController = new OrderDatabaseController();
 
     public ViewCheckoutInputFragment() {
         // Required empty public constructor
@@ -69,36 +77,50 @@ public class ViewCheckoutInputFragment extends Fragment {
             public void onClick(View v) {
                 if(townInput.getText().toString().matches("")){
                     Toast.makeText(getActivity(), "Address has not been inputted", Toast.LENGTH_SHORT).show();
+                    townInput.requestFocus();
+                    townInput.setError("No Entry");
                 }
                 town = townInput.getText().toString();
 
                 if(cityInput.getText().toString().matches("")){
                     Toast.makeText(getActivity(), "Town/City has not been inputted", Toast.LENGTH_SHORT).show();
+                    cityInput.requestFocus();
+                    cityInput.setError("No Entry");
                 }
                 city = cityInput.getText().toString();
 
                 if(countyInput.getText().toString().matches("")){
                     Toast.makeText(getActivity(), "County has not been inputted", Toast.LENGTH_SHORT).show();
+                    countyInput.requestFocus();
+                    countyInput.setError("No Entry");
                 }
                 county = countyInput.getText().toString();
 
                 if(cardNameInput.getText().toString().matches("")){
                     Toast.makeText(getActivity(), "Name of Card Holder has not been inputted", Toast.LENGTH_SHORT).show();
+                    cardNameInput.requestFocus();
+                    cardNameInput.setError("No Entry");
                 }
                 cardName = cardNameInput.getText().toString();
 
                 if(cardNumInput.getText().toString().matches("")){
                     Toast.makeText(getActivity(), "Card Number has not been inputted", Toast.LENGTH_SHORT).show();
+                    cardNumInput.requestFocus();
+                    cardNumInput.setError("No Entry");
                 }
                 cardNum = cardNumInput.getText().toString();
 
                 if(expiryDateInput.getText().toString().matches("")){
                     Toast.makeText(getActivity(), "Expiry Date has not been inputted", Toast.LENGTH_SHORT).show();
+                    expiryDateInput.requestFocus();
+                    expiryDateInput.setError("No Entry");
                 }
                 expiryDateString = expiryDateInput.getText().toString();
 
                 if(cvvInput.getText().toString().matches("")){
                     Toast.makeText(getActivity(), "CVV has not been inputted", Toast.LENGTH_SHORT).show();
+                    cvvInput.requestFocus();
+                    cvvInput.setError("No Entry");
                 }
                 cvv = cvvInput.getText().toString();
 
@@ -139,19 +161,32 @@ public class ViewCheckoutInputFragment extends Fragment {
                     Toast.makeText(getActivity(), "Your order has been confirmed", Toast.LENGTH_SHORT).show();
                     address = town + ", " + city + ", " + county + ", Ireland";
                     paymentDetails = cardNum + ", " + expiryDate + ", " + cvv;
+                    Float totalPrice = cart.getTotalPrice();
                     order.setCustomerName(cardName);
                     order.setCustomerAddress(address);
                     order.setPaymentDetails(paymentDetails);
-                    order.setPurchasedProducts(cart.getCart());
-                    cart.removeAllProductsFromCart();
+                    HashMap<String, String> productInfo = new HashMap<>();
+                    for(Map.Entry<Product, String> entry: cart.getCart().entrySet()){
+                        productInfo.put(entry.getKey().getId(),entry.getValue());
+                    }
+                    order.setPurchasedProducts(productInfo);
+                    order.setEmailAddress( Objects.requireNonNull(mAuth.getCurrentUser()).getEmail());
+                    orderDatabaseController.addOrderToDB(order);
                     AlertDialog.Builder builder = new AlertDialog.Builder(myContext);
                     builder.setCancelable(true);
-                    builder.setTitle("Order Confirmation");
-                    builder.setMessage("Thank you " + cardName + "! Your order has been confirmed!");
+                    if (totalPrice == 0) {
+                        builder.setTitle("Order Confirmation");
+                        builder.setMessage("Your order has already been processed!\nPlease press 'OK' to return to the main menu!");
+                    }
+                    else {
+                        builder.setTitle("Order Confirmation");
+                        builder.setMessage("Thank you " + cardName + "! \nYour order has been confirmed! \nYour card has been charged €" + totalPrice);
+                    }
                     builder.setPositiveButton("Ok",
                             new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
+                                    popBackToHome();
                                 }
                             });
 
@@ -176,6 +211,8 @@ public class ViewCheckoutInputFragment extends Fragment {
         boolean valid = true;
         if(!(x.length() == 16)) {
             Toast.makeText(getActivity(), "Card Number must be 16 digits in length", Toast.LENGTH_SHORT).show();
+            cardNumInput.requestFocus();
+            cardNumInput.setError("Invalid Entry");
             valid = false;
         }
         return valid;
@@ -185,6 +222,8 @@ public class ViewCheckoutInputFragment extends Fragment {
         boolean valid = true;
         if(!(x.length() == 3)) {
             Toast.makeText(getActivity(), "CVV must be 3 digits in length", Toast.LENGTH_SHORT).show();
+            cvvInput.requestFocus();
+            cvvInput.setError("Invalid Entry");
             valid = false;
         }
         return valid;
@@ -194,5 +233,9 @@ public class ViewCheckoutInputFragment extends Fragment {
         @SuppressLint("SimpleDateFormat") SimpleDateFormat format = new SimpleDateFormat("MM/yyyy");
         format.setLenient(false);
         return format.parse(str);
+    }
+
+    public void popBackToHome() {
+        myContext.getSupportFragmentManager().popBackStack(null, myContext.getSupportFragmentManager().POP_BACK_STACK_INCLUSIVE);
     }
 }

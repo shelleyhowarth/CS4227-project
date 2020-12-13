@@ -58,7 +58,7 @@ public class ViewCartFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 cart.removeAllProductsFromCart();
-                emptyCart();
+                refreshCart();
                 Log.d(LogTags.CHECK_CARD, "We yeeting products");
             }
         });
@@ -92,7 +92,7 @@ public class ViewCartFragment extends Fragment {
         return view;
     }
 
-    public void emptyCart(){
+    public void refreshCart(){
         //updates the recycler view with the empty cart
         Cart cart = Cart.getInstance();
         ArrayList<Product> products = cart.productArrayList(new ArrayList<Product>());

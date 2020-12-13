@@ -224,11 +224,4 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             goToCart();
         }
     }
-
-    public void onClickAddToCart (View v) {
-        Log.d(LogTags.CHECK_CARD, "We ain't adding anything");
-        Toast.makeText(this, "Added the item to cart", Toast.LENGTH_SHORT).show();
-        //final Product item = productList.get(currentPosition);
-        //cart.addProductToCart(item);
-    }
 }

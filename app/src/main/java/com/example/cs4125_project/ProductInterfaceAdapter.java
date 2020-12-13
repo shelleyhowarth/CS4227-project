@@ -34,7 +34,7 @@ import java.util.List;
 import java.util.Map;
 
 public class ProductInterfaceAdapter extends RecyclerView.Adapter implements AdapterView.OnItemSelectedListener{
-    private Cart cart = Cart.getInstance();
+    private final Cart cart = Cart.getInstance();
     private List<Product> productList;
     private TextView textViewProductName;
     private TextView textViewProductPrice;
@@ -46,10 +46,8 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter implements Ada
     private String chosenSize;
     private static final String all = "All";
     private Spinner size;
-    private RecyclerView recyclerView;
 
-    private final String add = "Add to Cart";
-    private  final String remove = "Remove from Cart";
+    private  RecyclerView mRecyclerView;
 
     public ProductInterfaceAdapter(ArrayList<Product> products) {
         Log.d(LogTags.CHECK_CARD, products.toString());
@@ -99,18 +97,9 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter implements Ada
                     inCart(item);
                     size = productDialog.findViewById(R.id.spinner);
                     size.setOnItemSelectedListener(size.getOnItemSelectedListener());
-                    List<String> sizes = new ArrayList<String>();
-                    if(!(cart.inCart(item))) {
-                        sizes.addAll(item.getSizes());
-                    }
-                    else {
-                        sizes.add(cart.getSize(item));
-                    }
-                    ArrayAdapter<String> aa = new ArrayAdapter(productDialog.getContext(), android.R.layout.simple_spinner_item, sizes);
-                    aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     textViewProductName.setText(item.getName());
                     textViewProductPrice.setText("€" + String.valueOf(item.getPrice()));
-                    size.setAdapter(aa);
+                    size.setAdapter(setUpSpinner(item));
                     Picasso.get().load(item.getImageURL()).fit().centerCrop().into(imageViewProductImage);
                     addBtn.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -121,13 +110,16 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter implements Ada
                                 Log.d(LogTags.CHECK_CARD, "Added Product to cart");
                                 Toast.makeText(productDialog.getContext(), "Selected size is " + chosenSize, Toast.LENGTH_SHORT).show();
                                 Toast.makeText(productDialog.getContext(), "Added the item to cart", Toast.LENGTH_SHORT).show();
+                                refreshInstance(item);
                             }
                             else {
                                 cart.removeProductFromCart(item);
                                 Log.d(LogTags.CHECK_CARD, "Added Product to cart");
                                 Toast.makeText(productDialog.getContext(), "Selected size is " + chosenSize, Toast.LENGTH_SHORT).show();
                                 Toast.makeText(productDialog.getContext(), "Removed the item from cart", Toast.LENGTH_SHORT).show();
+                                refreshInstance(item);
                             }
+                            size.setAdapter(setUpSpinner(item));
                         }
                     });
                     productDialog.show();
@@ -167,9 +159,43 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter implements Ada
 
     private void inCart(Product p) {
         if(cart.inCart(p)) {
+            String remove = "Remove from Cart";
             addBtn.setText(remove);
         } else {
+            String add = "Add to Cart";
             addBtn.setText(add);
         }
+    }
+
+    public void refreshInstance(Product item){
+        ArrayList<Product> products = new ArrayList<>(productList);
+        ProductInterfaceAdapter adapter = new ProductInterfaceAdapter(products);
+        mRecyclerView.setAdapter(adapter);
+        inCart(item);
+    }
+
+    @Override
+    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+
+        mRecyclerView = recyclerView;
+    }
+
+    public ArrayAdapter setUpSpinner(Product item){
+        List<String> sizes = new ArrayList<String>();
+        sizes = setSizes(sizes, item);
+        ArrayAdapter<String> aa = new ArrayAdapter(productDialog.getContext(), android.R.layout.simple_spinner_item, sizes);
+        aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        return aa;
+    }
+
+    public List<String> setSizes(List<String> sizes, Product p){
+        if(!(cart.inCart(p))) {
+            sizes.addAll(p.getSizes());
+        }
+        else {
+            sizes.add(cart.getSize(p));
+        }
+        return sizes;
     }
 }

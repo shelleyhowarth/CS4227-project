@@ -65,4 +65,12 @@ public class Cart {
         }
         return s;
     }
+
+    public Float getTotalPrice(){
+        float total = 0;
+        for(Map.Entry<Product,String> entry : products.entrySet()) {
+            total += (entry.getKey().getPrice());
+        }
+        return total;
+    }
 }
