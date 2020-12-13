@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.os.Bundle;
 
 import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
@@ -46,7 +45,6 @@ public class ViewProductsFragment extends Fragment implements AdapterView.OnItem
     private ArrayList<Product> products;
     private Map<ProductDatabaseFields, Spinner> filterSpinners;
     private static final String all = "All";
-    private FragmentActivity myContext;
 
     public ViewProductsFragment() {
         // Required empty public constructor
@@ -64,12 +62,6 @@ public class ViewProductsFragment extends Fragment implements AdapterView.OnItem
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        myContext=(FragmentActivity) activity;
-        super.onAttach(activity);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -78,14 +70,6 @@ public class ViewProductsFragment extends Fragment implements AdapterView.OnItem
         db.setType(type);
         Log.d(LogTags.CHECK_CARD, type.getValue());
         View view = inflater.inflate(R.layout.fragment_view_products, container, false);
-        ConstraintLayout fLayout = view.findViewById(R.id.fragment_view_products);
-        Button cartBtn = view.findViewById(R.id.cart);
-        cartBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToCart();
-            }
-        });
         adapter = new ProductInterfaceAdapter(products);
         Log.d(LogTags.CHECK_CARD, "" + adapter);
 
@@ -222,20 +206,5 @@ public class ViewProductsFragment extends Fragment implements AdapterView.OnItem
             Toast toast = Toast.makeText(getActivity(), "No products found", Toast.LENGTH_SHORT);
             toast.show();
         }
-    }
-
-    public void goToCart(){
-        Cart cart = Cart.getInstance();
-        ArrayList<Product> products = cart.getCart();
-        ArrayList<Product> alProd = new ArrayList<>(products.size());
-        alProd.addAll(products);
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("Products", alProd);
-        ViewCartFragment fragment = new ViewCartFragment();
-        fragment.setArguments(bundle);
-        FragmentTransaction transaction = myContext.getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.content, fragment);
-        transaction.addToBackStack("viewCart");
-        transaction.commit();
     }
 }

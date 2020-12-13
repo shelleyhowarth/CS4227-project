@@ -1,5 +1,6 @@
 package com.example.cs4125_project;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cs4125_project.enums.ProductType;
@@ -31,8 +33,7 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter {
     private CardView cardViewProduct;
     private Dialog productDialog;
     private Button addBtn;
-    private Cart cart = Cart.getInstance();
-    private int currentPosition;
+    private final Cart cart = Cart.getInstance();
 
     public ProductInterfaceAdapter(ArrayList<Product> products) {
         Log.d(LogTags.CHECK_CARD, products.toString());
@@ -61,7 +62,6 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter {
             textViewProductPrice = itemView.findViewById(R.id.productPrice);
             imageViewProductPic = itemView.findViewById(R.id.productViewImage);
             cardViewProduct = itemView.findViewById(R.id.productCard);
-            addBtn = itemView.findViewById(R.id.addToCart);
         }
 
         void bindView(int pos){
@@ -76,7 +76,6 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter {
             cardViewProduct.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View productView) {
-                    cart.addProductToCart(item);
                     TextView textViewProductName = productDialog.findViewById(R.id.productName);
                     TextView textViewProductPrice = productDialog.findViewById(R.id.productPrice);
                     TextView textViewProductSizes = productDialog.findViewById(R.id.productSizes);
@@ -95,6 +94,15 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter {
                     textViewProductPrice.setText("€" + String.valueOf(item.getPrice()));
                     textViewProductSizes.setText(result);
                     Picasso.get().load(item.getImageURL()).fit().centerCrop().into(imageViewProductImage);
+                    addBtn = productDialog.findViewById(R.id.addToCart);
+                    addBtn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View productView) {
+                            cart.addProductToCart(item);
+                            Log.d(LogTags.CHECK_CARD, "We ain't adding anything");
+                            Toast.makeText(productDialog.getContext(), "Added the item to cart", Toast.LENGTH_SHORT).show();
+                        }
+                    });
                     productDialog.show();
                 }
             });

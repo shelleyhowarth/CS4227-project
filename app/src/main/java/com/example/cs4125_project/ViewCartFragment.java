@@ -22,7 +22,6 @@ public class ViewCartFragment extends Fragment {
     private final Cart cart = Cart.getInstance();
     private RecyclerView recyclerView;
     private ProductInterfaceAdapter adapter;
-    private ConstraintLayout fLayout;
     private FragmentActivity myContext;
 
     public ViewCartFragment() {
@@ -50,7 +49,6 @@ public class ViewCartFragment extends Fragment {
                              Bundle savedInstanceState) {
         ArrayList<Product> products = (ArrayList<Product>)getArguments().getSerializable("Products");
         View view = inflater.inflate(R.layout.fragment_cart, container, false);
-        fLayout = view.findViewById(R.id.fragment_cart);
         Button emptyCartBtn = view.findViewById(R.id.clearCart);
         emptyCartBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,14 +69,14 @@ public class ViewCartFragment extends Fragment {
                     Log.d(LogTags.CHECK_CARD, "We ain't checkin out");
                 }
                 else {
-                    goToFrag();
+                    goToCheckout();
                 }
             }
         });
         adapter = new ProductInterfaceAdapter(products);
         Log.d(LogTags.CHECK_CARD, "" + adapter);
         // Add the following lines to create RecyclerView
-        RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
+        recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         recyclerView.setAdapter(adapter);
@@ -86,20 +84,18 @@ public class ViewCartFragment extends Fragment {
     }
 
     public void emptyCart(){
+        //updates the recycler view with the empty cart
         Cart cart = Cart.getInstance();
         ArrayList<Product> products = cart.getCart();
-        ArrayList<Product> alProd = new ArrayList<>(products.size());
-        alProd.addAll(products);
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("Products", alProd);
-        ViewCartFragment fragment = new ViewCartFragment();
-        fragment.setArguments(bundle);
-        FragmentTransaction transaction = myContext.getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.content, fragment);
-        transaction.commit();
+        adapter = new ProductInterfaceAdapter(products);
+        recyclerView.setAdapter(adapter);
+        if(products.size() == 0) {
+            Toast toast = Toast.makeText(getActivity(), "The cart has been emptied", Toast.LENGTH_SHORT);
+            toast.show();
+        }
     }
 
-    public void goToFrag(){
+    public void goToCheckout(){
         Bundle bundle = new Bundle();
         ViewCheckoutInputFragment fragment = new ViewCheckoutInputFragment();
         fragment.setArguments(bundle);

@@ -1,6 +1,9 @@
 package com.example.cs4125_project;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +14,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -21,25 +25,28 @@ import java.util.List;
 public class ViewCheckoutInputFragment extends Fragment {
     private final Cart cart = Cart.getInstance();
     private final Order order = Order.getInstance();
-    String town, city, county, address, cardName, expiryDateString, cardNum, cvv, paymentDetails;
-    Date expiryDate = new Date();
+    private String town, city, county, address, cardName, expiryDateString, cardNum, cvv, paymentDetails;
+    private Date expiryDate = new Date();
 
-    EditText townInput, cityInput, countyInput, cardNameInput, cardNumInput, expiryDateInput, cvvInput;
+    private EditText townInput, cityInput, countyInput, cardNameInput, cardNumInput, expiryDateInput, cvvInput;
 
-    Button nextButton;
+    private Button nextButton;
+
+    private FragmentActivity myContext;
 
     public ViewCheckoutInputFragment() {
         // Required empty public constructor
     }
 
-    public static ViewCheckoutInputFragment newInstance() {
-        ViewCheckoutInputFragment fragment = new ViewCheckoutInputFragment();
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        myContext=(FragmentActivity) activity;
+        super.onAttach(activity);
     }
 
     @Override
@@ -60,10 +67,9 @@ public class ViewCheckoutInputFragment extends Fragment {
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                town = townInput.getText().toString();
-                city = cityInput.getText().toString();
                 if(townInput.getText().toString().matches("")){
                     Toast.makeText(getActivity(), "Address has not been inputted", Toast.LENGTH_SHORT).show();
+                    townInput.setError(null);
                 }
                 town = townInput.getText().toString();
 
@@ -131,13 +137,27 @@ public class ViewCheckoutInputFragment extends Fragment {
                 cvvValid = queryCVV(cvv);
 
                 if(cardNumberValid && cvvValid && textsValid && expiryDateValid) {
-                    Toast.makeText(getActivity(), "We did it bois", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Your order has been confirmed", Toast.LENGTH_SHORT).show();
                     address = town + ", " + city + ", " + county + ", Ireland";
                     paymentDetails = cardNum + ", " + expiryDate + ", " + cvv;
                     order.setCustomerName(cardName);
                     order.setCustomerAddress(address);
                     order.setPaymentDetails(paymentDetails);
                     order.setPurchasedProducts(cart.getCart());
+                    cart.removeAllProductsFromCart();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(myContext);
+                    builder.setCancelable(true);
+                    builder.setTitle("Order Confirmation");
+                    builder.setMessage("Thank you " + cardName + "! Your order has been confirmed!");
+                    builder.setPositiveButton("Ok",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                }
+                            });
+
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
                 }
             }
         });
