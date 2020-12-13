@@ -20,6 +20,12 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:text="@string/login" />
+
+  <Button
+      android:id="@+id/cartBtn"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="Cart"/>
  </androidx.appcompat.widget.Toolbar>
 
  <TextView
@@ -80,19 +86,17 @@
      app:srcCompat="@drawable/fui_ic_twitter_bird_white_24dp" />
 
  <FrameLayout
-     android:id="@+id/content"
-     android:layout_width="match_parent"
-     android:layout_height="match_parent"
-     android:elevation="3dp">
- </FrameLayout>
-
- <FrameLayout
      android:id="@+id/contentWithToolbar"
      android:layout_below="@+id/homeToolbar"
      android:layout_width="match_parent"
      android:layout_height="match_parent"
      android:elevation="2dp">
-
  </FrameLayout>
+
+ <FrameLayout
+     android:id="@+id/content"
+     android:layout_width="match_parent"
+     android:layout_height="match_parent"
+     android:elevation="3dp"></FrameLayout>
 
 </RelativeLayout>

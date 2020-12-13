@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -40,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ProductDatabaseController productDataC;
     FirebaseAuth mAuth;
     private Button logInButton;
+    private Button cartButton;
 
     private final String login = "Log In";
     private  final String logout = "Log Out";
@@ -59,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         accButton = findViewById(R.id.accButton);
         shoeButton = findViewById(R.id.shoeButton);
         logInButton = findViewById(R.id.logInBtn);
+        cartButton = findViewById(R.id.cartBtn);
 
         //Checking to see if user is logged in
         isLoggedIn();
@@ -71,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         shoeButton.setOnClickListener(this);
         accButton.setOnClickListener(this);
         logInButton.setOnClickListener(this);
+        cartButton.setOnClickListener(this);
 
         //listener for when back stack is changed
         getSupportFragmentManager().addOnBackStackChangedListener(
@@ -170,6 +174,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         transaction.commit();
     }
 
+    public void goToCart(){
+        Cart cart = Cart.getInstance();
+        ArrayList<Product> products = cart.productArrayList(new ArrayList<Product>());
+        ArrayList<Product> alProd = new ArrayList<>(products.size());
+        alProd.addAll(products);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("Products", alProd);
+        ViewCartFragment fragment = new ViewCartFragment();
+        fragment.setArguments(bundle);
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction().replace(R.id.contentWithToolbar, fragment);
+        transaction.addToBackStack("viewCart");
+        transaction.commit();
+    }
+
     public void onClick(View v) {
         int i = v.getId();
         if (i == R.id.logInBtn) {
@@ -199,6 +218,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             selected = ProductType.SHOE;
             Log.d(LogTags.CHECK_CARD, "Card view selected " + selected);
             getProductList(ProductType.SHOE);
+        }
+
+        if(i == R.id.cartBtn){
+            goToCart();
         }
     }
 }

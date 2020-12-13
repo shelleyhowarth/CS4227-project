@@ -1,9 +1,13 @@
 package com.example.cs4125_project;
 
+import android.app.Activity;
 import android.os.Bundle;
+
+import androidx.fragment.app.FragmentActivity;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -41,7 +45,6 @@ public class ViewProductsFragment extends Fragment implements AdapterView.OnItem
     private ArrayList<Product> products;
     private Map<ProductDatabaseFields, Spinner> filterSpinners;
     private static final String all = "All";
-    private ConstraintLayout fLayout;
 
     public ViewProductsFragment() {
         // Required empty public constructor
@@ -67,7 +70,6 @@ public class ViewProductsFragment extends Fragment implements AdapterView.OnItem
         db.setType(type);
         Log.d(LogTags.CHECK_CARD, type.getValue());
         View view = inflater.inflate(R.layout.fragment_view_products, container, false);
-        fLayout = view.findViewById(R.id.fragment_view_products);
         adapter = new ProductInterfaceAdapter(products);
         Log.d(LogTags.CHECK_CARD, "" + adapter);
 
