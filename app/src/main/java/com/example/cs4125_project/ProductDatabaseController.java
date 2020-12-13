@@ -19,7 +19,7 @@ import java.util.Map;
 
 public class ProductDatabaseController {
     private Database db = Database.getInstance();
-    private List<Product> data = new ArrayList<>();
+    private ArrayList<Product> data = new ArrayList<>();
     private ProductType type;
     private MyEventListener myEventL;
 

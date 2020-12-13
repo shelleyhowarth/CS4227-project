@@ -1,12 +1,9 @@
 package com.example.cs4125_project;
 
-import com.example.cs4125_project.enums.Brand;
-import com.example.cs4125_project.enums.Colour;
-import com.example.cs4125_project.enums.Size;
-
+import java.io.Serializable;
 import java.util.List;
 
-public interface Product {
+public interface Product extends Serializable {
 
     void setId(String id);
 

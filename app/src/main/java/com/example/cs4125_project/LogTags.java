@@ -9,4 +9,8 @@ public class LogTags {
     public static final String DB_DELETE = "DB_DELETE";
     public static final String DB_UPDATE = "DB_UPDATE";
     public static final String CHECK_CARD = "CHECK_CARD";
+    public static final String SET_UP_FILTERS = "SET_UP_FILTERS";
+    public static final String FILTER_PRODUCTS = "FILTER_PRODUCTS";
+    public static final String LOG_IN = "LOG_IN";
+    public static final String REGISTER_ACCOUNT = "REGISTER_ACCOUNT";
 }
