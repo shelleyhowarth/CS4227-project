@@ -46,7 +46,6 @@ public class ViewProductsFragment extends Fragment implements AdapterView.OnItem
     private ArrayList<Product> products;
     private Map<ProductDatabaseFields, Spinner> filterSpinners;
     private static final String all = "All";
-    private ConstraintLayout fLayout;
     private FragmentActivity myContext;
 
     public ViewProductsFragment() {
@@ -79,12 +78,12 @@ public class ViewProductsFragment extends Fragment implements AdapterView.OnItem
         db.setType(type);
         Log.d(LogTags.CHECK_CARD, type.getValue());
         View view = inflater.inflate(R.layout.fragment_view_products, container, false);
-        fLayout = view.findViewById(R.id.fragment_view_products);
+        ConstraintLayout fLayout = view.findViewById(R.id.fragment_view_products);
         Button cartBtn = view.findViewById(R.id.cart);
         cartBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToFrag();
+                goToCart();
             }
         });
         adapter = new ProductInterfaceAdapter(products);
@@ -225,8 +224,18 @@ public class ViewProductsFragment extends Fragment implements AdapterView.OnItem
         }
     }
 
-    public void onClickAddToCart(View v) {
-        Log.d(LogTags.CHECK_CARD, "Are we working slutties");
-        adapter.onClickAddToCart(v);
+    public void goToCart(){
+        Cart cart = Cart.getInstance();
+        ArrayList<Product> products = cart.getCart();
+        ArrayList<Product> alProd = new ArrayList<>(products.size());
+        alProd.addAll(products);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("Products", alProd);
+        ViewCartFragment fragment = new ViewCartFragment();
+        fragment.setArguments(bundle);
+        FragmentTransaction transaction = myContext.getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.content, fragment);
+        transaction.addToBackStack("viewCart");
+        transaction.commit();
     }
 }

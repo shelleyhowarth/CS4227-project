@@ -23,14 +23,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProductInterfaceAdapter extends RecyclerView.Adapter {
-    List<Product> productList;
-    TextView textViewProductName;
-    TextView textViewProductPrice;
-    TextView textViewProductSize;
-    ImageView imageViewProductPic;
-    CardView cardViewProduct;
-    Dialog productDialog;
-    Button btn;
+    private List<Product> productList;
+    private TextView textViewProductName;
+    private TextView textViewProductPrice;
+    private TextView textViewProductSize;
+    private ImageView imageViewProductPic;
+    private CardView cardViewProduct;
+    private Dialog productDialog;
+    private Button addBtn;
     private Cart cart = Cart.getInstance();
     private int currentPosition;
 
@@ -61,10 +61,10 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter {
             textViewProductPrice = itemView.findViewById(R.id.productPrice);
             imageViewProductPic = itemView.findViewById(R.id.productViewImage);
             cardViewProduct = itemView.findViewById(R.id.productCard);
-            btn = itemView.findViewById(R.id.addToCart);
+            addBtn = itemView.findViewById(R.id.addToCart);
         }
 
-        void bindView(final int pos){
+        void bindView(int pos){
             final Product item = productList.get(pos);
             textViewProductName.setText(item.getName());
             textViewProductPrice.setText("€" + String.valueOf(item.getPrice()));
@@ -76,7 +76,6 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter {
             cardViewProduct.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View productView) {
-                    currentPosition = pos;
                     cart.addProductToCart(item);
                     TextView textViewProductName = productDialog.findViewById(R.id.productName);
                     TextView textViewProductPrice = productDialog.findViewById(R.id.productPrice);
@@ -118,11 +117,5 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter {
         this.productList.clear();
         this.productList.addAll(productList);
         notifyDataSetChanged();
-    }
-
-    public void onClickAddToCart (View v) {
-        Log.d(LogTags.CHECK_CARD, "Are we working slutties");
-        //final Product item = productList.get(currentPosition);
-        //cart.addProductToCart(item);
     }
 }

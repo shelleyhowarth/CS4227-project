@@ -19,7 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 public class ViewCartFragment extends Fragment {
-    private Cart cart = Cart.getInstance();
+    private final Cart cart = Cart.getInstance();
     private RecyclerView recyclerView;
     private ProductInterfaceAdapter adapter;
     private ConstraintLayout fLayout;
@@ -51,19 +51,12 @@ public class ViewCartFragment extends Fragment {
         ArrayList<Product> products = (ArrayList<Product>)getArguments().getSerializable("Products");
         View view = inflater.inflate(R.layout.fragment_cart, container, false);
         fLayout = view.findViewById(R.id.fragment_cart);
-        Button backBtn = view.findViewById(R.id.back);
-        backBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                fLayout.setVisibility(View.INVISIBLE);
-            }
-        });
         Button emptyCartBtn = view.findViewById(R.id.clearCart);
         emptyCartBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 cart.removeAllProductsFromCart();
-                refresh();
+                emptyCart();
                 Log.d(LogTags.CHECK_CARD, "We yeeting products");
             }
         });
@@ -92,7 +85,7 @@ public class ViewCartFragment extends Fragment {
         return view;
     }
 
-    public void refresh(){
+    public void emptyCart(){
         Cart cart = Cart.getInstance();
         ArrayList<Product> products = cart.getCart();
         ArrayList<Product> alProd = new ArrayList<>(products.size());
@@ -108,10 +101,11 @@ public class ViewCartFragment extends Fragment {
 
     public void goToFrag(){
         Bundle bundle = new Bundle();
-        ViewChekoutInputFragment fragment = new ViewChekoutInputFragment();
+        ViewCheckoutInputFragment fragment = new ViewCheckoutInputFragment();
         fragment.setArguments(bundle);
         FragmentTransaction transaction = myContext.getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.content, fragment);
+        transaction.addToBackStack("viewCheckout");
         transaction.commit();
     }
 }

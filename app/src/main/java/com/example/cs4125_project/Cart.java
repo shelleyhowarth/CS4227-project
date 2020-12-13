@@ -35,8 +35,6 @@ public class Cart {
     }
 
     public void removeAllProductsFromCart() {
-        for(Product x : products) {
-            products.remove(x);
-        }
+        products.clear();
     }
 }

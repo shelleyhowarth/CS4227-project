@@ -203,10 +203,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    public void onClickAddToCart(View v) {
+    public void onClickAddToCart (View v) {
+        Log.d(LogTags.CHECK_CARD, "Are we working slutties");
         //final Product item = productList.get(currentPosition);
         //cart.addProductToCart(item);
-        Log.d(LogTags.CHECK_CARD, "Are we working slutties");
-        fragment.onClickAddToCart(v);
     }
 }
