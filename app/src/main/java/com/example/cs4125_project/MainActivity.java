@@ -36,7 +36,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ImageButton shoeButton;
     private ProductType selected;
     private ProductDatabaseController productDataC;
-    private ProductInterfaceAdapter adapter;
     FirebaseAuth mAuth;
     private Button logInButton;
     private Button signOutButton;
@@ -71,27 +70,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         logInButton.setOnClickListener(this);
         signOutButton.setOnClickListener(this);
 
-        String[]sizes = {AlphaSize.X_SMALL.getValue(),AlphaSize.SMALL.getValue(),AlphaSize.MEDIUM.getValue(), AlphaSize.LARGE.getValue(), AlphaSize.X_LARGE.getValue()};
+        //listener for when back stack is changed
+        getSupportFragmentManager().addOnBackStackChangedListener(
+                new FragmentManager.OnBackStackChangedListener() {
+                    public void onBackStackChanged() {
+                        FragmentManager fm = getSupportFragmentManager();
+                        isLoggedIn();
+                    }
+                });
+
+        //String[]sizes = {AlphaSize.X_SMALL.getValue(),AlphaSize.SMALL.getValue(),AlphaSize.MEDIUM.getValue(), AlphaSize.LARGE.getValue(), AlphaSize.X_LARGE.getValue()};
 
         //pretend that user has clicked clothing tab
         //ProductDatabaseController.setType(ProductType.CLOTHES);
 
         //Example usage of creating a product item from the product factory
-        Map<String, Object> testClothes = new HashMap<>();
+        /*Map<String, Object> testClothes = new HashMap<>();
         testClothes.put(ProductDatabaseFields.NAME.getValue(), "Bumblebee Jumper");
         testClothes.put(ProductDatabaseFields.PRICE.getValue(), 69.99);
         testClothes.put(ProductDatabaseFields.SIZES.getValue(), Arrays.asList(sizes));
         testClothes.put(ProductDatabaseFields.QUANTITIES.getValue(), Arrays.asList(8,1,2,10,13));
         testClothes.put(ProductDatabaseFields.BRAND.getValue(), Brand.CALVINKLEIN.getValue());
         testClothes.put(ProductDatabaseFields.COLOUR.getValue(), Colour.YELLOW.getValue());
-        testClothes.put(ProductDatabaseFields.STYLE.getValue(), ClothesStyles.JUMPER.getValue());
+        testClothes.put(ProductDatabaseFields.STYLE.getValue(), ClothesStyles.JUMPER.getValue());*/
         //Generate product from product factory
         //Product p = ProductFactory.getProduct(ProductType.CLOTHES, testClothes);
         //Uncomment when you want to actually add this item to the db
         // ProductDatabaseController.addProductToDB(p);
 
-        Map<String, Object> testParams = new HashMap<>();
-        testParams.put(ProductDatabaseFields.SIZES.getValue(), AlphaSize.X_LARGE.getValue());
+        //Map<String, Object> testParams = new HashMap<>();
+        //testParams.put(ProductDatabaseFields.SIZES.getValue(), AlphaSize.X_LARGE.getValue());
         //testParams.put(ProductDatabaseFields.COLOUR.getValue(), Colour.BLUE.getValue());
         //ProductDatabaseController.getFilteredProducts(testParams);
 
@@ -133,8 +141,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     {
         Fragment fr = new LogInFragment();
         FragmentManager fm = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fm.beginTransaction();
-        fragmentTransaction.replace(R.id.content, fr);
+        FragmentTransaction fragmentTransaction = fm.beginTransaction().replace(R.id.content, fr);
         fragmentTransaction.addToBackStack("login");
         fragmentTransaction.commit();
     }
@@ -160,6 +167,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fragment.setArguments(bundle);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.content, fragment);
+        transaction.addToBackStack("viewProducts");
         transaction.commit();
     }
 

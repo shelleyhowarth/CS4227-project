@@ -68,15 +68,9 @@ public class ViewProductsFragment extends Fragment implements AdapterView.OnItem
         Log.d(LogTags.CHECK_CARD, type.getValue());
         View view = inflater.inflate(R.layout.fragment_view_products, container, false);
         fLayout = view.findViewById(R.id.fragment_view_products);
-        Button btn = view.findViewById(R.id.back);
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                fLayout.setVisibility(View.INVISIBLE);
-            }
-        });
         adapter = new ProductInterfaceAdapter(products);
         Log.d(LogTags.CHECK_CARD, "" + adapter);
+
         // Add the following lines to create RecyclerView
         recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
@@ -193,7 +187,7 @@ public class ViewProductsFragment extends Fragment implements AdapterView.OnItem
 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
-
+        //part of item selected interface
     }
 
     @Override
