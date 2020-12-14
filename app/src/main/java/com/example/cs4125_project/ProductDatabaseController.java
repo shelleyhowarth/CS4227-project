@@ -21,13 +21,13 @@ public class ProductDatabaseController {
     private Database db = Database.getInstance();
     private ArrayList<Product> data = new ArrayList<>();
     private ProductType type;
-    private MyEventListener myEventL;
+    private ProductReadListener myEventL;
 
     ProductDatabaseController(){
 
     }
 
-    ProductDatabaseController(MyEventListener ml){
+    ProductDatabaseController(ProductReadListener ml){
         this.myEventL = ml;
     }
 
@@ -58,7 +58,7 @@ public class ProductDatabaseController {
                             //convert document to Product and add to List of data
                             readProductIntoList(document);
                         }
-                        myEventL.callback("success");
+                        myEventL.productCallback("success");
                         Log.d(LogTags.DB_GET, "Number of products: " +data.size());
                     } else {
                         Log.d(LogTags.DB_GET, "Error getting documents: ", task.getException());
@@ -101,7 +101,7 @@ public class ProductDatabaseController {
                             //convert document to Product and add to List data
                             readProductIntoList(document);
                         }
-                        myEventL.callback("success");
+                        myEventL.productCallback("success");
                         Log.d(LogTags.DB_GET_FILTERED, "Number of products: " +data.size());
                     } else {
                         Log.d(LogTags.DB_GET_FILTERED, "Error getting documents: ", task.getException());

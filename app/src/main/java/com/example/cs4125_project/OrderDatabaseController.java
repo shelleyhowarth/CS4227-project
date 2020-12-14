@@ -4,29 +4,28 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.example.cs4125_project.enums.ProductDatabaseFields;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class OrderDatabaseController {
     private Database db = Database.getInstance();
-    private ProductDatabaseController productDatabaseController = new ProductDatabaseController();
     private Cart cart = Cart.getInstance();
-    private ArrayList<Product> data = new ArrayList<>();
     private ArrayList<Order> orders = new ArrayList<>();
-    private MyEventListener myEventL;
+    private OrderReadListener myEventL;
 
     public OrderDatabaseController() {}
 
-    OrderDatabaseController(MyEventListener ml){
+    OrderDatabaseController(OrderReadListener ml){
         this.myEventL = ml;
     }
 
@@ -53,7 +52,7 @@ public class OrderDatabaseController {
     }
 
     public void getOrderCollection() {
-        data.clear();
+        orders.clear();
         //get reference to collection from database
         CollectionReference colRef = db.GET("orders");
         colRef.get()
@@ -66,8 +65,8 @@ public class OrderDatabaseController {
                                 //convert document to Product and add to List of data
                                 readOrderIntoList(document);
                             }
-                            myEventL.callback("success");
-                            Log.d(LogTags.DB_GET, "Number of products: " +data.size());
+                            myEventL.orderCallback("success");
+                            Log.d(LogTags.DB_GET, "Number of products: " + orders.size());
                         } else {
                             Log.d(LogTags.DB_GET, "Error getting documents: ", task.getException());
                         }
@@ -76,9 +75,10 @@ public class OrderDatabaseController {
     }
 
     public Order getOrder(Map<String, Object> order) {
+
         Order o = new Order((String)order.get("customerName"), (String)order.get("emailAddress"),
                 (String)order.get("customerAddress"), (HashMap<String, String>)order.get("purchasedProducts"),
-                (String)order.get("paymentDetails"));
+                (String)order.get("paymentDetails"), (String)order.get("time"), (double)order.get("total"));
         return o;
     }
 

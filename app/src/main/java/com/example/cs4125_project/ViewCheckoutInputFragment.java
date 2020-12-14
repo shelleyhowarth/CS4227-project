@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.text.ParseException;
@@ -25,12 +26,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
 public class ViewCheckoutInputFragment extends Fragment {
     private final Cart cart = Cart.getInstance();
-    private final Order order = Order.getInstance();
+    private Order newOrder;
     private String town, city, county, address, cardName, expiryDateString, cardNum, cvv, paymentDetails;
     private Date expiryDate = new Date();
 
@@ -161,17 +163,18 @@ public class ViewCheckoutInputFragment extends Fragment {
                     Toast.makeText(getActivity(), "Your order has been confirmed", Toast.LENGTH_SHORT).show();
                     address = town + ", " + city + ", " + county + ", Ireland";
                     paymentDetails = cardNum + ", " + expiryDate + ", " + cvv;
-                    Float totalPrice = cart.getTotalPrice();
-                    order.setCustomerName(cardName);
-                    order.setCustomerAddress(address);
-                    order.setPaymentDetails(paymentDetails);
+                    double totalPrice = cart.getTotalPrice();
+
                     HashMap<String, String> productInfo = new HashMap<>();
                     for(Map.Entry<Product, String> entry: cart.getCart().entrySet()){
                         productInfo.put(entry.getKey().getId(),entry.getValue());
                     }
-                    order.setPurchasedProducts(productInfo);
-                    order.setEmailAddress( Objects.requireNonNull(mAuth.getCurrentUser()).getEmail());
-                    orderDatabaseController.addOrderToDB(order);
+
+                    Date timeNow = new Date();
+                    SimpleDateFormat sfd = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy ", Locale.getDefault());
+                    String ts = sfd.format(timeNow);
+                    newOrder = new Order(cardName, Objects.requireNonNull(mAuth.getCurrentUser()).getEmail(), address, productInfo, paymentDetails , ts, totalPrice);
+                    orderDatabaseController.addOrderToDB(newOrder);
                     AlertDialog.Builder builder = new AlertDialog.Builder(myContext);
                     builder.setCancelable(true);
                     if (totalPrice == 0) {
@@ -179,8 +182,9 @@ public class ViewCheckoutInputFragment extends Fragment {
                         builder.setMessage("Your order has already been processed!\nPlease press 'OK' to return to the main menu!");
                     }
                     else {
+                        String total = String.format("%.2f", totalPrice);
                         builder.setTitle("Order Confirmation");
-                        builder.setMessage("Thank you " + cardName + "! \nYour order has been confirmed! \nYour card has been charged €" + totalPrice);
+                        builder.setMessage("Thank you " + cardName + "! \nYour order has been confirmed! \nYour card has been charged €" + total);
                     }
                     builder.setPositiveButton("Ok",
                             new DialogInterface.OnClickListener() {

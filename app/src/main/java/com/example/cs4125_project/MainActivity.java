@@ -1,6 +1,5 @@
 package com.example.cs4125_project;
 
-import androidx.annotation.ContentView;
 import androidx.fragment.app.FragmentManager;
 
 import android.os.Bundle;
@@ -8,32 +7,21 @@ import android.util.Log;
 
 import android.view.View;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.example.cs4125_project.enums.AlphaSize;
 import com.example.cs4125_project.enums.ProductType;
 import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-import com.example.cs4125_project.enums.Brand;
-import com.example.cs4125_project.enums.ClothesStyles;
-import com.example.cs4125_project.enums.Colour;
-import com.example.cs4125_project.enums.ProductDatabaseFields;
-
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, MyEventListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, ProductReadListener, OrderReadListener {
     private ImageButton clothesButton;
     private ImageButton accButton;
     private ImageButton shoeButton;
@@ -96,8 +84,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void isLoggedIn() {
         if(mAuth.getCurrentUser() != null) {
             logInButton.setText(logout);
+            ordersButton.setEnabled(true);
         } else {
             logInButton.setText(login);
+            ordersButton.setEnabled(false);
         }
     }
 
@@ -127,9 +117,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    public void callback(String result) {
+    public void productCallback(String result) {
         List<Product> products = productDataC.getProducts();
         goToFrag(products);
+    }
+
+    @Override
+    public void orderCallback(String result){
+        ArrayList<Order> orders = new ArrayList<>();
+        orders = orderDb.getAllOrders();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("Orders", orders);
+        ViewOrders fragment = new ViewOrders();
+        fragment.setArguments(bundle);
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction().replace(R.id.contentWithToolbar, fragment);
+        transaction.addToBackStack("viewOrders");
+        transaction.commit();
     }
 
     public void goToFrag(List<Product> products){
@@ -163,16 +167,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void goToOrders() {
         orderDb.getOrderCollection();
-        ArrayList<Order> orders = new ArrayList<>();
-        orders = orderDb.getAllOrders();
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("Orders", orders);
-        ViewOrders fragment = new ViewOrders();
-        fragment.setArguments(bundle);
-        FragmentManager manager = getSupportFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction().replace(R.id.contentWithToolbar, fragment);
-        transaction.addToBackStack("viewOrders");
-        transaction.commit();
     }
 
     public void onClick(View v) {

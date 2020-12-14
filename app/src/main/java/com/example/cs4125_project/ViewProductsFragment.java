@@ -1,13 +1,8 @@
 package com.example.cs4125_project;
 
-import android.app.Activity;
 import android.os.Bundle;
 
-import androidx.fragment.app.FragmentActivity;
-
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -37,7 +32,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class ViewProductsFragment extends Fragment implements AdapterView.OnItemSelectedListener, MyEventListener {
+public class ViewProductsFragment extends Fragment implements AdapterView.OnItemSelectedListener, ProductReadListener {
 
     private RecyclerView recyclerView;
     private ProductInterfaceAdapter adapter;
@@ -193,7 +188,7 @@ public class ViewProductsFragment extends Fragment implements AdapterView.OnItem
     }
 
     @Override
-    public void callback(String result) {
+    public void productCallback(String result) {
         products = (ArrayList<Product>) db.getProducts();
         updateRecyclerAdapter();
     }
