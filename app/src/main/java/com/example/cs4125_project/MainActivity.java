@@ -13,7 +13,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.cs4125_project.database.OrderDatabaseController;
+import com.example.cs4125_project.database.OrderReadListener;
+import com.example.cs4125_project.database.ProductDatabaseController;
+import com.example.cs4125_project.database.ProductReadListener;
 import com.example.cs4125_project.enums.ProductType;
+import com.example.cs4125_project.logs.LogTags;
+import com.example.cs4125_project.order.Order;
+import com.example.cs4125_project.order.ViewOrdersFragment;
+import com.example.cs4125_project.products.Product;
+import com.example.cs4125_project.products.ViewProductsFragment;
+import com.example.cs4125_project.shop.Cart;
+import com.example.cs4125_project.shop.ViewCartFragment;
+import com.example.cs4125_project.user.LogInFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
 
@@ -128,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         orders = orderDb.getAllOrders();
         Bundle bundle = new Bundle();
         bundle.putSerializable("Orders", orders);
-        ViewOrders fragment = new ViewOrders();
+        ViewOrdersFragment fragment = new ViewOrdersFragment();
         fragment.setArguments(bundle);
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction().replace(R.id.contentWithToolbar, fragment);

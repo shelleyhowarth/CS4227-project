@@ -1,18 +1,20 @@
-package com.example.cs4125_project;
+package com.example.cs4125_project.database;
 
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.example.cs4125_project.shop.Cart;
+import com.example.cs4125_project.logs.LogTags;
+import com.example.cs4125_project.order.Order;
+import com.example.cs4125_project.products.Product;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +27,7 @@ public class OrderDatabaseController {
 
     public OrderDatabaseController() {}
 
-    OrderDatabaseController(OrderReadListener ml){
+    public OrderDatabaseController(OrderReadListener ml){
         this.myEventL = ml;
     }
 

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:id="@+id/fragment_cart"
     android:background="@drawable/log_in_box"
-    tools:context=".ViewCartFragment">
+    tools:context=".shop.ViewCartFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"

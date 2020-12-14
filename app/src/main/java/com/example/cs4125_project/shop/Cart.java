@@ -1,4 +1,6 @@
-package com.example.cs4125_project;
+package com.example.cs4125_project.shop;
+
+import com.example.cs4125_project.products.Product;
 
 import java.util.ArrayList;
 import java.util.HashMap;

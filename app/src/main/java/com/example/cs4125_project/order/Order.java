@@ -1,10 +1,6 @@
-package com.example.cs4125_project;
+package com.example.cs4125_project.order;
 
-import com.google.firebase.Timestamp;
-
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Map;
 
 public class Order {
     private static Order instance = null;

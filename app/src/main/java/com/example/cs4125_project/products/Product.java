@@ -1,4 +1,4 @@
-package com.example.cs4125_project;
+package com.example.cs4125_project.products;
 
 import java.io.Serializable;
 import java.util.List;

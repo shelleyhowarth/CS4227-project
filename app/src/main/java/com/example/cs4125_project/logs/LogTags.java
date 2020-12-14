@@ -1,4 +1,4 @@
-package com.example.cs4125_project;
+package com.example.cs4125_project.logs;
 
 public class LogTags {
     // Used to keep track of logs

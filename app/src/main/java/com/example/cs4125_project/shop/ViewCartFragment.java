@@ -1,4 +1,4 @@
-package com.example.cs4125_project;
+package com.example.cs4125_project.shop;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -9,13 +9,16 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.cs4125_project.R;
+import com.example.cs4125_project.logs.LogTags;
+import com.example.cs4125_project.products.Product;
+import com.example.cs4125_project.products.ProductInterfaceAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;

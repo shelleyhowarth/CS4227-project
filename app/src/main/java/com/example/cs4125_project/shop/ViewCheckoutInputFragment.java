@@ -1,11 +1,10 @@
-package com.example.cs4125_project;
+package com.example.cs4125_project.shop;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,9 +14,11 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentTransaction;
 
-import com.google.firebase.Timestamp;
+import com.example.cs4125_project.R;
+import com.example.cs4125_project.database.OrderDatabaseController;
+import com.example.cs4125_project.order.Order;
+import com.example.cs4125_project.products.Product;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.text.ParseException;

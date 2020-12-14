@@ -1,4 +1,4 @@
-package com.example.cs4125_project;
+package com.example.cs4125_project.order;
 
 import android.os.Bundle;
 
@@ -11,16 +11,17 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.example.cs4125_project.R;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link ViewOrders#newInstance} factory method to
+ * Use the {@link ViewOrdersFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ViewOrders extends Fragment {
+public class ViewOrdersFragment extends Fragment {
 
     private ArrayList<Order> allOrders;
     private ArrayList<String> result = new ArrayList<>();
@@ -28,12 +29,12 @@ public class ViewOrders extends Fragment {
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private ListView simpleList;
 
-    public ViewOrders() {
+    public ViewOrdersFragment() {
         // Required empty public constructor
     }
 
-    public static ViewOrders newInstance() {
-        ViewOrders fragment = new ViewOrders();
+    public static ViewOrdersFragment newInstance() {
+        ViewOrdersFragment fragment = new ViewOrdersFragment();
         return fragment;
     }
 
