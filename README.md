@@ -8,7 +8,7 @@
 
 <h2>Instructions:</h2>
 <ol>
-<li>Download the code and run it in android studio.</li>
+<li>Download the code from master and run using android studio</li>
 
 <h2>Use Cases</h2>
 <ul>
