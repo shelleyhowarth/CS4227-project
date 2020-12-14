@@ -1,4 +1,4 @@
-package com.example.cs4125_project;
+package com.example.cs4125_project.products;
 
 import com.example.cs4125_project.enums.ProductDatabaseFields;
 import com.example.cs4125_project.enums.ProductType;

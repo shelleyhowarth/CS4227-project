@@ -1,6 +1,5 @@
-package com.example.cs4125_project;
+package com.example.cs4125_project.products;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -18,20 +17,15 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
-import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.cs4125_project.enums.AlphaSize;
-import com.example.cs4125_project.enums.Brand;
-import com.example.cs4125_project.enums.Colour;
-import com.example.cs4125_project.enums.ProductDatabaseFields;
-import com.example.cs4125_project.enums.ProductType;
+import com.example.cs4125_project.logs.LogTags;
+import com.example.cs4125_project.R;
+import com.example.cs4125_project.shop.Cart;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class ProductInterfaceAdapter extends RecyclerView.Adapter implements AdapterView.OnItemSelectedListener{
     private final Cart cart = Cart.getInstance();

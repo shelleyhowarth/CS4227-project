@@ -1,9 +1,9 @@
-package com.example.cs4125_project;
+package com.example.cs4125_project.products;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Accessory implements Product {
+public class Clothes implements Product {
     private String id = "";
     private String name = "";
     private double price = 0.0;
@@ -14,9 +14,9 @@ public class Accessory implements Product {
     private String style = "";
     private String imageURL = "";
 
-    Accessory() { }
+    Clothes() { }
 
-    Accessory(String name, double price, List<String> sizes, List<Integer> quantity, String brand, String colour, String style, String imageUrl){
+    Clothes(String name, double price, List<String> sizes, List<Integer> quantity, String brand, String colour, String style, String imageUrl){
         this.name = name;
         this.price = price;
         this.sizes = sizes;
@@ -27,7 +27,7 @@ public class Accessory implements Product {
         this.imageURL = imageUrl;
     }
 
-    Accessory(String id, String name, double price, List<String> sizes, List<Integer> quantity, String brand, String colour, String style){
+    Clothes(String id, String name, double price, List<String> sizes, List<Integer> quantity, String brand, String colour, String style){
         this.id = id;
         this.name = name;
         this.price = price;

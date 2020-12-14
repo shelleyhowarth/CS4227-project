@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:id="@+id/fragment_view_products"
     android:background="@drawable/log_in_box"
-    tools:context=".ViewProductsFragment">
+    tools:context=".products.ViewProductsFragment">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
