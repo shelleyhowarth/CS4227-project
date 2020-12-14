@@ -1,7 +1,12 @@
 package com.example.cs4125_project;
 
-import androidx.test.ext.junit.rules.ActivityScenarioRule;
+import android.widget.Button;
+import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.ActivityTestRule;
 
 import com.example.cs4125_project.enums.AccessoryStyles;
 import com.example.cs4125_project.enums.AlphaSize;
@@ -11,6 +16,7 @@ import com.example.cs4125_project.enums.Colour;
 import com.example.cs4125_project.enums.NumericalSize;
 import com.example.cs4125_project.enums.ShoeStyles;
 
+import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,7 +26,6 @@ import static androidx.test.espresso.assertion.ViewAssertions.*;
 import static androidx.test.espresso.action.ViewActions.*;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.onData;
-import static androidx.test.espresso.contrib.RecyclerViewActions.*;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.instanceOf;
@@ -40,8 +45,8 @@ public class InstrumentedTest {
     private final static int SHORT_WAIT = 250;
 
     @Rule
-    public ActivityScenarioRule<MainActivity> activityRule =
-            new ActivityScenarioRule<>(MainActivity.class);
+    public ActivityTestRule<MainActivity> activityRule =
+            new ActivityTestRule<>(MainActivity.class);
 
     @Test
     public void verifyViewProductsUseCase() throws InterruptedException {
@@ -118,6 +123,129 @@ public class InstrumentedTest {
                     .check(matches(withSpinnerText(containsString(e.getValue()))));
             Thread.sleep(SHORT_WAIT);
         }
+    }
+
+    @Test
+    public void verifyFilterProductsUseCase() throws InterruptedException {
+        //go to view clothes
+        checkViewProductsType(R.id.clothesButton);
+        RecyclerView recyclerView = activityRule.getActivity().findViewById(R.id.recycler_view);
+        int originalItemCount = recyclerView.getChildCount();
+
+        //set size spinner to 'S'
+        onView(withId(R.id.sizeSpinner)).perform(click());
+        Thread.sleep(SHORT_WAIT);
+        onData(allOf(is(instanceOf(String.class)), is(AlphaSize.SMALL.getValue()))).perform(click());
+        Thread.sleep(SHORT_WAIT);
+
+        //set style spinner to 'Hoodie'
+        onView(withId(R.id.styleSpinner)).perform(click());
+        Thread.sleep(SHORT_WAIT);
+        onData(allOf(is(instanceOf(String.class)), is(ClothesStyles.HOODIES.getValue()))).perform(click());
+        Thread.sleep(SHORT_WAIT);
+
+        //set colour spinner to 'Red'
+        onView(withId(R.id.colourSpinner)).perform(click());
+        Thread.sleep(SHORT_WAIT);
+        onData(allOf(is(instanceOf(String.class)), is(Colour.RED.getValue()))).perform(click());
+        Thread.sleep(SHORT_WAIT);
+
+        //set brand spinner to 'Nike'
+        onView(withId(R.id.brandSpinner)).perform(click());
+        Thread.sleep(SHORT_WAIT);
+        onData(allOf(is(instanceOf(String.class)), is(Brand.NIKE.getValue()))).perform(click());
+        Thread.sleep(SHORT_WAIT);
+
+        //click filter and verify there are now less products displayed
+        onView(withId(R.id.filter)).perform(click());
+        Thread.sleep(SHORT_WAIT);
+        int filteredCount = recyclerView.getChildCount();
+        Assert.assertEquals(true, originalItemCount > filteredCount);
+
+        //click reset filters and verify all products are now displayed
+        onView(withId(R.id.resetFilters)).perform(click());
+        Thread.sleep(SHORT_WAIT);
+        Assert.assertEquals(true, originalItemCount == recyclerView.getChildCount());
+    }
+
+    @Test
+    public void verifyPurchaseProductUseCase() throws InterruptedException {
+        checkViewProductsType(R.id.clothesButton);
+        //click on first product in recycler view
+        onView(withId(R.id.recycler_view)).perform(RecyclerViewActions.actionOnItemAtPosition(0,click()));
+        Thread.sleep(SHORT_WAIT);
+        onView(withId(R.id.productImage)).check(matches(isDisplayed()));
+        //add product to cart
+        onView(withId(R.id.addToCart)).perform(click());
+        Thread.sleep(SHORT_WAIT);
+        TextView tv = activityRule.getActivity().findViewById(R.id.productName);
+        String name = (String) tv.getText();
+        onView(isRoot()).perform(pressBack());
+        Thread.sleep(SHORT_WAIT);
+
+        //log in if not logged in
+        Button b = activityRule.getActivity().findViewById(R.id.logInBtn);
+        String logintext = (String) b.getText();
+        if(logintext.equals("Log In")) {
+            onView(withId(R.id.logInBtn)).perform(click());
+            Thread.sleep(LONG_WAIT);
+            onView(withId(R.id.fieldEmail)).check(matches(isDisplayed()));
+            onView(withId(R.id.fieldEmail)).perform(click());
+            Thread.sleep(SHORT_WAIT);
+            onView(withId(R.id.fieldEmail)).perform(typeText("carla@gmail.com"));
+            Thread.sleep(SHORT_WAIT);
+            onView(withId(R.id.fieldPassword)).perform(click());
+            onView(withId(R.id.fieldPassword)).perform(typeText("testpassword"));
+            Thread.sleep(SHORT_WAIT);
+            onView(withId(R.id.signIn)).perform(click());
+            Thread.sleep(LONG_WAIT);
+        }
+
+        //go to cart
+        onView(withId(R.id.cartBtn)).perform(click());
+        Thread.sleep(MED_WAIT);
+        onView(withId(R.id.recycler_view)).perform(RecyclerViewActions.actionOnItemAtPosition(0,click()));
+        Thread.sleep(SHORT_WAIT);
+        onView(withId(R.id.productImage)).check(matches(isDisplayed()));
+        TextView tvCart = activityRule.getActivity().findViewById(R.id.productName);
+        String nameCart = (String) tvCart.getText();
+        Assert.assertEquals("View Product Name matches Cart Product Name", true, name.equals(nameCart));
+        onView(isRoot()).perform(pressBack());
+        Thread.sleep(SHORT_WAIT);
+
+        //go to checkout
+        onView(withId(R.id.checkout)).perform(click());
+        Thread.sleep(LONG_WAIT);
+        //enter test address
+        onView(withId(R.id.townInput)).check(matches(isDisplayed()));
+        onView(withId(R.id.townInput)).perform(click());
+        onView(withId(R.id.townInput)).perform(typeText("testTown"));
+        Thread.sleep(SHORT_WAIT);
+        onView(withId(R.id.cityInput)).perform(click());
+        onView(withId(R.id.cityInput)).perform(typeText("testCity"));
+        Thread.sleep(SHORT_WAIT);
+        onView(withId(R.id.countyInput)).perform(click());
+        onView(withId(R.id.countyInput)).perform(typeText("testCounty"));
+        //enter test card details
+        Thread.sleep(SHORT_WAIT);
+        onView(withId(R.id.cardNameInput)).perform(click());
+        onView(withId(R.id.cardNameInput)).perform(typeText("testCardName"));
+        Thread.sleep(SHORT_WAIT);
+        onView(withId(R.id.cardNumInput)).perform(click());
+        onView(withId(R.id.cardNumInput)).perform(typeText("1234567812345678"));
+        Thread.sleep(SHORT_WAIT);
+        onView(withId(R.id.expiryDateInput)).perform(click());
+        onView(withId(R.id.expiryDateInput)).perform(typeText("12/2021"));
+        Thread.sleep(SHORT_WAIT);
+        onView(withId(R.id.cvvInput)).perform(click());
+        onView(withId(R.id.cvvInput)).perform(typeText("123"));
+        onView(isRoot()).perform(pressBack());
+        //click on order button and verify order confirmation
+        onView(withId(R.id.submitButton)).perform(click());
+        Thread.sleep(LONG_WAIT);
+        onView(withText("Ok")).perform(click());
+        Thread.sleep(LONG_WAIT);
+        onView(withId(R.id.clothesButton)).check(matches(isDisplayed()));
     }
 
     public void checkViewProductsType(int buttonId) throws InterruptedException {
