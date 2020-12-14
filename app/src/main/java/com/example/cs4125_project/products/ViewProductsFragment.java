@@ -1,4 +1,4 @@
-package com.example.cs4125_project;
+package com.example.cs4125_project.products;
 
 import android.os.Bundle;
 
@@ -16,6 +16,9 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.cs4125_project.R;
+import com.example.cs4125_project.database.ProductDatabaseController;
+import com.example.cs4125_project.database.ProductReadListener;
 import com.example.cs4125_project.enums.AccessoryStyles;
 import com.example.cs4125_project.enums.Brand;
 import com.example.cs4125_project.enums.ClothesStyles;
@@ -25,6 +28,7 @@ import com.example.cs4125_project.enums.ProductDatabaseFields;
 import com.example.cs4125_project.enums.ProductType;
 import com.example.cs4125_project.enums.ShoeStyles;
 import com.example.cs4125_project.enums.AlphaSize;
+import com.example.cs4125_project.logs.LogTags;
 
 import java.util.ArrayList;
 import java.util.HashMap;

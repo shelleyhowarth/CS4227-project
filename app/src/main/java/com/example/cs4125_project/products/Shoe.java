@@ -1,22 +1,22 @@
-package com.example.cs4125_project;
+package com.example.cs4125_project.products;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Clothes implements Product {
+public class Shoe implements Product {
     private String id = "";
     private String name = "";
-    private double price = 0.0;
+    private double price = (long) 0.0;
     private List<String> sizes = new ArrayList<>();
     private List<Integer> sizeQuantities = new ArrayList<>();
     private String brand = "";
     private String colour = "";
-    private String style = "";
+    private String style = null;
     private String imageURL = "";
 
-    Clothes() { }
+    Shoe() { }
 
-    Clothes(String name, double price, List<String> sizes, List<Integer> quantity, String brand, String colour, String style, String imageUrl){
+    Shoe(String name, double price, List<String> sizes, List<Integer> quantity, String brand, String colour, String style, String imageUrl){
         this.name = name;
         this.price = price;
         this.sizes = sizes;
@@ -27,7 +27,7 @@ public class Clothes implements Product {
         this.imageURL = imageUrl;
     }
 
-    Clothes(String id, String name, double price, List<String> sizes, List<Integer> quantity, String brand, String colour, String style){
+    Shoe(String id, String name, double price, List<String> sizes, List<Integer> quantity, String brand, String colour, String style, String imageUrl){
         this.id = id;
         this.name = name;
         this.price = price;
@@ -36,6 +36,7 @@ public class Clothes implements Product {
         this.brand = brand;
         this.colour = colour;
         this.style = style;
+        this.imageURL = imageUrl;
     }
 
     public void setId(String id) {

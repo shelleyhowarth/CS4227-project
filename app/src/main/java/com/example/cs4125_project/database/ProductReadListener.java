@@ -1,6 +1,4 @@
-package com.example.cs4125_project;
-
-import android.view.View;
+package com.example.cs4125_project.database;
 
 public interface ProductReadListener {
     public void productCallback(String result);

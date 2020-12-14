@@ -7,7 +7,7 @@
     android:layout_weight="0.5"
     android:background="@drawable/log_in_box"
     android:clickable="true"
-    tools:context=".LogInFragment">
+    tools:context=".user.LogInFragment">
 
     <LinearLayout
         android:layout_width="wrap_content"

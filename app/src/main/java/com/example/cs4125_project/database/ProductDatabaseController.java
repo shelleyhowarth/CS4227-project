@@ -1,9 +1,12 @@
-package com.example.cs4125_project;
+package com.example.cs4125_project.database;
 
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.example.cs4125_project.logs.LogTags;
+import com.example.cs4125_project.products.Product;
+import com.example.cs4125_project.products.ProductFactory;
 import com.example.cs4125_project.enums.ProductDatabaseFields;
 import com.example.cs4125_project.enums.ProductType;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -23,11 +26,11 @@ public class ProductDatabaseController {
     private ProductType type;
     private ProductReadListener myEventL;
 
-    ProductDatabaseController(){
+    public ProductDatabaseController(){
 
     }
 
-    ProductDatabaseController(ProductReadListener ml){
+    public ProductDatabaseController(ProductReadListener ml){
         this.myEventL = ml;
     }
 
