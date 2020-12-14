@@ -131,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void productCallback(String result) {
         List<Product> products = productDataC.getProducts();
-        goToFrag(products);
+        goToProduct(products);
     }
 
     @Override
@@ -148,7 +148,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         transaction.commit();
     }
 
-    public void goToFrag(List<Product> products){
+    public void goToProduct(List<Product> products){
         ArrayList<Product> alProd = new ArrayList<>(products.size());
         alProd.addAll(products);
         Bundle bundle = new Bundle();
