@@ -1,14 +1,16 @@
 # CS4125 Group 32 Shopping app
 <h2>Info:</h2>
 <p><b>Title: </b>Shopping App</p>
-<p><b>Description: </b>Allows users to view, filter and but products using an android app</p>
+<p><b>Description: </b>Allows users to view, filter and buy products using an android app</p>
 <p><b>Last Updated: </b>14/12/2020</p>
 <p><b>Author(s): </b>Aine Reynolds, Carla Warde, Shelley Howarth, Vincent Kiely</p>
-<p><b>Utilised: </b>Java Android, Firebase</p>
+<p><b>Utilised: </b>Java Android, Firebase, Junit, Espresso</p>
 
 <h2>Instructions:</h2>
 <ol>
-<li>Download the code from master and run using android studio</li>
+  <li>Clone the code from this repo.</li>
+  <li>Open as project in android studio</li>
+  <li>Run on Pixel 3a Api 27 emulator</li>
 
 <h2>Use Cases</h2>
 <ul>
