@@ -55,7 +55,7 @@ public class ProductDatabaseController {
         data.clear();
         createFactory();
         //get reference to collection from database
-        CollectionReference colRef = db.GET(ProductTypeController.getType().getValue());
+        CollectionReference colRef = db.GET(ProductTypeController.getType().getValue()+ProductTypeController.isFemale());
         colRef.get()
             .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
@@ -83,7 +83,7 @@ public class ProductDatabaseController {
     public void getFilteredProducts(Map<String, Object> filters) {
         data.clear();
         createFactory();
-        Query filteredResults = db.GET(ProductTypeController.getType().getValue());
+        Query filteredResults = db.GET(ProductTypeController.getType().getValue()+ProductTypeController.isFemale());
         String key;
         Object value;
         //for each filter pair in the filters map, perform a query on the database

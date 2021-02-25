@@ -13,11 +13,10 @@ public class MensAccessory implements Product{
     private String colour = "";
     private String style = "";
     private String imageURL = "";
-    private boolean female = false;
 
     MensAccessory() { }
 
-    MensAccessory(String name, double price, List<String> sizes, List<Integer> quantity, String brand, String colour, String style, String imageUrl, boolean female){
+    MensAccessory(String name, double price, List<String> sizes, List<Integer> quantity, String brand, String colour, String style, String imageUrl){
         this.name = name;
         this.price = price;
         this.sizes = sizes;
@@ -26,10 +25,9 @@ public class MensAccessory implements Product{
         this.colour = colour;
         this.style = style;
         this.imageURL = imageUrl;
-        this.female = female;
     }
 
-    MensAccessory(String id, String name, double price, List<String> sizes, List<Integer> quantity, String brand, String colour, String style, boolean female){
+    MensAccessory(String id, String name, double price, List<String> sizes, List<Integer> quantity, String brand, String colour, String style){
         this.id = id;
         this.name = name;
         this.price = price;
@@ -38,7 +36,6 @@ public class MensAccessory implements Product{
         this.brand = brand;
         this.colour = colour;
         this.style = style;
-        this.female = female;
     }
 
     public void setId(String id) {
@@ -62,10 +59,6 @@ public class MensAccessory implements Product{
     public String getColour() {return this.colour;}
 
     public String getStyle() {return this.style;}
-
-    public boolean isFemale() {
-        return female;
-    }
 
     public void setName(String name) {
         this.name = name;
@@ -99,7 +92,4 @@ public class MensAccessory implements Product{
         this.imageURL = imageURL;
     }
 
-    public void setFemale(boolean female) {
-        this.female = female;
-    }
 }

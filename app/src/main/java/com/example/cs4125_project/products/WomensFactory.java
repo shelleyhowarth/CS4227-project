@@ -26,15 +26,15 @@ public class WomensFactory extends AbstractFactory {
             case ACCESSORIES:
                 return new WomensAccessory((String) data.get(ProductDatabaseFields.NAME.getValue()), (double) data.get(ProductDatabaseFields.PRICE.getValue()),
                         (List<String>) data.get(ProductDatabaseFields.SIZES.getValue()),(List<Integer>) data.get(ProductDatabaseFields.QUANTITIES.getValue()),(String) data.get(ProductDatabaseFields.BRAND.getValue()),
-                        (String) data.get(ProductDatabaseFields.COLOUR.getValue()),(String) data.get(ProductDatabaseFields.STYLE.getValue()), (String) data.get(ProductDatabaseFields.IMAGEURL.getValue()), (boolean) data.get(ProductDatabaseFields.FEMALE.getValue()));
+                        (String) data.get(ProductDatabaseFields.COLOUR.getValue()),(String) data.get(ProductDatabaseFields.STYLE.getValue()), (String) data.get(ProductDatabaseFields.IMAGEURL.getValue()));
             case SHOE:
                 return new WomensShoe((String) data.get(ProductDatabaseFields.NAME.getValue()), (double) data.get(ProductDatabaseFields.PRICE.getValue()),
                         (List<String>) data.get(ProductDatabaseFields.SIZES.getValue()),(List<Integer>) data.get(ProductDatabaseFields.QUANTITIES.getValue()),(String) data.get(ProductDatabaseFields.BRAND.getValue()),
-                        (String) data.get(ProductDatabaseFields.COLOUR.getValue()),(String) data.get(ProductDatabaseFields.STYLE.getValue()), (String) data.get(ProductDatabaseFields.IMAGEURL.getValue()), (boolean) data.get(ProductDatabaseFields.FEMALE.getValue()));
+                        (String) data.get(ProductDatabaseFields.COLOUR.getValue()),(String) data.get(ProductDatabaseFields.STYLE.getValue()), (String) data.get(ProductDatabaseFields.IMAGEURL.getValue()));
             case CLOTHES:
                 return new WomensClothes((String) data.get(ProductDatabaseFields.NAME.getValue()), (double) data.get(ProductDatabaseFields.PRICE.getValue()),
                         (List<String>) data.get(ProductDatabaseFields.SIZES.getValue()),(List<Integer>) data.get(ProductDatabaseFields.QUANTITIES.getValue()),(String) data.get(ProductDatabaseFields.BRAND.getValue()),
-                        (String) data.get(ProductDatabaseFields.COLOUR.getValue()),(String) data.get(ProductDatabaseFields.STYLE.getValue()), (String) data.get(ProductDatabaseFields.IMAGEURL.getValue()), (boolean) data.get(ProductDatabaseFields.FEMALE.getValue()));
+                        (String) data.get(ProductDatabaseFields.COLOUR.getValue()),(String) data.get(ProductDatabaseFields.STYLE.getValue()), (String) data.get(ProductDatabaseFields.IMAGEURL.getValue()));
         }
         return  null;
     }
