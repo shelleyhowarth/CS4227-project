@@ -9,8 +9,7 @@ public enum ProductDatabaseFields {
     SIZES("sizes"),
     BRAND("brand"),
     COLOUR("colour"),
-    STYLE("style"),
-    FEMALE("female");
+    STYLE("style");
 
     private final String stringValue;
 
