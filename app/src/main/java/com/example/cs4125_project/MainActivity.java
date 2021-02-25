@@ -22,10 +22,13 @@ import com.example.cs4125_project.logs.LogTags;
 import com.example.cs4125_project.order.Order;
 import com.example.cs4125_project.order.ViewOrdersFragment;
 import com.example.cs4125_project.products.Product;
+import com.example.cs4125_project.products.ProductTypeController;
 import com.example.cs4125_project.products.ViewProductsFragment;
 import com.example.cs4125_project.shop.Cart;
 import com.example.cs4125_project.shop.ViewCartFragment;
 import com.example.cs4125_project.user.LogInFragment;
+import com.google.android.material.tabs.TabItem;
+import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
 
@@ -34,17 +37,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, ProductReadListener, OrderReadListener {
-    private ImageButton clothesButton;
-    private ImageButton accButton;
-    private ImageButton shoeButton;
-    private ProductType selected;
-    private ProductDatabaseController productDataC;
-    FirebaseAuth mAuth;
+    //ui elements
     private Button logInButton;
     private Button cartButton;
     private Button ordersButton;
-    private OrderDatabaseController orderDb;
+    private ImageButton clothesButton;
+    private ImageButton accButton;
+    private ImageButton shoeButton;
+    private TabLayout genderTab;
 
+    //backend elements
+    private ProductType selected;
+    private ProductDatabaseController productDataC;
+    FirebaseAuth mAuth;
+    private OrderDatabaseController orderDb;
 
     private final String login = "Log In";
     private  final String logout = "Log Out";
@@ -67,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         logInButton = findViewById(R.id.logInBtn);
         cartButton = findViewById(R.id.cartBtn);
         ordersButton = findViewById(R.id.ordersBtn);
+        genderTab = findViewById(R.id.genderTab);
 
         //Checking to see if user is logged in
         isLoggedIn();
@@ -81,6 +88,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         logInButton.setOnClickListener(this);
         cartButton.setOnClickListener(this);
         ordersButton.setOnClickListener(this);
+
+        genderTab.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                int mSelectedPosition = genderTab.getSelectedTabPosition();
+                if(mSelectedPosition == 0) {
+                    ProductTypeController.setFemale(true);
+                }
+                else  {
+                    ProductTypeController.setFemale(false);
+                }
+                Log.d(LogTags.GENDER_TAB, "Gender tab female is "+ProductTypeController.isFemale());
+            }
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+            }
+        });
 
         //listener for when back stack is changed
         getSupportFragmentManager().addOnBackStackChangedListener(
@@ -123,11 +150,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fragmentTransaction.commit();
     }
 
-    public void getProductList(ProductType type) {
-        productDataC.setType(type);
-        productDataC.getProductCollection();
-    }
-
     @Override
     public void productCallback(String result) {
         List<Product> products = productDataC.getProducts();
@@ -153,7 +175,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         alProd.addAll(products);
         Bundle bundle = new Bundle();
         bundle.putSerializable("Products", alProd);
-        bundle.putSerializable("Type", selected);
         ViewProductsFragment fragment = new ViewProductsFragment();
         fragment.setArguments(bundle);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -195,21 +216,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         if(i == R.id.clothesButton){
-            selected = ProductType.CLOTHES;
-            Log.d(LogTags.CHECK_CARD, "Card view selected " + selected);
-            getProductList(ProductType.CLOTHES);
+            ProductTypeController.setType(ProductType.CLOTHES);
+            Log.d(LogTags.CHECK_CARD, "Card view selected " + ProductType.CLOTHES);
+            productDataC.getProductCollection();
         }
 
         if(i == R.id.accButton){
-            selected = ProductType.ACCESSORIES;
-            Log.d(LogTags.CHECK_CARD, "Card view selected " + selected);
-            getProductList(ProductType.ACCESSORIES);
+            ProductTypeController.setType(ProductType.ACCESSORIES);
+            Log.d(LogTags.CHECK_CARD, "Card view selected " + ProductType.ACCESSORIES);
+            productDataC.getProductCollection();
         }
 
         if(i == R.id.shoeButton) {
-            selected = ProductType.SHOE;
-            Log.d(LogTags.CHECK_CARD, "Card view selected " + selected);
-            getProductList(ProductType.SHOE);
+            ProductTypeController.setType(ProductType.SHOE);
+            Log.d(LogTags.CHECK_CARD, "Card view selected " + ProductType.SHOE);
+            productDataC.getProductCollection();
         }
 
         if(i == R.id.cartBtn){
