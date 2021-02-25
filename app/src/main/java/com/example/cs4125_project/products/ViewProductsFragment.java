@@ -65,9 +65,8 @@ public class ViewProductsFragment extends Fragment implements AdapterView.OnItem
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         products = (ArrayList<Product>)getArguments().getSerializable("Products");
-        ProductType type = (ProductType) getArguments().getSerializable("Type");
-        db.setType(type);
-        Log.d(LogTags.CHECK_CARD, type.getValue());
+
+        Log.d(LogTags.CHECK_CARD, ProductTypeController.getType().getValue());
         View view = inflater.inflate(R.layout.fragment_view_products, container, false);
         adapter = new ProductInterfaceAdapter(products);
         Log.d(LogTags.CHECK_CARD, "" + adapter);
@@ -94,7 +93,7 @@ public class ViewProductsFragment extends Fragment implements AdapterView.OnItem
         List<String> sizeValues = new ArrayList<>();
         sizeValues.add(all);
         //sizes have different sizes than clothes and accessories so this just checks what product type we have
-        if(type == ProductType.SHOE) {
+        if(ProductTypeController.getType() == ProductType.SHOE) {
             for(NumericalSize s : NumericalSize.values()) { sizeValues.add(s.getValue()); }
         }
         else {
@@ -114,7 +113,7 @@ public class ViewProductsFragment extends Fragment implements AdapterView.OnItem
         List<String> styleValues = new ArrayList<>();
         styleValues.add(all);
         //different product types have different styles so we need this switch statement to check which enums to retrieve
-        switch(type) {
+        switch(ProductTypeController.getType()) {
             case CLOTHES:
                 Log.d(LogTags.SET_UP_FILTERS, "Adding clothes styles to style spinner");
                 for(ClothesStyles e : ClothesStyles.values())  { styleValues.add(e.getValue());}

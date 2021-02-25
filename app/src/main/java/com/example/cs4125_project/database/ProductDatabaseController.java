@@ -5,10 +5,14 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.example.cs4125_project.logs.LogTags;
+import com.example.cs4125_project.products.AbstractFactory;
+import com.example.cs4125_project.products.FactoryProducer;
+import com.example.cs4125_project.products.MensFactory;
 import com.example.cs4125_project.products.Product;
-import com.example.cs4125_project.products.ProductFactory;
 import com.example.cs4125_project.enums.ProductDatabaseFields;
 import com.example.cs4125_project.enums.ProductType;
+import com.example.cs4125_project.products.ProductTypeController;
+import com.example.cs4125_project.products.WomensFactory;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
@@ -23,8 +27,8 @@ import java.util.Map;
 public class ProductDatabaseController {
     private Database db = Database.getInstance();
     private ArrayList<Product> data = new ArrayList<>();
-    private ProductType type;
     private ProductReadListener myEventL;
+    private AbstractFactory productFactory;
 
     public ProductDatabaseController(){
 
@@ -40,7 +44,7 @@ public class ProductDatabaseController {
      * @param product
      */
     public void addProductToDB(Product product) {
-        db.POST(type.getValue(), product);
+        db.POST(ProductTypeController.getType().getValue(), product);
     }
 
     /**
@@ -49,8 +53,9 @@ public class ProductDatabaseController {
      */
     public void getProductCollection() {
         data.clear();
+        createFactory();
         //get reference to collection from database
-        CollectionReference colRef = db.GET(type.getValue());
+        CollectionReference colRef = db.GET(ProductTypeController.getType().getValue());
         colRef.get()
             .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
@@ -77,7 +82,8 @@ public class ProductDatabaseController {
      */
     public void getFilteredProducts(Map<String, Object> filters) {
         data.clear();
-        Query filteredResults = db.GET(type.getValue());
+        createFactory();
+        Query filteredResults = db.GET(ProductTypeController.getType().getValue());
         String key;
         Object value;
         //for each filter pair in the filters map, perform a query on the database
@@ -119,7 +125,7 @@ public class ProductDatabaseController {
      * @param productId - id of the product to be deleted
      */
     public void removeProductFromDB(String productId) {
-        db.DELETE(type.getValue(),productId);
+        db.DELETE(ProductTypeController.getType().getValue(),productId);
     }
 
     /**
@@ -130,7 +136,7 @@ public class ProductDatabaseController {
      * @param newValue - the new value
      */
     public void updateProductField(String productId, ProductDatabaseFields field, Object newValue) {
-        db.PATCH(type.getValue(), productId, field.getValue(), newValue);
+        db.PATCH(ProductTypeController.getType().getValue(), productId, field.getValue(), newValue);
     }
 
     /**
@@ -143,14 +149,9 @@ public class ProductDatabaseController {
         return data;
     }
 
-    /**
-     * Sets the type of product
-     * @author Carla Warde
-     * @param product - ProductType (CLOTHES, ACCESSORIES, SHOES)
-     */
-    public void setType(ProductType product) {
-        Log.d(LogTags.DB_GET, "Setting Type");
-        type = product;
+    public void createFactory() {
+        //generate factory
+        productFactory = FactoryProducer.getFactory(ProductTypeController.isFemale());
     }
 
     /**
@@ -159,8 +160,7 @@ public class ProductDatabaseController {
      * @param document
      */
     public void readProductIntoList(QueryDocumentSnapshot document) {
-        //Generate product from product factory
-        Product p = ProductFactory.getProduct(type, document.getData());
+        Product p = productFactory.getProduct(ProductTypeController.getType(), document.getData());
         //locally sets the id attribute of the product
         p.setId(document.getId());
         //adds product to list of data
