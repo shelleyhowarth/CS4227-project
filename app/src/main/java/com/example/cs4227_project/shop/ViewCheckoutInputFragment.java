@@ -92,7 +92,7 @@ public class ViewCheckoutInputFragment extends Fragment {
                 }
 
                 if(cardNumberValid && cvvValid  && expiryDateValid) {
-                    fixThisBitch(inputtedTexts);
+                    createOrder(inputtedTexts);
                 }
             }
         });
@@ -100,7 +100,7 @@ public class ViewCheckoutInputFragment extends Fragment {
         return view;
     }
 
-    public void fixThisBitch(ArrayList<String> texts) {
+    public void createOrder(ArrayList<String> texts) {
         Toast.makeText(getActivity(), "Your order has been confirmed", Toast.LENGTH_SHORT).show();
         String address = texts.get(0) + ", " + texts.get(1) + ", " + texts.get(2) + ", Ireland";
         String paymentDetails = texts.get(4)+ ", " + expiryDate + ", " + texts.get(6);
