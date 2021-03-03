@@ -62,9 +62,9 @@ public class ViewOrdersFragment extends Fragment {
             if(o.getEmailAddress().equalsIgnoreCase(userEmail)){
                 Log.d("Test", o.getEmailAddress());
                 int numOfItems = o.getPurchasedProducts().size();
-                double total = o.getTotal();
+                double total = o.getCost();
                 String s = String.format("%.2f", total);
-                String text = "Name: "+o.getCustomerName() + "\nTime: " + o.getTime() + "\nTotal: €" + s + "\nTotal number of Items: " + numOfItems;
+                String text = "Name: "+o.getPaymentDetails().getCardName() + "\nTime: " + o.getTime() + "\nTotal: €" + s + "\nTotal number of Items: " + numOfItems;
                 result.add(text);
                 Log.d("Test", result.toString());
             }

@@ -1,87 +1,72 @@
 package com.example.cs4227_project.order;
 
+import com.example.cs4227_project.products.Product;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 public class Order {
     private static Order instance = null;
-    private String customerName;
-    private String emailAddress;
-    private String customerAddress;
-    private HashMap<String, String> purchasedProducts;
-    private String paymentDetails;
-    private String time;
-    private double total;
+    private String emailAddress = "";
+    private Address customerAddress = new Address();
+    private HashMap<String, String> purchasedProducts = new HashMap<String, String>();
+    private CardDetails paymentDetails = new CardDetails();
+    private String time = "";
+    private double total = 0.0;
 
-    public static Order getInstance() {
+    public Order() {
+    }
+
+    /*public static Order getInstance() {
         if(instance == null) {
             instance = new Order();
         }
         return instance;
+    }*/
+
+    public void addProduct(HashMap<String, String> products){
+        for(Map.Entry<String, String> entry: products.entrySet()){
+            this.purchasedProducts.put(entry.getKey(),entry.getValue());
+        }
     }
 
-    public Order() {
-        this.customerName = "";
-        this.emailAddress = "";
-        this.customerAddress = "";
-        this.purchasedProducts = new HashMap<>();
-        this.paymentDetails = "";
+    public void addCost(double price){
+        this.total += price;
     }
 
-    public Order(String name, String email, String address, HashMap<String, String> purchases, String paymentDetails , String time, double total) {
-        this.customerName = name;
-        this.emailAddress = email;
+    public double getCost(){
+        return total;
+    }
+
+    public void addPaymentDetails(CardDetails details) {
+        this.paymentDetails = details;
+    }
+
+    public void addAddress(Address address){
         this.customerAddress = address;
-        this.purchasedProducts = purchases;
-        this.paymentDetails = paymentDetails;
-        this.time = time;
-        this.total = total;
     }
 
-    public String getCustomerName() {
-        return customerName;
+    public void addEmailAddress(String email){
+        this.emailAddress = email;
     }
 
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
+    public void addTime(){
+        Date timeNow = new Date();
+        SimpleDateFormat sfd = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy ", Locale.getDefault());
+        this.time = sfd.format(timeNow);
     }
 
-    public String getEmailAddress() {
-        return emailAddress;
-    }
+    public String getEmailAddress(){return this.emailAddress; }
 
-    public void setEmailAddress(String emailAddress) {
-        this.emailAddress = emailAddress;
-    }
+    public Address getCustomerAddress(){ return this.customerAddress; }
 
-    public String getCustomerAddress() {
-        return customerAddress;
-    }
+    public HashMap<String, String> getPurchasedProducts(){ return this.purchasedProducts; }
 
-    public void setCustomerAddress(String customerAddress) {
-        this.customerAddress = customerAddress;
-    }
+    public String getTime(){ return this.time; }
 
-    public HashMap<String, String> getPurchasedProducts() {
-        return purchasedProducts;
-    }
-
-    public void setPurchasedProducts(HashMap<String, String> purchasedProducts) {
-        this.purchasedProducts = purchasedProducts;
-    }
-
-    public String getPaymentDetails() {
-        return paymentDetails;
-    }
-
-    public void setPaymentDetails(String paymentDetails) {
-        this.paymentDetails = paymentDetails;
-    }
-
-    public String getTime(){ return time;}
-
-    public void setTime(String time){this.time = time;}
-
-    public double getTotal() {return total;}
-
-    public void setTotal(double total){this.total = total;}
+    public CardDetails getPaymentDetails(){ return this.paymentDetails; }
 }

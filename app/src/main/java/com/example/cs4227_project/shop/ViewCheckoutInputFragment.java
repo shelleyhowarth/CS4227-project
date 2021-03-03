@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +18,10 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.example.cs4227_project.R;
 import com.example.cs4227_project.database.OrderDatabaseController;
+import com.example.cs4227_project.order.Address;
+import com.example.cs4227_project.order.CardDetails;
 import com.example.cs4227_project.order.Order;
+import com.example.cs4227_project.order.OrderBuilder;
 import com.example.cs4227_project.products.Product;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -33,7 +37,6 @@ import java.util.Objects;
 
 public class ViewCheckoutInputFragment extends Fragment {
     private final Cart cart = Cart.getInstance();
-    private Date expiryDate = new Date();
 
     private FragmentActivity myContext;
     private final FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -88,7 +91,7 @@ public class ViewCheckoutInputFragment extends Fragment {
                 if (textsValid) {
                     cardNumberValid = queryCardNum(inputtedTexts.get(4), texts.get(4));
                     cvvValid = queryCVV(inputtedTexts.get(6), texts.get(6));
-                    expiryDateValid = queryExpiryDate(inputtedTexts.get(5), texts.get(6));
+                    expiryDateValid = queryExpiryDate(inputtedTexts.get(5), texts.get(5));
                 }
 
                 if(cardNumberValid && cvvValid  && expiryDateValid) {
@@ -102,21 +105,23 @@ public class ViewCheckoutInputFragment extends Fragment {
 
     public void createOrder(ArrayList<String> texts) {
         Toast.makeText(getActivity(), "Your order has been confirmed", Toast.LENGTH_SHORT).show();
-        String address = texts.get(0) + ", " + texts.get(1) + ", " + texts.get(2) + ", Ireland";
-        String paymentDetails = texts.get(4)+ ", " + expiryDate + ", " + texts.get(6);
-        double totalPrice = cart.getTotalPrice();
 
+        double totalPrice = 0.0;
         HashMap<String, String> productInfo = new HashMap<>();
         for(Map.Entry<Product, String> entry: cart.getCart().entrySet()){
+            Log.d("ORDER", "Products to checkout =" + entry.getKey().toString());
+            totalPrice += entry.getKey().getPrice();
             productInfo.put(entry.getKey().getId(),entry.getValue());
         }
 
-        Date timeNow = new Date();
-        SimpleDateFormat sfd = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy ", Locale.getDefault());
-        String ts = sfd.format(timeNow);
-        Order newOrder = new Order(texts.get(3), Objects.requireNonNull(mAuth.getCurrentUser()).getEmail(), address, productInfo, paymentDetails, ts, totalPrice);
-        orderDatabaseController.addOrderToDB(newOrder);
-        createDialog(texts, totalPrice);
+        Address address = new Address(texts.get(0), texts.get(1), texts.get(2));
+        CardDetails cardDetails = new CardDetails(texts.get(4), texts.get(3), texts.get(6), texts.get(5));
+
+        OrderBuilder orderBuilder = new OrderBuilder();
+        Order order = orderBuilder.newOrder(productInfo, address, cardDetails, Objects.requireNonNull(mAuth.getCurrentUser()).getEmail(), totalPrice);
+
+        orderDatabaseController.addOrderToDB(order);
+        createDialog(texts, order.getCost());
     }
 
     public void createDialog(ArrayList<String> texts, double price) {
@@ -180,7 +185,7 @@ public class ViewCheckoutInputFragment extends Fragment {
     public boolean queryExpiryDate(String x, EditText text){
         boolean valid = true;
         try {
-            expiryDate = parseMonth(x);
+            Date expiryDate = parseMonth(x);
         } catch (ParseException e) {
             e.printStackTrace();
             Toast.makeText(getActivity(), "The expiry date format is wrong", Toast.LENGTH_SHORT).show();
