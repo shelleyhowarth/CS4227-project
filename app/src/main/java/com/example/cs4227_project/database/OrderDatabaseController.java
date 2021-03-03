@@ -4,6 +4,9 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.example.cs4227_project.order.Address;
+import com.example.cs4227_project.order.CardDetails;
+import com.example.cs4227_project.order.OrderBuilder;
 import com.example.cs4227_project.shop.Cart;
 import com.example.cs4227_project.logs.LogTags;
 import com.example.cs4227_project.order.Order;
@@ -77,10 +80,15 @@ public class OrderDatabaseController {
     }
 
     public Order getOrder(Map<String, Object> order) {
+        Log.d("ORDER", order.get("paymentDetails").getClass().getName());
+        HashMap<String, String> cardDetails = (HashMap<String, String>) order.get("paymentDetails");
+        HashMap<String, String> customerAddress = (HashMap<String, String>) order.get("customerAddress");
 
-        Order o = new Order((String)order.get("customerName"), (String)order.get("emailAddress"),
-                (String)order.get("customerAddress"), (HashMap<String, String>)order.get("purchasedProducts"),
-                (String)order.get("paymentDetails"), (String)order.get("time"), (double)order.get("total"));
+        CardDetails details = new CardDetails(cardDetails.get("cardNum"), cardDetails.get("cardName"), cardDetails.get("cvv"), cardDetails.get("expiryDate"));
+        Address address = new Address(customerAddress.get("line1"), customerAddress.get("city"), customerAddress.get("county"));
+
+        OrderBuilder builder = new OrderBuilder();
+        Order o = builder.newOrder((HashMap<String, String>)order.get("purchasedProducts"), address, details, (String)order.get("emailAddress"), (double)order.get("cost"));
         return o;
     }
 

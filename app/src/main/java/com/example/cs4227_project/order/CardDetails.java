@@ -1,23 +1,26 @@
 package com.example.cs4227_project.order;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class CardDetails {
     String cardNum;
     String cardName;
     String cvv;
-    Date expiryDate;
+    String expiryDate;
 
     public CardDetails(){
 
     }
 
-    public CardDetails(String cardNum, String cardName,String cvv, Date date){
+    public CardDetails(String cardNum, String cardName,String cvv, String date){
         this.cardNum = cardNum;
         this.cardName = cardName;
         this.cvv = cvv;
         this.expiryDate = date;
     }
+
 
     public String getCardNum() {
         return cardNum;
@@ -43,11 +46,11 @@ public class CardDetails {
         this.cvv = cvv;
     }
 
-    public Date getExpiryDate() {
+    public String getExpiryDate() {
         return expiryDate;
     }
 
-    public void setExpiryDate(Date expiryDate) {
+    public void setExpiryDate(String expiryDate) {
         this.expiryDate = expiryDate;
     }
 }
