@@ -33,17 +33,11 @@ import java.util.Objects;
 
 public class ViewCheckoutInputFragment extends Fragment {
     private final Cart cart = Cart.getInstance();
-    private Order newOrder;
-    private String town, city, county, address, cardName, expiryDateString, cardNum, cvv, paymentDetails;
     private Date expiryDate = new Date();
 
-    private EditText townInput, cityInput, countyInput, cardNameInput, cardNumInput, expiryDateInput, cvvInput;
-
-    private Button nextButton;
-
     private FragmentActivity myContext;
-    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
-    private OrderDatabaseController orderDatabaseController = new OrderDatabaseController();
+    private final FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private final OrderDatabaseController orderDatabaseController = new OrderDatabaseController();
 
     public ViewCheckoutInputFragment() {
         // Required empty public constructor
@@ -65,138 +59,40 @@ public class ViewCheckoutInputFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_checkout_input, container, false);
 
-        townInput = view.findViewById(R.id.townInput);
-        cityInput = view.findViewById(R.id.cityInput);
-        countyInput = view.findViewById(R.id.countyInput);
+        final ArrayList<EditText> texts = createTexts(view);
 
-        cardNameInput = view.findViewById(R.id.cardNameInput);
-        cardNumInput = view.findViewById(R.id.cardNumInput);
-        expiryDateInput = view.findViewById(R.id.expiryDateInput);
-        cvvInput = view.findViewById(R.id.cvvInput);
-
-        nextButton = view.findViewById(R.id.submitButton);
+        Button nextButton = view.findViewById(R.id.submitButton);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(townInput.getText().toString().matches("")){
-                    Toast.makeText(getActivity(), "Address has not been inputted", Toast.LENGTH_SHORT).show();
-                    townInput.requestFocus();
-                    townInput.setError("No Entry");
+                ArrayList<String> inputtedTexts = new ArrayList<>();
+                for(EditText text : texts){
+                    if(text.getText().toString().matches("")) {
+                        Toast.makeText(getActivity(), "No input detected", Toast.LENGTH_SHORT).show();
+                        text.requestFocus();
+                        text.setError("No Entry");
+                    } else {
+                        inputtedTexts.add(text.getText().toString());
+                    }
                 }
-                town = townInput.getText().toString();
 
-                if(cityInput.getText().toString().matches("")){
-                    Toast.makeText(getActivity(), "Town/City has not been inputted", Toast.LENGTH_SHORT).show();
-                    cityInput.requestFocus();
-                    cityInput.setError("No Entry");
-                }
-                city = cityInput.getText().toString();
-
-                if(countyInput.getText().toString().matches("")){
-                    Toast.makeText(getActivity(), "County has not been inputted", Toast.LENGTH_SHORT).show();
-                    countyInput.requestFocus();
-                    countyInput.setError("No Entry");
-                }
-                county = countyInput.getText().toString();
-
-                if(cardNameInput.getText().toString().matches("")){
-                    Toast.makeText(getActivity(), "Name of Card Holder has not been inputted", Toast.LENGTH_SHORT).show();
-                    cardNameInput.requestFocus();
-                    cardNameInput.setError("No Entry");
-                }
-                cardName = cardNameInput.getText().toString();
-
-                if(cardNumInput.getText().toString().matches("")){
-                    Toast.makeText(getActivity(), "Card Number has not been inputted", Toast.LENGTH_SHORT).show();
-                    cardNumInput.requestFocus();
-                    cardNumInput.setError("No Entry");
-                }
-                cardNum = cardNumInput.getText().toString();
-
-                if(expiryDateInput.getText().toString().matches("")){
-                    Toast.makeText(getActivity(), "Expiry Date has not been inputted", Toast.LENGTH_SHORT).show();
-                    expiryDateInput.requestFocus();
-                    expiryDateInput.setError("No Entry");
-                }
-                expiryDateString = expiryDateInput.getText().toString();
-
-                if(cvvInput.getText().toString().matches("")){
-                    Toast.makeText(getActivity(), "CVV has not been inputted", Toast.LENGTH_SHORT).show();
-                    cvvInput.requestFocus();
-                    cvvInput.setError("No Entry");
-                }
-                cvv = cvvInput.getText().toString();
-
-                final List<String> texts = new ArrayList<>();
-                texts.add(town);
-                texts.add(city);
-                texts.add(county);
-                texts.add(cardName);
-
-                boolean cvvValid;
-                boolean cardNumberValid;
-                boolean textsValid = false;
+                boolean textsValid = true;
+                boolean cardNumberValid = false;
+                boolean cvvValid = false;
                 boolean expiryDateValid = false;
 
-                for(String x : texts){
-                    textsValid = queryText(x);
-                    if(!textsValid){
-                        break;
-                    }
+                if (inputtedTexts.size() < 7) {
+                    textsValid = false;
                 }
 
-                cardNumberValid = queryCardNum(cardNum);
-
-                if(!expiryDateString.matches("")){
-                    try {
-                        expiryDate = parseMonth(expiryDateString);
-                        expiryDateValid = true;
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                        Toast.makeText(getActivity(), "The expiry date format is wrong", Toast.LENGTH_SHORT).show();
-                        expiryDateValid = false;
-                    }
+                if (textsValid) {
+                    cardNumberValid = queryCardNum(inputtedTexts.get(4), texts.get(4));
+                    cvvValid = queryCVV(inputtedTexts.get(6), texts.get(6));
+                    expiryDateValid = queryExpiryDate(inputtedTexts.get(5), texts.get(6));
                 }
 
-                cvvValid = queryCVV(cvv);
-
-                if(cardNumberValid && cvvValid && textsValid && expiryDateValid) {
-                    Toast.makeText(getActivity(), "Your order has been confirmed", Toast.LENGTH_SHORT).show();
-                    address = town + ", " + city + ", " + county + ", Ireland";
-                    paymentDetails = cardNum + ", " + expiryDate + ", " + cvv;
-                    double totalPrice = cart.getTotalPrice();
-
-                    HashMap<String, String> productInfo = new HashMap<>();
-                    for(Map.Entry<Product, String> entry: cart.getCart().entrySet()){
-                        productInfo.put(entry.getKey().getId(),entry.getValue());
-                    }
-
-                    Date timeNow = new Date();
-                    SimpleDateFormat sfd = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy ", Locale.getDefault());
-                    String ts = sfd.format(timeNow);
-                    newOrder = new Order(cardName, Objects.requireNonNull(mAuth.getCurrentUser()).getEmail(), address, productInfo, paymentDetails , ts, totalPrice);
-                    orderDatabaseController.addOrderToDB(newOrder);
-                    AlertDialog.Builder builder = new AlertDialog.Builder(myContext);
-                    builder.setCancelable(true);
-                    if (totalPrice == 0) {
-                        builder.setTitle("Order Confirmation");
-                        builder.setMessage("Your order has already been processed!\nPlease press 'OK' to return to the main menu!");
-                    }
-                    else {
-                        String total = String.format("%.2f", totalPrice);
-                        builder.setTitle("Order Confirmation");
-                        builder.setMessage("Thank you " + cardName + "! \nYour order has been confirmed! \nYour card has been charged €" + total);
-                    }
-                    builder.setPositiveButton("Ok",
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    popBackToHome();
-                                }
-                            });
-
-                    AlertDialog dialog = builder.create();
-                    dialog.show();
+                if(cardNumberValid && cvvValid  && expiryDateValid) {
+                    createOrder(inputtedTexts);
                 }
             }
         });
@@ -204,31 +100,92 @@ public class ViewCheckoutInputFragment extends Fragment {
         return view;
     }
 
-    public boolean queryText(String x){
-        boolean valid = true;
-        if (x.matches("")) {
-            valid = false;
+    public void createOrder(ArrayList<String> texts) {
+        Toast.makeText(getActivity(), "Your order has been confirmed", Toast.LENGTH_SHORT).show();
+        String address = texts.get(0) + ", " + texts.get(1) + ", " + texts.get(2) + ", Ireland";
+        String paymentDetails = texts.get(4)+ ", " + expiryDate + ", " + texts.get(6);
+        double totalPrice = cart.getTotalPrice();
+
+        HashMap<String, String> productInfo = new HashMap<>();
+        for(Map.Entry<Product, String> entry: cart.getCart().entrySet()){
+            productInfo.put(entry.getKey().getId(),entry.getValue());
         }
-        return valid;
+
+        Date timeNow = new Date();
+        SimpleDateFormat sfd = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy ", Locale.getDefault());
+        String ts = sfd.format(timeNow);
+        Order newOrder = new Order(texts.get(3), Objects.requireNonNull(mAuth.getCurrentUser()).getEmail(), address, productInfo, paymentDetails, ts, totalPrice);
+        orderDatabaseController.addOrderToDB(newOrder);
+        createDialog(texts, totalPrice);
     }
 
-    public boolean queryCardNum(String x){
+    public void createDialog(ArrayList<String> texts, double price) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(myContext);
+        builder.setCancelable(true);
+        if (price == 0) {
+            builder.setTitle("Order Confirmation");
+            builder.setMessage("Your order has already been processed!\nPlease press 'OK' to return to the main menu!");
+        }
+        else {
+            String total = String.format("%.2f", price);
+            builder.setTitle("Order Confirmation");
+            builder.setMessage("Thank you " + texts.get(3) + "! \nYour order has been confirmed! \nYour card has been charged €" + total);
+        }
+        builder.setPositiveButton("Ok",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        popBackToHome();
+                    }
+                });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    public ArrayList<EditText> createTexts(View view){
+        ArrayList<EditText> texts = new ArrayList<>();
+        texts.add((EditText) view.findViewById(R.id.townInput));
+        texts.add((EditText) view.findViewById(R.id.cityInput));
+        texts.add((EditText) view.findViewById(R.id.countyInput));
+        texts.add((EditText) view.findViewById(R.id.cardNameInput));
+        texts.add((EditText) view.findViewById(R.id.cardNumInput));
+        texts.add((EditText) view.findViewById(R.id.expiryDateInput));
+        texts.add((EditText) view.findViewById(R.id.cvvInput));
+        return texts;
+    }
+
+    public boolean queryCardNum(String x, EditText text){
         boolean valid = true;
         if(!(x.length() == 16)) {
             Toast.makeText(getActivity(), "Card Number must be 16 digits in length", Toast.LENGTH_SHORT).show();
-            cardNumInput.requestFocus();
-            cardNumInput.setError("Invalid Entry");
+            text.requestFocus();
+            text.setError("Invalid Entry");
             valid = false;
         }
         return valid;
     }
 
-    public boolean queryCVV(String x){
+    public boolean queryCVV(String x, EditText text){
         boolean valid = true;
         if(!(x.length() == 3)) {
             Toast.makeText(getActivity(), "CVV must be 3 digits in length", Toast.LENGTH_SHORT).show();
-            cvvInput.requestFocus();
-            cvvInput.setError("Invalid Entry");
+            text.requestFocus();
+            text.setError("Invalid Entry");
+            valid = false;
+        }
+        return valid;
+    }
+
+    public boolean queryExpiryDate(String x, EditText text){
+        boolean valid = true;
+        try {
+            expiryDate = parseMonth(x);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            Toast.makeText(getActivity(), "The expiry date format is wrong", Toast.LENGTH_SHORT).show();
+            text.requestFocus();
+            text.setError("Invalid Entry");
             valid = false;
         }
         return valid;
