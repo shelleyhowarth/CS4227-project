@@ -11,12 +11,14 @@ public class Stock {
         this.sizeQuantity = sizeQuantity;
     }
 
+    //For admin adding products to site
     public void addStock(String size, int quantity){
         int val = sizeQuantity.get(size);
         int newQuantity = val + quantity;
         this.sizeQuantity.put(size, newQuantity);
     }
 
+    // When customer buys products
     public void sell(String id, String size, int quantity){
         int val = sizeQuantity.get(size);
         int newQuantity = val - quantity;
