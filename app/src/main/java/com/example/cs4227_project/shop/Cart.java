@@ -25,7 +25,7 @@ public class Cart {
         return products;
     }
 
-    public void addProductToCart(Product p, String s) {
+    public void addProductToCart(Product p, String s, int quantity) {
         products.put(p,s);
     }
 

@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -87,6 +88,8 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter implements Ada
                     TextView textViewProductName = productDialog.findViewById(R.id.productName);
                     TextView textViewProductPrice = productDialog.findViewById(R.id.productPrice);
                     ImageView imageViewProductImage = productDialog.findViewById(R.id.productImage);
+                    final EditText editQuantity = productDialog.findViewById(R.id.quantity);
+
                     addBtn = productDialog.findViewById(R.id.addToCart);
                     inCart(item);
                     size = productDialog.findViewById(R.id.spinner);
@@ -95,12 +98,14 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter implements Ada
                     textViewProductPrice.setText("€" + String.valueOf(item.getPrice()));
                     size.setAdapter(setUpSpinner(item));
                     Picasso.get().load(item.getImageURL()).fit().centerCrop().into(imageViewProductImage);
+
                     addBtn.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View productView) {
                             chosenSize = size.getSelectedItem().toString();
                             if(!(cart.inCart(item))) {
-                                cart.addProductToCart(item, chosenSize);
+                                int quantity = Integer.parseInt(editQuantity.getText().toString());
+                                cart.addProductToCart(item, chosenSize, quantity);
                                 Log.d(LogTags.CHECK_CARD, "Added Product to cart");
                                 Toast.makeText(productDialog.getContext(), "Selected size is " + chosenSize, Toast.LENGTH_SHORT).show();
                                 Toast.makeText(productDialog.getContext(), "Added the item to cart", Toast.LENGTH_SHORT).show();
