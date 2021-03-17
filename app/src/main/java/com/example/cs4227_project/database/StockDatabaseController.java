@@ -9,6 +9,8 @@ import com.example.cs4227_project.order.Stock;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -63,8 +65,31 @@ public class StockDatabaseController {
                 });
     }
 
+    public void getStockDocs(final ArrayList<String> ids){
+        stock.clear();
+        CollectionReference colRef = db.GET("stock");
+        colRef.get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                //convert document to Product and add to List of data
+                                for(String id : ids){
+                                    if(document.getId().equals(id)){
+                                        readStockIntoList(document);
+                                    }
+                                }
+                            }
+                            stockL.stockCallback("success");
+                        } else {
+                        }
+                    }
+                });
+    }
+
     public Stock getStock(Map<String, Object> stock) {
-        Stock s = new Stock((String)stock.get("id"), (HashMap<String, Integer>)stock.get("sizeQuantity"));
+        Stock s = new Stock((String)stock.get("id"), (HashMap<String, String>)stock.get("sizeQuantity"));
         return s;
     }
 
@@ -73,7 +98,7 @@ public class StockDatabaseController {
         stock.add(s);
     }
 
-    public ArrayList<Stock> getAllStock() {
+    public ArrayList<Stock> getStockArray() {
         return stock;
     }
 }

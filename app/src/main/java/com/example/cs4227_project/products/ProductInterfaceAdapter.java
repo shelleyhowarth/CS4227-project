@@ -22,10 +22,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cs4227_project.logs.LogTags;
 import com.example.cs4227_project.R;
+import com.example.cs4227_project.order.Stock;
 import com.example.cs4227_project.shop.Cart;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class ProductInterfaceAdapter extends RecyclerView.Adapter implements AdapterView.OnItemSelectedListener{
@@ -104,8 +106,11 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter implements Ada
                         public void onClick(View productView) {
                             chosenSize = size.getSelectedItem().toString();
                             if(!(cart.inCart(item))) {
-                                int quantity = Integer.parseInt(editQuantity.getText().toString());
-                                cart.addProductToCart(item, chosenSize, quantity);
+                                String quantity = editQuantity.getText().toString();
+                                HashMap<String, String> sizeQ = new HashMap<>();
+                                sizeQ.put(chosenSize, quantity);
+                                Stock stock = new Stock(item.getId(), sizeQ);
+                                cart.addProductToCart(item, stock);
                                 Log.d(LogTags.CHECK_CARD, "Added Product to cart");
                                 Toast.makeText(productDialog.getContext(), "Selected size is " + chosenSize, Toast.LENGTH_SHORT).show();
                                 Toast.makeText(productDialog.getContext(), "Added the item to cart", Toast.LENGTH_SHORT).show();

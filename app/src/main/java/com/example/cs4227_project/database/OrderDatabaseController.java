@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import com.example.cs4227_project.order.Address;
 import com.example.cs4227_project.order.CardDetails;
 import com.example.cs4227_project.order.OrderBuilder;
+import com.example.cs4227_project.order.Stock;
 import com.example.cs4227_project.shop.Cart;
 import com.example.cs4227_project.logs.LogTags;
 import com.example.cs4227_project.order.Order;
@@ -44,10 +45,12 @@ public class OrderDatabaseController {
         List<Integer> sizesQuantities;
         Map<String, List<Integer>> updatedQuantities = new HashMap<>();
         int sizeIndex;
-        for(Map.Entry<Product, String> entry: cart.getCart().entrySet()){
+        for(Map.Entry<Product, Stock> entry: cart.getCart().entrySet()){
             Product p = entry.getKey();
             sizesQuantities = p.getSizeQuantities();
-            sizeIndex = p.getSizes().indexOf(entry.getValue());
+            Map.Entry<String,String> sizeQ = entry.getValue().getSizeQuantity().entrySet().iterator().next();
+            String size = sizeQ.getKey();
+            sizeIndex = p.getSizes().indexOf(size);
             //Integer num = (int) sizesQuantities.get(sizeIndex);
             //num--;
             //sizesQuantities.set(sizeIndex, num);
@@ -83,12 +86,13 @@ public class OrderDatabaseController {
         Log.d("ORDER", order.get("paymentDetails").getClass().getName());
         HashMap<String, String> cardDetails = (HashMap<String, String>) order.get("paymentDetails");
         HashMap<String, String> customerAddress = (HashMap<String, String>) order.get("customerAddress");
+        HashMap<String, String> productsDetails = (HashMap<String, String>)order.get("purchasedProducts");
 
         CardDetails details = new CardDetails(cardDetails.get("cardNum"), cardDetails.get("cardName"), cardDetails.get("cvv"), cardDetails.get("expiryDate"));
         Address address = new Address(customerAddress.get("line1"), customerAddress.get("city"), customerAddress.get("county"));
 
         OrderBuilder builder = new OrderBuilder();
-        Order o = builder.newOrder((HashMap<String, String>)order.get("purchasedProducts"), address, details, (String)order.get("emailAddress"), (double)order.get("cost"));
+        Order o = builder.newOrder((HashMap<String, Stock>)order.get("purchasedProducts"), address, details, (String)order.get("emailAddress"), (double)order.get("cost"));
         return o;
     }
 

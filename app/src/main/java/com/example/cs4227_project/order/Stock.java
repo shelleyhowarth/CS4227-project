@@ -4,9 +4,9 @@ import java.util.HashMap;
 
 public class Stock {
     private String id;
-    private HashMap<String, Integer> sizeQuantity;
+    private HashMap<String, String> sizeQuantity;
 
-    public Stock(String id, HashMap<String, Integer> sizeQuantity){
+    public Stock(String id, HashMap<String, String> sizeQuantity){
         this.id = id;
         this.sizeQuantity = sizeQuantity;
     }
@@ -25,7 +25,7 @@ public class Stock {
 
     public void setId(String id) { this.id = id; }
 
-    public HashMap<String, Integer> getSizeQuantity() { return sizeQuantity; }
+    public HashMap<String, String> getSizeQuantity() { return sizeQuantity; }
 
-    public void setSizeQuantity(HashMap<String, Integer> sizeQuantity) { this.sizeQuantity = sizeQuantity; }
+    public void setSizeQuantity(HashMap<String, String> sizeQuantity) { this.sizeQuantity = sizeQuantity; }
 }

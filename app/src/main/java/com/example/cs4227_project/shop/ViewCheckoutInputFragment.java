@@ -18,10 +18,15 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.example.cs4227_project.R;
 import com.example.cs4227_project.database.OrderDatabaseController;
+import com.example.cs4227_project.database.StockDatabaseController;
+import com.example.cs4227_project.database.StockReadListener;
 import com.example.cs4227_project.order.Address;
 import com.example.cs4227_project.order.CardDetails;
+import com.example.cs4227_project.order.CommandControl;
 import com.example.cs4227_project.order.Order;
 import com.example.cs4227_project.order.OrderBuilder;
+import com.example.cs4227_project.order.SellStock;
+import com.example.cs4227_project.order.Stock;
 import com.example.cs4227_project.products.Product;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -35,12 +40,14 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
-public class ViewCheckoutInputFragment extends Fragment {
+public class ViewCheckoutInputFragment extends Fragment implements StockReadListener {
     private final Cart cart = Cart.getInstance();
 
     private FragmentActivity myContext;
     private final FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private final OrderDatabaseController orderDatabaseController = new OrderDatabaseController();
+    private final StockDatabaseController stockDb = new StockDatabaseController(this);
+    private final HashMap<Product, Stock> cartMap = new HashMap<>();
 
     public ViewCheckoutInputFragment() {
         // Required empty public constructor
@@ -107,12 +114,15 @@ public class ViewCheckoutInputFragment extends Fragment {
         Toast.makeText(getActivity(), "Your order has been confirmed", Toast.LENGTH_SHORT).show();
 
         double totalPrice = 0.0;
-        HashMap<String, String> productInfo = new HashMap<>();
-        for(Map.Entry<Product, String> entry: cart.getCart().entrySet()){
+        HashMap<String, Stock> productInfo = new HashMap<>();
+        for(Map.Entry<Product, Stock> entry: cart.getCart().entrySet()){
             Log.d("ORDER", "Products to checkout =" + entry.getKey().toString());
             totalPrice += entry.getKey().getPrice();
-            productInfo.put(entry.getKey().getId(),entry.getValue());
+            cartMap.put(entry.getKey(), entry.getValue());
+            productInfo.put(entry.getKey().getId(), entry.getValue());
         }
+
+        Log.d("STOCKS", "Cart List" + cartMap.toString());
 
         Address address = new Address(texts.get(0), texts.get(1), texts.get(2));
         CardDetails cardDetails = new CardDetails(texts.get(4), texts.get(3), texts.get(6), texts.get(5));
@@ -120,8 +130,49 @@ public class ViewCheckoutInputFragment extends Fragment {
         OrderBuilder orderBuilder = new OrderBuilder();
         Order order = orderBuilder.newOrder(productInfo, address, cardDetails, Objects.requireNonNull(mAuth.getCurrentUser()).getEmail(), totalPrice);
 
+        updateStock(productInfo);
         orderDatabaseController.addOrderToDB(order);
         createDialog(texts, order.getCost());
+    }
+
+    public void updateStock(HashMap<String, Stock> products){
+        Log.d("STOCKS", "Get Stock");
+        ArrayList<String> productIds = new ArrayList<>();
+        for(Map.Entry<String, Stock> entry: products.entrySet()){
+            String productId = entry.getKey();
+            productIds.add(productId);
+        }
+        stockDb.getStockDocs(productIds);
+    }
+
+    @Override
+    public void stockCallback(String result){
+        ArrayList<Stock> stock = new ArrayList<>();
+        stock = stockDb.getStockArray();
+        Log.d("STOCKS", "Stock list" + stock.toString());
+        changeStock(stock);
+    }
+
+    public void changeStock(ArrayList<Stock> stock){
+        CommandControl commandController = new CommandControl();
+        for(Map.Entry<Product, Stock> entry: cartMap.entrySet()){
+            String productId = entry.getKey().getId();
+            Stock stockToChange = entry.getValue();
+            Log.d("STOCKS", "Stock list" + stockToChange.toString());
+            Map.Entry<String,String> sizeQ = stockToChange.getSizeQuantity().entrySet().iterator().next();
+            String size = sizeQ.getKey();
+            int quantity = Integer.parseInt(sizeQ.getValue());
+            for(Stock s : stock){
+                Log.d("STOCKS", "Stock ids" + s.getId());
+                if(s.getId().equals(productId)){
+                    Stock stockFromDb = s;
+                    Log.d("STOCKS", "Stock ids match " + productId);
+                    SellStock sellStock= new SellStock(stockFromDb, quantity, size);
+                    commandController.addCommand(sellStock);
+                }
+            }
+        }
+        commandController.executeCommands();
     }
 
     public void createDialog(ArrayList<String> texts, double price) {

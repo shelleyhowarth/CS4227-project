@@ -13,7 +13,7 @@ public class Order {
     private static Order instance = null;
     private String emailAddress = "";
     private Address customerAddress = new Address();
-    private HashMap<String, String> purchasedProducts = new HashMap<String, String>();
+    private HashMap<String, Stock> purchasedProducts = new HashMap<>();
     private CardDetails paymentDetails = new CardDetails();
     private String time = "";
     private double total = 0.0;
@@ -28,9 +28,9 @@ public class Order {
         return instance;
     }*/
 
-    public void addProduct(HashMap<String, String> products){
-        for(Map.Entry<String, String> entry: products.entrySet()){
-            this.purchasedProducts.put(entry.getKey(),entry.getValue());
+    public void addProduct(HashMap<String, Stock> products){
+        for(Map.Entry<String, Stock> entry: products.entrySet()){
+            this.purchasedProducts.put(entry.getKey(), entry.getValue());
         }
     }
 
@@ -64,7 +64,7 @@ public class Order {
 
     public Address getCustomerAddress(){ return this.customerAddress; }
 
-    public HashMap<String, String> getPurchasedProducts(){ return this.purchasedProducts; }
+    public HashMap<String, Stock> getPurchasedProducts(){ return this.purchasedProducts; }
 
     public String getTime(){ return this.time; }
 
