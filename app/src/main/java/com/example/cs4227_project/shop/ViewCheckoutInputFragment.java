@@ -20,6 +20,7 @@ import com.example.cs4227_project.R;
 import com.example.cs4227_project.database.OrderDatabaseController;
 import com.example.cs4227_project.database.StockDatabaseController;
 import com.example.cs4227_project.database.StockReadListener;
+import com.example.cs4227_project.logs.LogTags;
 import com.example.cs4227_project.order.Address;
 import com.example.cs4227_project.order.CardDetails;
 import com.example.cs4227_project.order.CommandControl;
@@ -130,43 +131,62 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
         OrderBuilder orderBuilder = new OrderBuilder();
         Order order = orderBuilder.newOrder(productInfo, address, cardDetails, Objects.requireNonNull(mAuth.getCurrentUser()).getEmail(), totalPrice);
 
-        updateStock(productInfo);
+        updateStock();
         orderDatabaseController.addOrderToDB(order);
         createDialog(texts, order.getCost());
     }
 
-    public void updateStock(HashMap<String, Stock> products){
+    /**
+     * Gets a list of document ids needed from stock collection in database
+     * @author Aine Reynolds
+     * @Description: Goes through user cart getting product ids then calls
+     * StockDatabaseController to retrieve docs from databse.
+     */
+    public void updateStock(){
         Log.d("STOCKS", "Get Stock");
         ArrayList<String> productIds = new ArrayList<>();
-        for(Map.Entry<String, Stock> entry: products.entrySet()){
-            String productId = entry.getKey();
+        for(Map.Entry<Product, Stock> entry: cartMap.entrySet()){
+            String productId = entry.getKey().getId();
+            Log.d(LogTags.COMMAND_DP, "Reading ids into list:" + productId);
             productIds.add(productId);
         }
         stockDb.getStockDocs(productIds);
     }
 
+    /**
+     * When the StockDatabaseController has finished executing the getStockDocsCommand
+     * @author Aine Reynolds
+     * @Description: Retrieves an arraylist of type stock using the StockDatabaseController.
+     * Then calls changeStock method.
+     */
     @Override
     public void stockCallback(String result){
         ArrayList<Stock> stock = new ArrayList<>();
         stock = stockDb.getStockArray();
-        Log.d("STOCKS", "Stock list" + stock.toString());
+        Log.d("STOCKS", "Stocks in database " + stock.toString());
         changeStock(stock);
     }
 
+    /**
+     * Implements the Command DP
+     * @author Aine Reynolds
+     * @param stock - the arraylist of stock from the database.
+     * @Description: Goes through each item in the user cart and gets the size and quantity
+     * that needs to be changed in the database. Finds that stock from the list of stock that was
+     * just read in from the database and implements the SellStock Command.
+     */
     public void changeStock(ArrayList<Stock> stock){
         CommandControl commandController = new CommandControl();
         for(Map.Entry<Product, Stock> entry: cartMap.entrySet()){
             String productId = entry.getKey().getId();
             Stock stockToChange = entry.getValue();
-            Log.d("STOCKS", "Stock list" + stockToChange.toString());
+            Log.d("STOCKS", "Stock list to change " + stockToChange.toString());
             Map.Entry<String,String> sizeQ = stockToChange.getSizeQuantity().entrySet().iterator().next();
             String size = sizeQ.getKey();
             int quantity = Integer.parseInt(sizeQ.getValue());
             for(Stock s : stock){
-                Log.d("STOCKS", "Stock ids" + s.getId());
                 if(s.getId().equals(productId)){
                     Stock stockFromDb = s;
-                    Log.d("STOCKS", "Stock ids match " + productId);
                     SellStock sellStock= new SellStock(stockFromDb, quantity, size);
                     commandController.addCommand(sellStock);
                 }

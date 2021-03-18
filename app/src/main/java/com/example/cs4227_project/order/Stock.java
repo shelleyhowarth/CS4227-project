@@ -28,4 +28,8 @@ public class Stock {
     public HashMap<String, String> getSizeQuantity() { return sizeQuantity; }
 
     public void setSizeQuantity(HashMap<String, String> sizeQuantity) { this.sizeQuantity = sizeQuantity; }
+
+    public String toString(){
+        return this.id;
+    }
 }

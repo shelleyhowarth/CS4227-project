@@ -10,6 +10,12 @@ public class SellStock implements Command{
     private Stock abcStock;
     private StockDatabaseController stockDb = new StockDatabaseController();
 
+    /**
+     * Command DP - SellStock
+     * @author Aine Reynolds
+     * @Description: Updates the quantity value for a particular stock.
+     * Then updates the database.
+     */
     public SellStock(Stock abcStock, int quantity, String size){
         this.abcStock = abcStock;
         HashMap<String, String> sizesQ = abcStock.getSizeQuantity();
