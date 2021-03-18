@@ -1,7 +1,5 @@
 package com.example.cs4227_project.products.productAttributes;
 
-import java.util.ArrayList;
-
 public class AttributeManager {
     private Attributes brands;
     private Attributes colours;

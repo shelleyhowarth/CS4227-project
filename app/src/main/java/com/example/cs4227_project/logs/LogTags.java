@@ -15,4 +15,5 @@ public class LogTags {
     public static final String LOG_IN = "LOG_IN";
     public static final String REGISTER_ACCOUNT = "REGISTER_ACCOUNT";
     public static final String GENDER_TAB = "GENDER_TAB";
+    public static final String ATTRIBUTE_MANAGER = "ATTRIBUTE_MANAGER";
 }
