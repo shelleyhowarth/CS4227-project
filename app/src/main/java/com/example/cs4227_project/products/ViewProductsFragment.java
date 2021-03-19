@@ -72,24 +72,16 @@ public class ViewProductsFragment extends Fragment implements AdapterView.OnItem
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         recyclerView.setAdapter(adapter);
 
-        // Set up filter spinners
-        filterSpinners = new HashMap<>();
-        // Map spinner UI ids to respective FilterAttributes ENUMS
-        Map<FilterAttributes, Integer> spinnerIds = new HashMap<>();
-        spinnerIds.put(FilterAttributes.BRANDS, R.id.brandSpinner);
-        spinnerIds.put(FilterAttributes.COLOURS, R.id.colourSpinner);
-        spinnerIds.put(FilterAttributes.SIZES, R.id.sizeSpinner);
-        spinnerIds.put(FilterAttributes.STYLES, R.id.styleSpinner);
-
         //Loop through FilterAttributes and set up spinners for each filter
         for(FilterAttributes f : FilterAttributes.values()) {
-            Spinner s = view.findViewById(spinnerIds.get(f));
+            Spinner s = view.findViewById(attributeManager.getSpinnerId(f));
             s.setOnItemSelectedListener(this);
             List<String> values = new ArrayList<>();
             values.add(all);
             values.addAll(attributeManager.getAttributes(f));
             s.setAdapter(initSpinner(values));
             filterSpinners.put(f, s);
+            Log.d(LogTags.SET_UP_FILTERS, "Set up "+f.getValue()+" spinner");
         }
 
         //filter products button setup

@@ -2,6 +2,7 @@ package com.example.cs4227_project.products.productAttributes;
 
 import android.util.Log;
 
+import com.example.cs4227_project.R;
 import com.example.cs4227_project.database.AttributesDatabaseController;
 import com.example.cs4227_project.database.AttributesReadListener;
 import com.example.cs4227_project.enums.FilterAttributes;
@@ -48,6 +49,21 @@ public class AttributeManager implements AttributesReadListener, Serializable {
                 return styles.getAttributes();
         }
         return null;
+    }
+
+    //returns ui id of spinner object for respective FilterAttribute
+    public int getSpinnerId(FilterAttributes attribute) {
+        switch (attribute) {
+            case BRANDS:
+                return R.id.brandSpinner;
+            case COLOURS:
+                return R.id.colourSpinner;
+            case SIZES:
+                return R.id.sizeSpinner;
+            case STYLES:
+                return R.id.styleSpinner;
+        }
+        return -1;
     }
 
     //Callback method for attribute database controller. Called when the database read is finished
