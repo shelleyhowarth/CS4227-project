@@ -48,9 +48,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TabLayout genderTab;
 
     //backend elements
-    private ProductType selected;
     private ProductDatabaseController productDataC;
-    FirebaseAuth mAuth;
+    private FirebaseAuth mAuth;
     private OrderDatabaseController orderDb;
 
     private final String login = "Log In";
@@ -118,8 +117,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         isLoggedIn();
                     }
                 });
-        AttributeManager attributeManager = new AttributeManager();
-        attributeManager.fillAttributes();
     }
 
     //Changes button to log in or sign out depending on whether the user is logged in
