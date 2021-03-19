@@ -23,12 +23,14 @@ import com.example.cs4227_project.enums.AccessoryStyles;
 import com.example.cs4227_project.enums.Brand;
 import com.example.cs4227_project.enums.ClothesStyles;
 import com.example.cs4227_project.enums.Colour;
+import com.example.cs4227_project.enums.FilterAttributes;
 import com.example.cs4227_project.enums.NumericalSize;
 import com.example.cs4227_project.enums.ProductDatabaseFields;
 import com.example.cs4227_project.enums.ProductType;
 import com.example.cs4227_project.enums.ShoeStyles;
 import com.example.cs4227_project.enums.AlphaSize;
 import com.example.cs4227_project.logs.LogTags;
+import com.example.cs4227_project.products.productAttributes.AttributeManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,7 +44,7 @@ public class ViewProductsFragment extends Fragment implements AdapterView.OnItem
     private ProductInterfaceAdapter adapter;
     private ProductDatabaseController db;
     private ArrayList<Product> products;
-    private Map<ProductDatabaseFields, Spinner> filterSpinners;
+    private Map<FilterAttributes, Spinner> filterSpinners;
     private static final String all = "All";
 
     public ViewProductsFragment() {
@@ -63,9 +65,11 @@ public class ViewProductsFragment extends Fragment implements AdapterView.OnItem
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        products = (ArrayList<Product>)getArguments().getSerializable("Products");
+        //Retrieve data from previous activity
+        products = (ArrayList<Product>) getArguments().getSerializable("Products");
+        AttributeManager attributeManager = (AttributeManager) getArguments().getSerializable("AttributeManager");
 
+        // Inflate the layout for this fragment
         Log.d(LogTags.CHECK_CARD, ProductTypeController.getType().getValue());
         View view = inflater.inflate(R.layout.fragment_view_products, container, false);
         adapter = new ProductInterfaceAdapter(products);
@@ -77,66 +81,25 @@ public class ViewProductsFragment extends Fragment implements AdapterView.OnItem
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         recyclerView.setAdapter(adapter);
 
-        //Set up colour spinner
-        Spinner colour = view.findViewById(R.id.colourSpinner);
-        colour.setOnItemSelectedListener(this);
-        //populate data with colour enums
-        List<String> colourValues = new ArrayList<>();
-        colourValues.add(all);
-        for(Colour c : Colour.values())  { colourValues.add(c.getValue());}
-        //set adapter for spinner
-        colour.setAdapter(initSpinner(colourValues));
-
-        //Set up size spinner
-        Spinner size = view.findViewById(R.id.sizeSpinner);
-        size.setOnItemSelectedListener(this);
-        List<String> sizeValues = new ArrayList<>();
-        sizeValues.add(all);
-        //sizes have different sizes than clothes and accessories so this just checks what product type we have
-        if(ProductTypeController.getType() == ProductType.SHOE) {
-            for(NumericalSize s : NumericalSize.values()) { sizeValues.add(s.getValue()); }
-        }
-        else {
-            for(AlphaSize s : AlphaSize.values())  { sizeValues.add(s.getValue());}
-        }
-        size.setAdapter(initSpinner(sizeValues));
-
-        //Set up brand spinner
-        Spinner brand = view.findViewById(R.id.brandSpinner);
-        brand.setOnItemSelectedListener(this);
-        List<String> brandValues = new ArrayList<>();
-        brandValues.add(all);
-        for(Brand b : Brand.values())  { brandValues.add(b.getValue());}
-        brand.setAdapter(initSpinner(brandValues));
-
-        //Set up style spinner
-        List<String> styleValues = new ArrayList<>();
-        styleValues.add(all);
-        //different product types have different styles so we need this switch statement to check which enums to retrieve
-        switch(ProductTypeController.getType()) {
-            case CLOTHES:
-                Log.d(LogTags.SET_UP_FILTERS, "Adding clothes styles to style spinner");
-                for(ClothesStyles e : ClothesStyles.values())  { styleValues.add(e.getValue());}
-                break;
-            case ACCESSORIES:
-                Log.d(LogTags.SET_UP_FILTERS, "Adding accessory styles to style spinner");
-                for(AccessoryStyles e : AccessoryStyles.values())  { styleValues.add(e.getValue());}
-                break;
-            case SHOE:
-                Log.d(LogTags.SET_UP_FILTERS, "Adding shoes styles to style spinner");
-                for(ShoeStyles e : ShoeStyles.values())  { styleValues.add(e.getValue());}
-                break;
-        }
-        Spinner style = view.findViewById(R.id.styleSpinner);
-        style.setOnItemSelectedListener(this);
-        style.setAdapter(initSpinner(styleValues));
-
-        //add spinners to list
+        // Set up filter spinners
         filterSpinners = new HashMap<>();
-        filterSpinners.put(ProductDatabaseFields.COLOUR, colour);
-        filterSpinners.put(ProductDatabaseFields.STYLE, style);
-        filterSpinners.put(ProductDatabaseFields.BRAND, brand);
-        filterSpinners.put(ProductDatabaseFields.SIZES, size);
+        // Map spinner UI ids to respective FilterAttributes ENUMS
+        Map<FilterAttributes, Integer> spinnerIds = new HashMap<>();
+        spinnerIds.put(FilterAttributes.BRANDS, R.id.brandSpinner);
+        spinnerIds.put(FilterAttributes.COLOURS, R.id.colourSpinner);
+        spinnerIds.put(FilterAttributes.SIZES, R.id.sizeSpinner);
+        spinnerIds.put(FilterAttributes.STYLES, R.id.styleSpinner);
+
+        //Loop through FilterAttributes and set up spinners for each filter
+        for(FilterAttributes f : FilterAttributes.values()) {
+            Spinner s = view.findViewById(spinnerIds.get(f));
+            s.setOnItemSelectedListener(this);
+            List<String> values = new ArrayList<>();
+            values.add(all);
+            values.addAll(attributeManager.getAttributes(f));
+            s.setAdapter(initSpinner(values));
+            filterSpinners.put(f, s);
+        }
 
         //filter products button setup
         Button filterProducts = view.findViewById(R.id.filter);
@@ -145,7 +108,7 @@ public class ViewProductsFragment extends Fragment implements AdapterView.OnItem
             public void onClick(View v) {
                 Log.d(LogTags.FILTER_PRODUCTS, "Filter products button clicked");
                 Map<String, Object> filters = new HashMap<>();
-                for(Map.Entry<ProductDatabaseFields, Spinner> entry : filterSpinners.entrySet()) {
+                for(Map.Entry<FilterAttributes, Spinner> entry : filterSpinners.entrySet()) {
                     //check if user has selected a value other than All (i.e. All = no filter)
                     if(!(entry.getValue().getSelectedItem().toString().equals("All"))) {
                         filters.put(entry.getKey().getValue(), entry.getValue().getSelectedItem().toString());
@@ -162,7 +125,7 @@ public class ViewProductsFragment extends Fragment implements AdapterView.OnItem
             @Override
             public void onClick(View v) {
                 Log.d(LogTags.FILTER_PRODUCTS, "Reset filter button clicked");
-                for(Map.Entry<ProductDatabaseFields, Spinner> entry : filterSpinners.entrySet()) {
+                for(Map.Entry<FilterAttributes, Spinner> entry : filterSpinners.entrySet()) {
                     //set spinner value back to all
                     entry.getValue().setSelection(0);
                 }
