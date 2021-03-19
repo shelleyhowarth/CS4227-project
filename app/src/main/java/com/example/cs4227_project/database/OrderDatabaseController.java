@@ -80,7 +80,7 @@ public class OrderDatabaseController {
     }
 
     public Order getOrder(Map<String, Object> order) {
-        Log.d("ORDER", order.get("paymentDetails").getClass().getName());
+        Log.d(LogTags.ORDER, order.get("paymentDetails").getClass().getName());
         HashMap<String, String> cardDetails = (HashMap<String, String>) order.get("paymentDetails");
         HashMap<String, String> customerAddress = (HashMap<String, String>) order.get("customerAddress");
 

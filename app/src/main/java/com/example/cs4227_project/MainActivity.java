@@ -24,6 +24,7 @@ import com.example.cs4227_project.order.ViewOrdersFragment;
 import com.example.cs4227_project.products.Product;
 import com.example.cs4227_project.products.ProductTypeController;
 import com.example.cs4227_project.products.ViewProductsFragment;
+import com.example.cs4227_project.products.productAttributes.AttributeManager;
 import com.example.cs4227_project.shop.Cart;
 import com.example.cs4227_project.shop.ViewCartFragment;
 import com.example.cs4227_project.user.LogInFragment;
@@ -117,6 +118,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         isLoggedIn();
                     }
                 });
+        AttributeManager attributeManager = new AttributeManager();
+        attributeManager.fillAttributes();
     }
 
     //Changes button to log in or sign out depending on whether the user is logged in

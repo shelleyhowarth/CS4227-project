@@ -7,10 +7,19 @@ import com.example.cs4227_project.products.ProductTypeController;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class Styles implements Attributes {
     private HashMap<String,ArrayList<String>> styles = new HashMap<>();
+
+    public Styles() {}
+
+    public Styles(Map<String,Object> data) {
+        for (Map.Entry<String,Object> entry: data.entrySet()) {
+            styles.put(entry.getKey(), (ArrayList<String>) entry.getValue());
+        }
+    }
 
     @Override
     public ArrayList<String> getAttributes() {
@@ -37,9 +46,8 @@ public class Styles implements Attributes {
     }
 
     @Override
-    public void addAttributes(ArrayList<String> attributes) {
-        String type = findProductType();
-        styles.put(type,attributes);
+    public void addAttributes(HashMap<String,ArrayList<String>>attributes) {
+        styles = attributes;
     }
 
     @Override

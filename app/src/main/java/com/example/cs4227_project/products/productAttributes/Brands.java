@@ -3,41 +3,55 @@ package com.example.cs4227_project.products.productAttributes;
 import android.util.Log;
 
 import com.example.cs4227_project.logs.LogTags;
+import com.example.cs4227_project.products.ProductTypeController;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 public class Brands implements Attributes {
-    private ArrayList<String> brands = new ArrayList<>();
+    private HashMap<String,ArrayList<String>> brands = new HashMap<>();
+
+    public Brands() {}
+
+    public Brands(Map<String,Object> data) {
+        for (Map.Entry<String,Object> entry: data.entrySet()) {
+            brands.put(entry.getKey(), (ArrayList<String>) entry.getValue());
+        }
+    }
 
     @Override
     public ArrayList<String> getAttributes() {
-        return brands;
+        String type = findProductType();
+        return brands.get(type);
     }
 
     @Override
     public void removeAttribute(String attribute) {
-        if(brands.contains(attribute)) {
-            brands.remove(attribute);
-            Log.d(LogTags.ATTRIBUTE_MANAGER,"Removed attribute from brands");
+        String type = findProductType();
+        if(Objects.requireNonNull(brands.get(type)).contains(attribute)) {
+            Objects.requireNonNull(brands.get(type)).remove(attribute);
+            Log.d(LogTags.ATTRIBUTE_MANAGER,"Removed attribute from "+ findProductType()+" styles");
         }
     }
 
     @Override
     public void addAttribute(String attribute) {
-        if(!(brands.contains(attribute))) {
-            brands.add(attribute);
-            Log.d(LogTags.ATTRIBUTE_MANAGER,"Added attribute to brands");
+        String type = findProductType();
+        if(!(Objects.requireNonNull(brands.get(type)).contains(attribute))) {
+            Objects.requireNonNull(brands.get(type)).add(attribute);
+            Log.d(LogTags.ATTRIBUTE_MANAGER,"Added attribute to "+ findProductType()+" styles");
         }
     }
 
     @Override
-    public void addAttributes(ArrayList<String> attributes) {
+    public void addAttributes(HashMap<String,ArrayList<String>> attributes) {
         brands = attributes;
     }
 
     @Override
     public String findProductType() {
-        //Not used here but could be in the future if we decide to expand brands
-        return "";
+        return "brands";
     }
 }
