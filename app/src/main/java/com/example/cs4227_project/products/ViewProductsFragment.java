@@ -19,16 +19,7 @@ import android.widget.Toast;
 import com.example.cs4227_project.R;
 import com.example.cs4227_project.database.ProductDatabaseController;
 import com.example.cs4227_project.database.ProductReadListener;
-import com.example.cs4227_project.enums.AccessoryStyles;
-import com.example.cs4227_project.enums.Brand;
-import com.example.cs4227_project.enums.ClothesStyles;
-import com.example.cs4227_project.enums.Colour;
 import com.example.cs4227_project.enums.FilterAttributes;
-import com.example.cs4227_project.enums.NumericalSize;
-import com.example.cs4227_project.enums.ProductDatabaseFields;
-import com.example.cs4227_project.enums.ProductType;
-import com.example.cs4227_project.enums.ShoeStyles;
-import com.example.cs4227_project.enums.AlphaSize;
 import com.example.cs4227_project.logs.LogTags;
 import com.example.cs4227_project.products.productAttributes.AttributeManager;
 
