@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cs4227_project.R;
 import com.example.cs4227_project.logs.LogTags;
+import com.example.cs4227_project.order.Stock;
 import com.example.cs4227_project.products.Product;
 import com.example.cs4227_project.products.ProductInterfaceAdapter;
 import com.google.firebase.auth.FirebaseAuth;
@@ -71,7 +72,7 @@ public class ViewCartFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Log.d(LogTags.CHECK_CARD, "We checkin out");
-                HashMap<Product, String> products = cart.getCart();
+                HashMap<Product, Stock> products = cart.getCart();
                 if (products.isEmpty()){
                     Toast.makeText(getActivity(), "There are no items in your cart", Toast.LENGTH_LONG).show();
                     Log.d(LogTags.CHECK_CARD, "We ain't checkin out");

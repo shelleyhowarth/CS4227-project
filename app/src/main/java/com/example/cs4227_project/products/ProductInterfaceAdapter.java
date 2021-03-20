@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -21,10 +22,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cs4227_project.logs.LogTags;
 import com.example.cs4227_project.R;
+import com.example.cs4227_project.order.Stock;
 import com.example.cs4227_project.shop.Cart;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class ProductInterfaceAdapter extends RecyclerView.Adapter implements AdapterView.OnItemSelectedListener{
@@ -87,6 +90,8 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter implements Ada
                     TextView textViewProductName = productDialog.findViewById(R.id.productName);
                     TextView textViewProductPrice = productDialog.findViewById(R.id.productPrice);
                     ImageView imageViewProductImage = productDialog.findViewById(R.id.productImage);
+                    final EditText editQuantity = productDialog.findViewById(R.id.quantity);
+
                     addBtn = productDialog.findViewById(R.id.addToCart);
                     inCart(item);
                     size = productDialog.findViewById(R.id.spinner);
@@ -95,12 +100,19 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter implements Ada
                     textViewProductPrice.setText("€" + String.valueOf(item.getPrice()));
                     size.setAdapter(setUpSpinner(item));
                     Picasso.get().load(item.getImageURL()).fit().centerCrop().into(imageViewProductImage);
+
                     addBtn.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View productView) {
                             chosenSize = size.getSelectedItem().toString();
                             if(!(cart.inCart(item))) {
-                                cart.addProductToCart(item, chosenSize);
+                                String quantity = editQuantity.getText().toString();
+                                HashMap<String, String> sizeQ = new HashMap<>();
+                                sizeQ.put(chosenSize, quantity);
+
+                                // Add product type to stock using productTypeController.
+                                Stock stock = new Stock(item.getId(), sizeQ, ProductTypeController.getType(), ProductTypeController.isFemale());
+                                cart.addProductToCart(item, stock);
                                 Log.d(LogTags.CHECK_CARD, "Added Product to cart");
                                 Toast.makeText(productDialog.getContext(), "Selected size is " + chosenSize, Toast.LENGTH_SHORT).show();
                                 Toast.makeText(productDialog.getContext(), "Added the item to cart", Toast.LENGTH_SHORT).show();
