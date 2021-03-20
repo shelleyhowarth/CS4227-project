@@ -1,18 +1,14 @@
 package com.example.cs4227_project.enums;
 
-public enum NumericalSize {
-    FOUR("4"),
-    FIVE("5"),
-    SIX("6"),
-    SEVEN("7"),
-    EIGHT("8"),
-    NINE("9"),
-    TEN("10"),
-    ELEVEN("11");
+public enum FilterAttributes {
+    BRANDS("brands"),
+    COLOURS("colours"),
+    SIZES("sizes"),
+    STYLES("styles");
 
     private final String stringValue;
 
-    private NumericalSize(String stringValue) {
+    private FilterAttributes(String stringValue) {
         this.stringValue = stringValue;
     }
 

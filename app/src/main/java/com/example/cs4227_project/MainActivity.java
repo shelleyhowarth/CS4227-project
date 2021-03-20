@@ -24,6 +24,7 @@ import com.example.cs4227_project.order.ViewOrdersFragment;
 import com.example.cs4227_project.products.Product;
 import com.example.cs4227_project.products.ProductTypeController;
 import com.example.cs4227_project.products.ViewProductsFragment;
+import com.example.cs4227_project.products.productAttributes.AttributeManager;
 import com.example.cs4227_project.shop.Cart;
 import com.example.cs4227_project.shop.ViewCartFragment;
 import com.example.cs4227_project.user.LogInFragment;
@@ -47,10 +48,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TabLayout genderTab;
 
     //backend elements
-    private ProductType selected;
     private ProductDatabaseController productDataC;
-    FirebaseAuth mAuth;
+    private FirebaseAuth mAuth;
     private OrderDatabaseController orderDb;
+    private AttributeManager attributeManager;
 
     private final String login = "Log In";
     private  final String logout = "Log Out";
@@ -65,6 +66,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mAuth = FirebaseAuth.getInstance();
         productDataC = new ProductDatabaseController(this);
         orderDb = new OrderDatabaseController(this);
+        attributeManager = new AttributeManager();
+        attributeManager.fillAttributes();
 
         //Buttons
         clothesButton = findViewById(R.id.clothesButton);
@@ -175,6 +178,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         alProd.addAll(products);
         Bundle bundle = new Bundle();
         bundle.putSerializable("Products", alProd);
+        bundle.putSerializable("AttributeManager", attributeManager);
         ViewProductsFragment fragment = new ViewProductsFragment();
         fragment.setArguments(bundle);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();

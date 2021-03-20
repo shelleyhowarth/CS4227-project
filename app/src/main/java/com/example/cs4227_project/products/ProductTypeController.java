@@ -3,7 +3,7 @@ package com.example.cs4227_project.products;
 import com.example.cs4227_project.enums.ProductType;
 
 public class ProductTypeController {
-    private static ProductType type;
+    private static ProductType type = ProductType.CLOTHES;
     private static boolean female = true;
 
     public static boolean isFemale() {
