@@ -75,5 +75,6 @@ public class AttributeManager implements AttributesReadListener, Serializable {
         colours = collectionData.get(FilterAttributes.COLOURS.getValue());
         sizes = collectionData.get(FilterAttributes.SIZES.getValue());
         styles = collectionData.get(FilterAttributes.STYLES.getValue());
+        Log.d(LogTags.ATTRIBUTE_MANAGER, "Filled attribute filters with values");
     }
 }
