@@ -18,8 +18,16 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.example.cs4227_project.R;
 import com.example.cs4227_project.database.OrderDatabaseController;
+import com.example.cs4227_project.database.StockDatabaseController;
+import com.example.cs4227_project.database.StockReadListener;
+import com.example.cs4227_project.logs.LogTags;
 import com.example.cs4227_project.order.Address;
 import com.example.cs4227_project.order.CardDetails;
+import com.example.cs4227_project.order.CommandControl;
+import com.example.cs4227_project.order.Order;
+import com.example.cs4227_project.order.OrderBuilder;
+import com.example.cs4227_project.order.SellStock;
+import com.example.cs4227_project.order.Stock;
 import com.example.cs4227_project.order.CustomerOrderBuilder;
 import com.example.cs4227_project.order.Order;
 import com.example.cs4227_project.products.Product;
@@ -33,12 +41,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class ViewCheckoutInputFragment extends Fragment {
+public class ViewCheckoutInputFragment extends Fragment implements StockReadListener {
     private final Cart cart = Cart.getInstance();
 
     private FragmentActivity myContext;
     private final FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private final OrderDatabaseController orderDatabaseController = new OrderDatabaseController();
+    private final StockDatabaseController stockDb = new StockDatabaseController(this);
+    private final HashMap<Product, Stock> cartMap = new HashMap<>();
 
     public ViewCheckoutInputFragment() {
         // Required empty public constructor
@@ -105,12 +115,15 @@ public class ViewCheckoutInputFragment extends Fragment {
         Toast.makeText(getActivity(), "Your order has been confirmed", Toast.LENGTH_SHORT).show();
 
         double totalPrice = 0.0;
-        HashMap<String, String> productInfo = new HashMap<>();
-        for(Map.Entry<Product, String> entry: cart.getCart().entrySet()){
+        HashMap<String, Stock> productInfo = new HashMap<>();
+        for(Map.Entry<Product, Stock> entry: cart.getCart().entrySet()){
             Log.d("ORDER", "Products to checkout =" + entry.getKey().toString());
             totalPrice += entry.getKey().getPrice();
-            productInfo.put(entry.getKey().getId(),entry.getValue());
+            cartMap.put(entry.getKey(), entry.getValue());
+            productInfo.put(entry.getKey().getId(), entry.getValue());
         }
+
+        Log.d("STOCKS", "Cart List" + cartMap.toString());
 
         Address address = new Address(texts.get(0), texts.get(1), texts.get(2));
         CardDetails cardDetails = new CardDetails(texts.get(4), texts.get(3), texts.get(6), texts.get(5));
@@ -123,9 +136,69 @@ public class ViewCheckoutInputFragment extends Fragment {
         orderBuilder.setPrice(totalPrice);
         orderBuilder.setTime();
 
+        updateStock();
         Order order = orderBuilder.getOrder();
         orderDatabaseController.addOrderToDB(order);
         createDialog(texts, totalPrice);
+    }
+
+    /**
+     * Gets a list of document ids needed from stock collection in database
+     * @author Aine Reynolds
+     * @Description: Goes through user cart getting product ids then calls
+     * StockDatabaseController to retrieve docs from databse.
+     */
+    public void updateStock(){
+        Log.d("STOCKS", "Get Stock");
+        ArrayList<String> productIds = new ArrayList<>();
+        for(Map.Entry<Product, Stock> entry: cartMap.entrySet()){
+            String productId = entry.getKey().getId();
+            Log.d(LogTags.COMMAND_DP, "Reading ids into list:" + productId);
+            productIds.add(productId);
+        }
+        stockDb.getStockDocs(productIds);
+    }
+
+    /**
+     * When the StockDatabaseController has finished executing the getStockDocsCommand
+     * @author Aine Reynolds
+     * @Description: Retrieves an arraylist of type stock using the StockDatabaseController.
+     * Then calls changeStock method.
+     */
+    @Override
+    public void stockCallback(String result){
+        ArrayList<Stock> stock = new ArrayList<>();
+        stock = stockDb.getStockArray();
+        Log.d("STOCKS", "Stocks in database " + stock.toString());
+        changeStock(stock);
+    }
+
+    /**
+     * Implements the Command DP
+     * @author Aine Reynolds
+     * @param stock - the arraylist of stock from the database.
+     * @Description: Goes through each item in the user cart and gets the size and quantity
+     * that needs to be changed in the database. Finds that stock from the list of stock that was
+     * just read in from the database and implements the SellStock Command.
+     */
+    public void changeStock(ArrayList<Stock> stock){
+        CommandControl commandController = new CommandControl();
+        for(Map.Entry<Product, Stock> entry: cartMap.entrySet()){
+            String productId = entry.getKey().getId();
+            Stock stockToChange = entry.getValue();
+            Log.d("STOCKS", "Stock list to change " + stockToChange.toString());
+            Map.Entry<String,String> sizeQ = stockToChange.getSizeQuantity().entrySet().iterator().next();
+            String size = sizeQ.getKey();
+            int quantity = Integer.parseInt(sizeQ.getValue());
+            for(Stock s : stock){
+                if(s.getId().equals(productId)){
+                    Stock stockFromDb = s;
+                    SellStock sellStock= new SellStock(stockFromDb, quantity, size);
+                    commandController.addCommand(sellStock);
+                }
+            }
+        }
+        commandController.executeCommands();
     }
 
     public void createDialog(ArrayList<String> texts, double price) {
