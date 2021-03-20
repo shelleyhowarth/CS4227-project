@@ -6,8 +6,7 @@ import androidx.annotation.NonNull;
 
 import com.example.cs4227_project.order.Address;
 import com.example.cs4227_project.order.CardDetails;
-import com.example.cs4227_project.order.NewOrderBuilder;
-import com.example.cs4227_project.order.OrderBuilder;
+import com.example.cs4227_project.order.CustomerOrderBuilder;
 import com.example.cs4227_project.shop.Cart;
 import com.example.cs4227_project.logs.LogTags;
 import com.example.cs4227_project.order.Order;
@@ -22,7 +21,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 public class OrderDatabaseController {
     private Database db = Database.getInstance();
@@ -89,7 +87,7 @@ public class OrderDatabaseController {
         CardDetails details = new CardDetails(cardDetails.get("cardNum"), cardDetails.get("cardName"), cardDetails.get("cvv"), cardDetails.get("expiryDate"));
         Address address = new Address(customerAddress.get("line1"), customerAddress.get("city"), customerAddress.get("county"));
 
-        NewOrderBuilder builder = new NewOrderBuilder();
+        CustomerOrderBuilder builder = new CustomerOrderBuilder();
 
         builder.setProductInfo((HashMap<String, String>)order.get("purchasedProducts"));
         builder.setAddress(address);

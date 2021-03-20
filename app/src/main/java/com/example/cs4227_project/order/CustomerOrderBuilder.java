@@ -11,11 +11,11 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-public class NewOrderBuilder implements OrderBuilder{
+public class CustomerOrderBuilder implements OrderBuilder{
 
     private Order order;
 
-    public NewOrderBuilder(){
+    public CustomerOrderBuilder(){
         this.order = new Order();
     }
 
