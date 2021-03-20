@@ -89,7 +89,6 @@ public class AttributesDatabaseController {
 
     //Returns the data Map
     public Map<String,Attributes> getAttributeData() {
-        Log.d(LogTags.DB_GET, "Number of attributes: " +data.size());
         return data;
     }
 }
