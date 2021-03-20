@@ -75,7 +75,7 @@ public class OrderInterfaceAdapter extends RecyclerView.Adapter implements Adapt
 
         void bindView(int pos){
             final Order item = orderList.get(pos);
-            textViewOrderTotal.setText("€" + String.valueOf(item.getCost()));
+            textViewOrderTotal.setText("€" + String.valueOf(item.getPrice()));
             textViewOrderTime.setText(item.getTime());
 
 
@@ -91,11 +91,11 @@ public class OrderInterfaceAdapter extends RecyclerView.Adapter implements Adapt
                     TextView textViewOrderAddress = orderDialog.findViewById(R.id.orderAddress);
                     TextView textViewOrderItems = orderDialog.findViewById(R.id.orderItems);
 
-                    textViewOrderName.setText("Name: " + item.getPaymentDetails().getCardName());
-                    textViewOrderTotal.setText("Total: " + "€" + String.valueOf(item.getCost()));
+                    textViewOrderName.setText("Name: " + item.getDetails().getCardName());
+                    textViewOrderTotal.setText("Total: " + "€" + String.valueOf(item.getPrice()));
                     textViewOrderTime.setText("Date purchased: " + item.getTime());
-                    textViewOrderItems.setText("Items purchased: \n" + String.valueOf(item.getPurchasedProducts()));
-                    textViewOrderAddress.setText("Address: " + item.getCustomerAddress());
+                    textViewOrderItems.setText("Items purchased: \n" + String.valueOf(item.getProductInfo()));
+                    textViewOrderAddress.setText("Address: " + item.getAddress());
 
                     orderDialog.show();
                 }
