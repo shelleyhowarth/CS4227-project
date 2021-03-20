@@ -20,6 +20,7 @@ import com.example.cs4227_project.R;
 import com.example.cs4227_project.database.OrderDatabaseController;
 import com.example.cs4227_project.order.Address;
 import com.example.cs4227_project.order.CardDetails;
+import com.example.cs4227_project.order.NewOrderBuilder;
 import com.example.cs4227_project.order.Order;
 import com.example.cs4227_project.order.OrderBuilder;
 import com.example.cs4227_project.products.Product;
@@ -117,11 +118,17 @@ public class ViewCheckoutInputFragment extends Fragment {
         Address address = new Address(texts.get(0), texts.get(1), texts.get(2));
         CardDetails cardDetails = new CardDetails(texts.get(4), texts.get(3), texts.get(6), texts.get(5));
 
-        OrderBuilder orderBuilder = new OrderBuilder();
-        Order order = orderBuilder.newOrder(productInfo, address, cardDetails, Objects.requireNonNull(mAuth.getCurrentUser()).getEmail(), totalPrice);
+        NewOrderBuilder orderBuilder = new NewOrderBuilder();
+        orderBuilder.setProductInfo(productInfo);
+        orderBuilder.setAddress(address);
+        orderBuilder.setDetails(cardDetails);
+        orderBuilder.setEmail(Objects.requireNonNull(mAuth.getCurrentUser()).getEmail());
+        orderBuilder.setPrice(totalPrice);
+        orderBuilder.setTime();
 
+        Order order = orderBuilder.getOrder();
         orderDatabaseController.addOrderToDB(order);
-        createDialog(texts, order.getCost());
+        createDialog(texts, totalPrice);
     }
 
     public void createDialog(ArrayList<String> texts, double price) {
