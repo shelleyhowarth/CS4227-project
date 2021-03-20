@@ -1,6 +1,7 @@
 package com.example.cs4227_project.database;
 
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -14,8 +15,12 @@ import com.example.cs4227_project.logs.LogTags;
 import com.example.cs4227_project.order.Order;
 import com.example.cs4227_project.products.Product;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -115,6 +120,32 @@ public class OrderDatabaseController {
         return orders;
     }
 
+    public void getProduct(String collection, String document) {
+        DocumentReference docRef = db.GET(collection, document);
+        docRef.get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if(documentSnapshot.exists()) {
+                            nameOfProduct(documentSnapshot);
+                        } else {
+                            Log.d("error", "Document does not exist");
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("error", "Couldn't get document");
+                    }
+                });
+
+    }
+
+    public String nameOfProduct(DocumentSnapshot doc) {
+        Log.d("success", doc.get("color") + " " + doc.get("brand") + " " + doc.get("name"));
+        return doc.get("color") + " " + doc.get("brand") + " " + doc.get("name");
+    }
     //a method to search for the product given the collection name and the product id
     //from that return a document and then use that document to get the string name etc.
 }

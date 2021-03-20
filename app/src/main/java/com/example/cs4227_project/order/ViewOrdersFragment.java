@@ -14,6 +14,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.example.cs4227_project.R;
+import com.example.cs4227_project.database.OrderDatabaseController;
+import com.example.cs4227_project.database.ProductDatabaseController;
 import com.example.cs4227_project.products.ProductInterfaceAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -33,6 +35,7 @@ public class ViewOrdersFragment extends Fragment {
     private String userEmail;
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private OrderInterfaceAdapter adapter;
+    private OrderDatabaseController db;
 
     public ViewOrdersFragment() {
         // Required empty public constructor
@@ -64,6 +67,10 @@ public class ViewOrdersFragment extends Fragment {
         ArrayList<Order> userOrders = getUserOrders();
         adapter = new OrderInterfaceAdapter(userOrders);
         recyclerView.setAdapter(adapter);
+
+        for(int i = 0; i < userOrders.size(); i++) {
+            Log.d()
+        }
         return view;
     }
 
