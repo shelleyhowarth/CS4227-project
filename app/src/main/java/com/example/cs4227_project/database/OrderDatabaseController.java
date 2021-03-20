@@ -110,4 +110,6 @@ public class OrderDatabaseController {
         return orders;
     }
 
+    //a method to search for the product given the collection name and the product id
+    //from that return a document and then use that document to get the string name etc.
 }
