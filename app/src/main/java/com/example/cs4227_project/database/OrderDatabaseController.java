@@ -8,6 +8,7 @@ import com.example.cs4227_project.order.Address;
 import com.example.cs4227_project.order.CardDetails;
 import com.example.cs4227_project.order.OrderBuilder;
 import com.example.cs4227_project.order.Stock;
+import com.example.cs4227_project.order.CustomerOrderBuilder;
 import com.example.cs4227_project.shop.Cart;
 import com.example.cs4227_project.logs.LogTags;
 import com.example.cs4227_project.order.Order;
@@ -83,7 +84,7 @@ public class OrderDatabaseController {
     }
 
     public Order getOrder(Map<String, Object> order) {
-        Log.d("ORDER", order.get("paymentDetails").getClass().getName());
+        Log.d(LogTags.ORDER, order.get("paymentDetails").getClass().getName());
         HashMap<String, String> cardDetails = (HashMap<String, String>) order.get("paymentDetails");
         HashMap<String, String> customerAddress = (HashMap<String, String>) order.get("customerAddress");
         HashMap<String, String> productsDetails = (HashMap<String, String>)order.get("purchasedProducts");
@@ -91,8 +92,16 @@ public class OrderDatabaseController {
         CardDetails details = new CardDetails(cardDetails.get("cardNum"), cardDetails.get("cardName"), cardDetails.get("cvv"), cardDetails.get("expiryDate"));
         Address address = new Address(customerAddress.get("line1"), customerAddress.get("city"), customerAddress.get("county"));
 
-        OrderBuilder builder = new OrderBuilder();
-        Order o = builder.newOrder((HashMap<String, Stock>)order.get("purchasedProducts"), address, details, (String)order.get("emailAddress"), (double)order.get("cost"));
+        CustomerOrderBuilder builder = new CustomerOrderBuilder();
+
+        builder.setProductInfo((HashMap<String, String>)order.get("purchasedProducts"));
+        builder.setAddress(address);
+        builder.setDetails(details);
+        builder.setEmail((String)order.get("emailAddress"));
+        builder.setPrice((double)order.get("cost"));
+        builder.setTime();
+
+        Order o = builder.getOrder();
         return o;
     }
 
