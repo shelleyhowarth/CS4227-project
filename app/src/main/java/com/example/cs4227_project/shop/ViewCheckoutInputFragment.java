@@ -20,8 +20,8 @@ import com.example.cs4227_project.R;
 import com.example.cs4227_project.database.OrderDatabaseController;
 import com.example.cs4227_project.order.Address;
 import com.example.cs4227_project.order.CardDetails;
+import com.example.cs4227_project.order.CustomerOrderBuilder;
 import com.example.cs4227_project.order.Order;
-import com.example.cs4227_project.order.OrderBuilder;
 import com.example.cs4227_project.products.Product;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -30,8 +30,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
@@ -117,11 +115,17 @@ public class ViewCheckoutInputFragment extends Fragment {
         Address address = new Address(texts.get(0), texts.get(1), texts.get(2));
         CardDetails cardDetails = new CardDetails(texts.get(4), texts.get(3), texts.get(6), texts.get(5));
 
-        OrderBuilder orderBuilder = new OrderBuilder();
-        Order order = orderBuilder.newOrder(productInfo, address, cardDetails, Objects.requireNonNull(mAuth.getCurrentUser()).getEmail(), totalPrice);
+        CustomerOrderBuilder orderBuilder = new CustomerOrderBuilder();
+        orderBuilder.setProductInfo(productInfo);
+        orderBuilder.setAddress(address);
+        orderBuilder.setDetails(cardDetails);
+        orderBuilder.setEmail(Objects.requireNonNull(mAuth.getCurrentUser()).getEmail());
+        orderBuilder.setPrice(totalPrice);
+        orderBuilder.setTime();
 
+        Order order = orderBuilder.getOrder();
         orderDatabaseController.addOrderToDB(order);
-        createDialog(texts, order.getCost());
+        createDialog(texts, totalPrice);
     }
 
     public void createDialog(ArrayList<String> texts, double price) {
