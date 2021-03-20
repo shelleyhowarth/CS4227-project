@@ -70,7 +70,7 @@ public class ViewOrdersFragment extends Fragment {
     public ArrayList<Order> getUserOrders() {
         ArrayList<Order> filtered = new ArrayList<Order>();
         for(Order o : allOrders) {
-            if (o.getEmailAddress().equalsIgnoreCase(userEmail)) {
+            if (o.getEmail().equalsIgnoreCase(userEmail)) {
                 filtered.add(o);
             }
         }
