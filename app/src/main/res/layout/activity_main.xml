@@ -31,6 +31,11 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:text="Orders"/>
+  <Button
+      android:id="@+id/stockBtn"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="Add Stock"/>
  </androidx.appcompat.widget.Toolbar>
 
  <com.google.android.material.tabs.TabLayout
