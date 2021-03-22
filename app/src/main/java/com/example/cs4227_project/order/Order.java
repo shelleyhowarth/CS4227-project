@@ -7,7 +7,7 @@ import java.util.Locale;
 
 public class Order implements OrderBuilder{
 
-    public HashMap<String, String> productInfo;
+    public HashMap<String, Stock> productInfo;
     public Address address;
     public CardDetails details;
     public String email;
@@ -23,7 +23,7 @@ public class Order implements OrderBuilder{
         this.time ="";
     }
 
-    public void setProductInfo(HashMap<String, String> productInfo) {
+    public void setProductInfo(HashMap<String, Stock> productInfo) {
         this.productInfo = productInfo;
     }
 
@@ -46,7 +46,7 @@ public class Order implements OrderBuilder{
     public void setTime(){
     }
 
-    public HashMap<String, String> getProductInfo() {
+    public HashMap<String, Stock> getProductInfo() {
         return productInfo;
     }
 

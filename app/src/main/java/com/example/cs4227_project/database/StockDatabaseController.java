@@ -114,7 +114,7 @@ public class StockDatabaseController {
      * @returns Stock object.
      */
     public Stock getStock(Map<String, Object> stock) {
-        Stock s = new Stock((String)stock.get("id"), (HashMap<String, String>)stock.get("sizeQuantity"), (ProductType)stock.get("type"), (boolean)stock.get("female"));
+        Stock s = new Stock((String)stock.get("id"), (HashMap<String, String>)stock.get("sizeQuantity"), (String)stock.get("type"), (boolean)stock.get("female"));
         return s;
     }
 

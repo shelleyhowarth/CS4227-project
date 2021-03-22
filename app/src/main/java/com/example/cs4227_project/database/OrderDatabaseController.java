@@ -89,21 +89,20 @@ public class OrderDatabaseController {
     }
 
     public Order getOrder(Map<String, Object> order) {
-        Log.d(LogTags.ORDER, order.get("paymentDetails").getClass().getName());
-        HashMap<String, String> cardDetails = (HashMap<String, String>) order.get("paymentDetails");
-        HashMap<String, String> customerAddress = (HashMap<String, String>) order.get("customerAddress");
-        HashMap<String, String> productsDetails = (HashMap<String, String>)order.get("purchasedProducts");
+        Log.d(LogTags.ORDER, order.get("productInfo").getClass().getName());
+        HashMap<String, String> cardDetails = (HashMap<String, String>) order.get("details");
+        HashMap<String, String> customerAddress = (HashMap<String, String>) order.get("address");
 
         CardDetails details = new CardDetails(cardDetails.get("cardNum"), cardDetails.get("cardName"), cardDetails.get("cvv"), cardDetails.get("expiryDate"));
         Address address = new Address(customerAddress.get("line1"), customerAddress.get("city"), customerAddress.get("county"));
 
         CustomerOrderBuilder builder = new CustomerOrderBuilder();
 
-        builder.setProductInfo((HashMap<String, String>)order.get("purchasedProducts"));
+        builder.setProductInfo((HashMap<String, Stock>)order.get("productInfo"));
         builder.setAddress(address);
         builder.setDetails(details);
-        builder.setEmail((String)order.get("emailAddress"));
-        builder.setPrice((double)order.get("cost"));
+        builder.setEmail((String)order.get("email"));
+        builder.setPrice((double)order.get("price"));
         builder.setTime();
 
         Order o = builder.getOrder();

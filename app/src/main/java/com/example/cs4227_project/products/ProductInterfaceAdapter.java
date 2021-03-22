@@ -111,7 +111,7 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter implements Ada
                                 sizeQ.put(chosenSize, quantity);
 
                                 // Add product type to stock using productTypeController.
-                                Stock stock = new Stock(item.getId(), sizeQ, ProductTypeController.getType(), ProductTypeController.isFemale());
+                                Stock stock = new Stock(item.getId(), sizeQ, ProductTypeController.getType().getValue(), ProductTypeController.isFemale());
                                 cart.addProductToCart(item, stock);
                                 Log.d(LogTags.CHECK_CARD, "Added Product to cart");
                                 Toast.makeText(productDialog.getContext(), "Selected size is " + chosenSize, Toast.LENGTH_SHORT).show();

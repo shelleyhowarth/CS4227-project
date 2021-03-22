@@ -19,8 +19,8 @@ public class CustomerOrderBuilder implements OrderBuilder{
         this.order = new Order();
     }
 
-    public void setProductInfo(HashMap<String, String> products){
-        for(Map.Entry<String, String> entry: products.entrySet()){
+    public void setProductInfo(HashMap<String, Stock> products){
+        for(Map.Entry<String, Stock> entry: products.entrySet()){
             order.productInfo.put(entry.getKey(),entry.getValue());
         }
     }
