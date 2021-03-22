@@ -7,10 +7,10 @@ import java.util.HashMap;
 public class Stock {
     private String id;
     private HashMap<String, String> sizeQuantity;
-    private ProductType type;
+    private String type;
     boolean female;
 
-    public Stock(String id, HashMap<String, String> sizeQuantity, ProductType type, boolean female){
+    public Stock(String id, HashMap<String, String> sizeQuantity, String type, boolean female){
         this.id = id;
         this.sizeQuantity = sizeQuantity;
         this.type = type;
@@ -35,9 +35,9 @@ public class Stock {
 
     public void setSizeQuantity(HashMap<String, String> sizeQuantity) { this.sizeQuantity = sizeQuantity; }
 
-    public ProductType getType() { return type; }
+    public String getType() { return type; }
 
-    public void setType(ProductType type) { this.type = type; }
+    public void setType(String type) { this.type = type; }
 
     public boolean isFemale() { return female; }
 
