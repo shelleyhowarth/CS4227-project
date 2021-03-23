@@ -16,7 +16,7 @@ import java.util.Map;
 
 public interface OrderBuilder {
 
-    public void setProductInfo(HashMap<String, Stock> productInfo);
+    public void setProductInfo(ArrayList<Stock> productInfo);
 
     public void setPrice(double price);
 

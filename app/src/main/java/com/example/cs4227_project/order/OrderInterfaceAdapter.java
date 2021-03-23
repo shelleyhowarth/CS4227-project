@@ -17,13 +17,17 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cs4227_project.R;
+import com.example.cs4227_project.database.OrderDatabaseController;
+import com.example.cs4227_project.database.OrderReadListener;
 import com.example.cs4227_project.logs.LogTags;
 import com.squareup.picasso.Picasso;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-public class OrderInterfaceAdapter extends RecyclerView.Adapter implements AdapterView.OnItemSelectedListener {
+public class OrderInterfaceAdapter extends RecyclerView.Adapter implements AdapterView.OnItemSelectedListener, OrderReadListener {
     private  RecyclerView mRecyclerView;
     private List<Order> orderList;
     private TextView textViewOrderName;
@@ -32,6 +36,10 @@ public class OrderInterfaceAdapter extends RecyclerView.Adapter implements Adapt
     private TextView textViewOrderItems;
     private CardView cardViewOrder;
     private Dialog orderDialog;
+    private OrderDatabaseController db = new OrderDatabaseController(this);
+    ArrayList<String> products = new ArrayList<>();
+
+
 
 
     public OrderInterfaceAdapter(ArrayList<Order> orders) {
@@ -75,26 +83,35 @@ public class OrderInterfaceAdapter extends RecyclerView.Adapter implements Adapt
 
         void bindView(int pos){
             final Order item = orderList.get(pos);
+            ArrayList<Stock> stock = item.getProductInfo();
+            db.getProduct(stock);
+
+
             textViewOrderTotal.setText("€" + String.valueOf(item.getPrice()));
             textViewOrderTime.setText(item.getTime());
-
-
             orderDialog.setContentView(R.layout.order_detail_page);
             orderDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
+            
             cardViewOrder.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View productView) {
+                    String descriptionText = "";
                     TextView textViewOrderName = orderDialog.findViewById(R.id.orderName);
                     TextView textViewOrderTime = orderDialog.findViewById(R.id.orderTime);
                     TextView textViewOrderTotal = orderDialog.findViewById(R.id.orderTotal);
                     TextView textViewOrderAddress = orderDialog.findViewById(R.id.orderAddress);
                     TextView textViewOrderItems = orderDialog.findViewById(R.id.orderItems);
 
+
                     textViewOrderName.setText("Name: " + item.getDetails().getCardName());
                     textViewOrderTotal.setText("Total: " + "€" + String.valueOf(item.getPrice()));
                     textViewOrderTime.setText("Date purchased: " + item.getTime());
-                    textViewOrderItems.setText("Items purchased: \n" + String.valueOf(item.getProductInfo()));
+                    int count = 1;
+                    for(String s: products) {
+                        descriptionText += count + ". " + s;
+                        count++;
+                    }
+                    textViewOrderItems.setText("Products purchased: \n" + descriptionText);
                     textViewOrderAddress.setText("Address: " + item.getAddress());
 
                     orderDialog.show();
@@ -102,6 +119,11 @@ public class OrderInterfaceAdapter extends RecyclerView.Adapter implements Adapt
             });
         }
     }
+
+    public void orderCallback(String result) {
+        products = db.getDescStrings();
+    }
+
 
     @Override
     public int getItemCount() {

@@ -1,13 +1,14 @@
 package com.example.cs4227_project.order;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 
 public class Order implements OrderBuilder{
 
-    public HashMap<String, Stock> productInfo;
+    public ArrayList<Stock> productInfo;
     public Address address;
     public CardDetails details;
     public String email;
@@ -15,7 +16,7 @@ public class Order implements OrderBuilder{
     public String time;
 
     public Order(){
-        this.productInfo = new HashMap<>();
+        this.productInfo = new ArrayList<>();
         this.address = new Address();
         this.details = new CardDetails();
         this.email = "";
@@ -23,7 +24,7 @@ public class Order implements OrderBuilder{
         this.time ="";
     }
 
-    public void setProductInfo(HashMap<String, Stock> productInfo) {
+    public void setProductInfo(ArrayList<Stock> productInfo) {
         this.productInfo = productInfo;
     }
 
@@ -46,7 +47,7 @@ public class Order implements OrderBuilder{
     public void setTime(){
     }
 
-    public HashMap<String, Stock> getProductInfo() {
+    public ArrayList<Stock> getProductInfo() {
         return productInfo;
     }
 

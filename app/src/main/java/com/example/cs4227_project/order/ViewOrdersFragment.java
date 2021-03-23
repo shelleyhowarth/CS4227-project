@@ -68,9 +68,6 @@ public class ViewOrdersFragment extends Fragment {
         adapter = new OrderInterfaceAdapter(userOrders);
         recyclerView.setAdapter(adapter);
 
-        for(int i = 0; i < userOrders.size(); i++) {
-            Log.d()
-        }
         return view;
     }
 
