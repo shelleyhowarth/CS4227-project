@@ -17,8 +17,11 @@ import com.example.cs4227_project.database.OrderDatabaseController;
 import com.example.cs4227_project.database.OrderReadListener;
 import com.example.cs4227_project.database.ProductDatabaseController;
 import com.example.cs4227_project.database.ProductReadListener;
+import com.example.cs4227_project.database.UserDatabaseController;
+import com.example.cs4227_project.database.UserReadListener;
 import com.example.cs4227_project.enums.ProductType;
 import com.example.cs4227_project.logs.LogTags;
+import com.example.cs4227_project.order.AddStockFragment;
 import com.example.cs4227_project.order.Order;
 import com.example.cs4227_project.order.ViewOrdersFragment;
 import com.example.cs4227_project.products.Product;
@@ -28,16 +31,19 @@ import com.example.cs4227_project.products.productAttributes.AttributeManager;
 import com.example.cs4227_project.shop.Cart;
 import com.example.cs4227_project.shop.ViewCartFragment;
 import com.example.cs4227_project.user.LogInFragment;
+import com.example.cs4227_project.user.User;
+import com.example.cs4227_project.user.UserController;
 import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, ProductReadListener, OrderReadListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, ProductReadListener, OrderReadListener, UserReadListener {
     //ui elements
     private Button logInButton;
     private Button cartButton;
@@ -49,9 +55,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     //backend elements
     private ProductDatabaseController productDataC;
+    private UserDatabaseController userDb;
     private FirebaseAuth mAuth;
     private OrderDatabaseController orderDb;
     private AttributeManager attributeManager;
+
+    private User currentUser;
 
     private final String login = "Log In";
     private  final String logout = "Log Out";
@@ -61,11 +70,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         //Instances
         mAuth = FirebaseAuth.getInstance();
         productDataC = new ProductDatabaseController(this);
         orderDb = new OrderDatabaseController(this);
+        userDb = new UserDatabaseController(this);
         attributeManager = new AttributeManager();
         attributeManager.fillAttributes();
 
@@ -78,8 +87,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ordersButton = findViewById(R.id.ordersBtn);
         genderTab = findViewById(R.id.genderTab);
 
-        //Checking to see if user is logged in
-        isLoggedIn();
 
         //Load images for home screen
         LoadImages();
@@ -91,6 +98,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         logInButton.setOnClickListener(this);
         cartButton.setOnClickListener(this);
         ordersButton.setOnClickListener(this);
+
+        //Checking to see if user is logged in
+        isLoggedIn();
+
+        //listener for when back stack is changed
+        getSupportFragmentManager().addOnBackStackChangedListener(
+                new FragmentManager.OnBackStackChangedListener() {
+                    public void onBackStackChanged() {
+                        FragmentManager fm = getSupportFragmentManager();
+                        isLoggedIn();
+                    }
+                });
+    }
+
+    public void setUpView(){
+        Button addStockBtn = findViewById(R.id.stockBtn);
+        addStockBtn.setOnClickListener(this);
+        if(currentUser.isAdmin()){
+            addStockBtn.setVisibility(View.VISIBLE);
+        }else{
+            addStockBtn.setVisibility(View.INVISIBLE);
+        }
 
         genderTab.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -111,22 +140,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onTabReselected(TabLayout.Tab tab) {
             }
         });
-
-        //listener for when back stack is changed
-        getSupportFragmentManager().addOnBackStackChangedListener(
-                new FragmentManager.OnBackStackChangedListener() {
-                    public void onBackStackChanged() {
-                        FragmentManager fm = getSupportFragmentManager();
-                        isLoggedIn();
-                    }
-                });
     }
 
     //Changes button to log in or sign out depending on whether the user is logged in
     private void isLoggedIn() {
-        if(mAuth.getCurrentUser() != null) {
+        FirebaseUser user = mAuth.getCurrentUser();
+        if(user != null) {
             logInButton.setText(logout);
             ordersButton.setEnabled(true);
+            userDb.getUserDoc(user.getUid());
         } else {
             logInButton.setText(login);
             ordersButton.setEnabled(false);
@@ -173,6 +195,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         transaction.commit();
     }
 
+    @Override
+    public void userCallback(String result){
+        User user = userDb.getSingleUser();
+        UserController.setUser(user);
+        currentUser = UserController.getUser();
+        setUpView();
+    }
+
     public void goToProduct(List<Product> products){
         ArrayList<Product> alProd = new ArrayList<>(products.size());
         alProd.addAll(products);
@@ -196,6 +226,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         bundle.putSerializable("Products", alProd);
         ViewCartFragment fragment = new ViewCartFragment();
         fragment.setArguments(bundle);
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction().replace(R.id.contentWithToolbar, fragment);
+        transaction.addToBackStack("viewCart");
+        transaction.commit();
+    }
+
+    public void goToAddStock(){
+        AddStockFragment fragment = new AddStockFragment();
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction().replace(R.id.contentWithToolbar, fragment);
         transaction.addToBackStack("viewCart");
@@ -243,6 +281,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if(i == R.id.ordersBtn) {
             goToOrders();
+        }
+
+        if(i == R.id.stockBtn){
+            goToAddStock();
         }
     }
 }

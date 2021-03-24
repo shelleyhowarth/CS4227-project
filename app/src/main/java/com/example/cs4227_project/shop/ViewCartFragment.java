@@ -20,6 +20,8 @@ import com.example.cs4227_project.logs.LogTags;
 import com.example.cs4227_project.order.Stock;
 import com.example.cs4227_project.products.Product;
 import com.example.cs4227_project.products.ProductInterfaceAdapter;
+import com.example.cs4227_project.user.User;
+import com.example.cs4227_project.user.UserController;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
@@ -66,6 +68,7 @@ public class ViewCartFragment extends Fragment {
                 Log.d(LogTags.CHECK_CARD, "We yeeting products");
             }
         });
+
         Button checkoutBtn = view.findViewById(R.id.checkout);
         final Button btn = view.findViewById(R.id.logInBtn);
         checkoutBtn.setOnClickListener(new View.OnClickListener() {
