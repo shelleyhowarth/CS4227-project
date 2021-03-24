@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:text="New Product"
             android:textSize="18sp"
-            android:padding="15dp"
+            android:padding="10dp"
             android:layout_gravity="center"
             android:gravity="center"/>
 
@@ -24,7 +24,7 @@
             android:id="@+id/productName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="15dp"
+            android:padding="10dp"
             android:hint="Product Name" />
 
         <TextView
@@ -36,18 +36,22 @@
             android:textSize="14sp"/>
 
         <RadioGroup
+            android:id="@+id/genderGroup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:padding="10dp">
 
             <RadioButton
+                android:id="@+id/female"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:focusedByDefault="true"
                 android:text="Women"
                 android:layout_weight="1"/>
 
             <RadioButton
+                android:id="@+id/male"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Men"
@@ -63,24 +67,29 @@
             android:textSize="14sp"/>
 
         <RadioGroup
+            android:id="@+id/categoryGroup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:padding="10dp">
 
             <RadioButton
+                android:id="@+id/clothes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:focusedByDefault="true"
                 android:text="Clothes"
                 android:layout_weight="1"/>
 
             <RadioButton
+                android:id="@+id/shoes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Shoes"
                 android:layout_weight="1"/>
 
             <RadioButton
+                android:id="@+id/accessories"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Accessories"
@@ -90,17 +99,79 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Quantity"
+            android:text="Sizes and Quantity"
             android:gravity="center"
             android:padding="10dp"
             android:textSize="14sp"/>
 
-        <EditText
-            android:id="@+id/quantity"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="15dp"
-            android:hint="Quantity" />
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/size1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:layout_weight="1"
+                android:hint="Size" />
+
+            <EditText
+                android:id="@+id/quantity1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:layout_weight="1"
+                android:hint="Quantity"
+                android:inputType="number"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/size2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:layout_weight="1"
+                android:hint="Size" />
+
+            <EditText
+                android:id="@+id/quantity2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:layout_weight="1"
+                android:hint="Quantity"
+                android:inputType="number"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/size3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:layout_weight="1"
+                android:hint="Size" />
+
+            <EditText
+                android:id="@+id/quantity3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:layout_weight="1"
+                android:hint="Quantity"
+                android:inputType="number"/>
+        </LinearLayout>
 
         <Button
             android:id="@+id/uploadImage"
@@ -112,7 +183,7 @@
             android:id="@+id/productPic"
             android:layout_width="200dp"
             android:layout_height="200dp"
-            android:gravity="center"/>
+            android:layout_gravity="center"/>
 
         <Button
             android:id="@+id/finish"

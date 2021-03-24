@@ -16,7 +16,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.example.cs4227_project.R;
@@ -29,6 +31,7 @@ import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
+import java.util.HashMap;
 import java.util.Random;
 
 import static android.app.Activity.RESULT_OK;
@@ -43,7 +46,10 @@ public class AddStockFragment extends Fragment implements View.OnClickListener {
     StorageReference storageReference = storage.getReference();
 
     private ImageView userPicture;
-    private String path;
+    private String path, category;
+    private EditText pName, size1, q1, size2, q2, size3, q3;
+    private RadioGroup genderGroup, categoryGroup;
+    private boolean female;
 
     private final int PICK_IMAGE_REQUEST = 22;
     private final int REQUEST_IMAGE_CAPTURE = 1;
@@ -71,6 +77,17 @@ public class AddStockFragment extends Fragment implements View.OnClickListener {
 
         Button uploadPic = rootView.findViewById(R.id.uploadImage);
         Button submit = rootView.findViewById(R.id.finish);
+
+        pName = rootView.findViewById(R.id.productName);
+        size1 = rootView.findViewById(R.id.size1);
+        size2 = rootView.findViewById(R.id.size2);
+        size3 = rootView.findViewById(R.id.size3);
+        q1 = rootView.findViewById(R.id.quantity1);
+        q2 = rootView.findViewById(R.id.quantity2);
+        q3 = rootView.findViewById(R.id.quantity3);
+
+        genderGroup = rootView.findViewById(R.id.genderGroup);
+        categoryGroup = rootView.findViewById(R.id.categoryGroup);
 
         uploadPic.setOnClickListener(this);
         submit.setOnClickListener(this);
@@ -150,6 +167,63 @@ public class AddStockFragment extends Fragment implements View.OnClickListener {
         inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
         String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
         return Uri.parse(path);
+    }
+
+    public void validateInput(){
+        HashMap<String, String> sizeQuantities = new HashMap<>();
+        String productName = pName.getText().toString();
+        String s1 = size1.getText().toString();
+        String s2 = size2.getText().toString();
+        String s3 = size3.getText().toString();
+        String quant1 = q1.getText().toString();
+        String quant2 = q2.getText().toString();
+        String quant3 = q3.getText().toString();
+
+        genderGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if(checkedId == R.id.female) {
+                    female=true;
+                } else if(checkedId == R.id.male) {
+                    female=false;
+                }
+            }
+        });
+
+        categoryGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if(checkedId == R.id.clothes){
+                    category = "clothes";
+                }else if(checkedId == R.id.shoes){
+                    category = "shoes";
+                }else if(checkedId == R.id.accessories){
+                    category = "accessories";
+                }
+            }
+        });
+
+        if(s1 != null && quant1 != null){
+            sizeQuantities.put(s1, quant1);
+        }
+        if(s2 != null && quant2 != null){
+            sizeQuantities.put(s2, quant2);
+        }
+        if(s3 != null && quant3 != null){
+            sizeQuantities.put(s3, quant3);
+        }
+
+        if(productName == null){
+            pName.setError("Must have product name");
+        }else if(sizeQuantities.size() == 0){
+            Toast.makeText(getActivity(), "Product must contain stock", Toast.LENGTH_SHORT).show();
+        }else{
+            createProductAndStock(sizeQuantities);
+        }
+    }
+
+    public void createProductAndStock(HashMap<String, String> sizeQuantities){
+        //Product product = new Product();
     }
 
     @Override
