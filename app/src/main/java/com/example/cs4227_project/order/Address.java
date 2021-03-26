@@ -1,9 +1,9 @@
 package com.example.cs4227_project.order;
 
 public class Address {
-    String line1;
-    String city;
-    String county;
+    private String line1;
+    private String city;
+    private String county;
 
     public Address(){
 
@@ -38,4 +38,6 @@ public class Address {
     public void setCounty(String county) {
         this.county = county;
     }
+
+    public String toString() { return "\n" + line1 + ", \n" + city + ", \n" + county; }
 }

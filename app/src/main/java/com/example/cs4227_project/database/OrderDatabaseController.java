@@ -1,6 +1,7 @@
 package com.example.cs4227_project.database;
 
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -14,11 +15,16 @@ import com.example.cs4227_project.logs.LogTags;
 import com.example.cs4227_project.order.Order;
 import com.example.cs4227_project.products.Product;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,6 +35,7 @@ public class OrderDatabaseController {
     private Cart cart = Cart.getInstance();
     private ArrayList<Order> orders = new ArrayList<>();
     private OrderReadListener myEventL;
+    private ArrayList<String> descStrings = new ArrayList<>();
 
     public OrderDatabaseController() {}
 
@@ -87,13 +94,22 @@ public class OrderDatabaseController {
         Log.d(LogTags.ORDER, order.get("productInfo").getClass().getName());
         HashMap<String, String> cardDetails = (HashMap<String, String>) order.get("details");
         HashMap<String, String> customerAddress = (HashMap<String, String>) order.get("address");
+        ArrayList<HashMap<String, Object>> stock = (ArrayList<HashMap<String, Object>>) order.get("productInfo");
+
+        //Converts hashmap from database to stock
+        ArrayList<Stock> orderStock = new ArrayList<>();
+
+        for(int i = 0; i < stock.size(); i++) {
+            HashMap<String, Object> map = stock.get(i);
+                Stock s = new Stock((String) map.get("id"), (HashMap<String, String>)map.get("sizeQuantity"), (String) map.get("type"), (boolean) map.get("female"));
+                orderStock.add(s);
+        }
 
         CardDetails details = new CardDetails(cardDetails.get("cardNum"), cardDetails.get("cardName"), cardDetails.get("cvv"), cardDetails.get("expiryDate"));
         Address address = new Address(customerAddress.get("line1"), customerAddress.get("city"), customerAddress.get("county"));
 
         CustomerOrderBuilder builder = new CustomerOrderBuilder();
-
-        builder.setProductInfo((HashMap<String, Stock>)order.get("productInfo"));
+        builder.setProductInfo(orderStock);
         builder.setAddress(address);
         builder.setDetails(details);
         builder.setEmail((String)order.get("email"));
@@ -113,4 +129,42 @@ public class OrderDatabaseController {
     public ArrayList<Order> getAllOrders() {
         return orders;
     }
+
+    public void getProduct(ArrayList<Stock> arr) {
+        for(Stock s: arr) {
+            String collection = s.getType() + s.isFemale();
+            String id = s.getId();
+
+            DocumentReference docRef = db.GET(collection, id);
+            docRef.get()
+                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            if(documentSnapshot.exists()) {
+                                extractInfo(documentSnapshot);
+                                Log.d("test", descStrings.toString());
+
+                            } else {
+                                Log.d("error", "Document does not exist");
+                            }
+                            myEventL.orderCallback("success");
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.d("error", "Couldn't get document");
+                        }
+                    });
+        }
+    }
+
+    public void extractInfo(DocumentSnapshot doc) {
+        String description = doc.get("colour") + " " + doc.get("brand") + " " + doc.get("name") + "\n";
+        descStrings.add(description);
+        Log.d("desc", descStrings.toString());
+    }
+
+    public ArrayList<String> getDescStrings() { return descStrings;}
+
 }

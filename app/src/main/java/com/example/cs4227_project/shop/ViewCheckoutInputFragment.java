@@ -115,12 +115,12 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
         Toast.makeText(getActivity(), "Your order has been confirmed", Toast.LENGTH_SHORT).show();
 
         double totalPrice = 0.0;
-        HashMap<String, Stock> productInfo = new HashMap<>();
+        ArrayList<Stock> productInfo = new ArrayList<>();
         for(Map.Entry<Product, Stock> entry: cart.getCart().entrySet()){
             Log.d("ORDER", "Products to checkout =" + entry.getKey().toString());
             totalPrice += entry.getKey().getPrice();
             cartMap.put(entry.getKey(), entry.getValue());
-            productInfo.put(entry.getKey().getId(), entry.getValue());
+            productInfo.add(entry.getValue());
         }
 
         Log.d("STOCKS", "Cart List" + cartMap.toString());

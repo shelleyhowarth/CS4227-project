@@ -5,10 +5,10 @@ import java.util.Date;
 import java.util.Locale;
 
 public class CardDetails {
-    String cardNum;
-    String cardName;
-    String cvv;
-    String expiryDate;
+    private String cardNum;
+    private String cardName;
+    private String cvv;
+    private String expiryDate;
 
     public CardDetails(){
 
