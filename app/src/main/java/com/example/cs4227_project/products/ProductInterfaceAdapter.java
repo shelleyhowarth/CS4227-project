@@ -20,10 +20,11 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.cs4227_project.logs.LogTags;
+import com.example.cs4227_project.misc.LogTags;
 import com.example.cs4227_project.R;
-import com.example.cs4227_project.order.Stock;
-import com.example.cs4227_project.shop.Cart;
+import com.example.cs4227_project.order.commandPattern.Stock;
+import com.example.cs4227_project.order.Cart;
+import com.example.cs4227_project.products.abstractFactoryPattern.Product;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;

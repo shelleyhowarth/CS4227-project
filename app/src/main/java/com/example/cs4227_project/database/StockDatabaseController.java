@@ -4,9 +4,8 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.example.cs4227_project.enums.ProductType;
-import com.example.cs4227_project.logs.LogTags;
-import com.example.cs4227_project.order.Stock;
+import com.example.cs4227_project.misc.LogTags;
+import com.example.cs4227_project.order.commandPattern.Stock;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
@@ -17,7 +16,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class StockDatabaseController {

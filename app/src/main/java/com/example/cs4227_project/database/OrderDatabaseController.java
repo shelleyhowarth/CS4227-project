@@ -1,19 +1,17 @@
 package com.example.cs4227_project.database;
 
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
-import com.example.cs4227_project.order.Address;
-import com.example.cs4227_project.order.CardDetails;
-import com.example.cs4227_project.order.OrderBuilder;
-import com.example.cs4227_project.order.Stock;
-import com.example.cs4227_project.order.CustomerOrderBuilder;
-import com.example.cs4227_project.shop.Cart;
-import com.example.cs4227_project.logs.LogTags;
-import com.example.cs4227_project.order.Order;
-import com.example.cs4227_project.products.Product;
+import com.example.cs4227_project.order.builderPattern.Address;
+import com.example.cs4227_project.order.builderPattern.CardDetails;
+import com.example.cs4227_project.order.commandPattern.Stock;
+import com.example.cs4227_project.order.builderPattern.CustomerOrderBuilder;
+import com.example.cs4227_project.order.Cart;
+import com.example.cs4227_project.misc.LogTags;
+import com.example.cs4227_project.order.builderPattern.Order;
+import com.example.cs4227_project.products.abstractFactoryPattern.Product;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -24,7 +22,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

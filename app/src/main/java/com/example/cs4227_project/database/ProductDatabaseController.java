@@ -4,11 +4,11 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.example.cs4227_project.logs.LogTags;
-import com.example.cs4227_project.products.AbstractFactory;
-import com.example.cs4227_project.products.FactoryProducer;
-import com.example.cs4227_project.products.Product;
-import com.example.cs4227_project.enums.ProductDatabaseFields;
+import com.example.cs4227_project.misc.LogTags;
+import com.example.cs4227_project.products.abstractFactoryPattern.AbstractFactory;
+import com.example.cs4227_project.products.abstractFactoryPattern.FactoryProducer;
+import com.example.cs4227_project.products.abstractFactoryPattern.Product;
+import com.example.cs4227_project.misc.ProductDatabaseFields;
 import com.example.cs4227_project.products.ProductTypeController;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
