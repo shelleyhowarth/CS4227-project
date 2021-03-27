@@ -17,6 +17,11 @@ public class AddStock implements Command{
         stockDb.updateStock(abcStock.getId(), "sizeQuantity", sizesQ);
     }
 
+    public AddStock(Stock abcStock){
+        this.abcStock = abcStock;
+        stockDb.addStockToDB(abcStock.getId(), this.abcStock);
+    }
+
     public void execute() {
         abcStock.addStock();
     }

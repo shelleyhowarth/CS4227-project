@@ -236,7 +236,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         AddStockFragment fragment = new AddStockFragment();
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction().replace(R.id.contentWithToolbar, fragment);
-        transaction.addToBackStack("viewCart");
+        transaction.addToBackStack("addProduct");
         transaction.commit();
     }
 
