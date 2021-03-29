@@ -19,9 +19,10 @@ import android.widget.Toast;
 import com.example.cs4227_project.R;
 import com.example.cs4227_project.database.ProductDatabaseController;
 import com.example.cs4227_project.database.ProductReadListener;
-import com.example.cs4227_project.enums.FilterAttributes;
-import com.example.cs4227_project.logs.LogTags;
-import com.example.cs4227_project.products.productAttributes.AttributeManager;
+import com.example.cs4227_project.misc.FilterAttributes;
+import com.example.cs4227_project.misc.LogTags;
+import com.example.cs4227_project.products.abstractFactoryPattern.Product;
+import com.example.cs4227_project.products.facadePattern.AttributeManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
