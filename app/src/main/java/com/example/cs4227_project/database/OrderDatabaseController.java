@@ -87,13 +87,22 @@ public class OrderDatabaseController {
         Log.d(LogTags.ORDER, order.get("productInfo").getClass().getName());
         HashMap<String, String> cardDetails = (HashMap<String, String>) order.get("details");
         HashMap<String, String> customerAddress = (HashMap<String, String>) order.get("address");
+        ArrayList<HashMap<String, Object>> stock = (ArrayList<HashMap<String, Object>>) order.get("productInfo");
+
+        //Converts hashmap from database to stock
+        ArrayList<Stock> orderStock = new ArrayList<>();
+
+        for(int i = 0; i < stock.size(); i++) {
+            HashMap<String, Object> map = stock.get(i);
+            Stock s = new Stock((String) map.get("id"), (HashMap<String, String>)map.get("sizeQuantity"), (String) map.get("type"), (boolean) map.get("female"));
+            orderStock.add(s);
+        }
 
         CardDetails details = new CardDetails(cardDetails.get("cardNum"), cardDetails.get("cardName"), cardDetails.get("cvv"), cardDetails.get("expiryDate"));
         Address address = new Address(customerAddress.get("line1"), customerAddress.get("city"), customerAddress.get("county"));
 
         CustomerOrderBuilder builder = new CustomerOrderBuilder();
-
-        builder.setProductInfo((HashMap<String, Stock>)order.get("productInfo"));
+        //builder.setProductInfo(orderStock);
         builder.setAddress(address);
         builder.setDetails(details);
         builder.setEmail((String)order.get("email"));

@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 
-public class Order implements OrderBuilder{
+public class Order{
 
     public HashMap<String, Stock> productInfo;
     public Address address;
@@ -21,29 +21,6 @@ public class Order implements OrderBuilder{
         this.email = "";
         this.price = 0.0;
         this.time ="";
-    }
-
-    public void setProductInfo(HashMap<String, Stock> productInfo) {
-        this.productInfo = productInfo;
-    }
-
-    public void setAddress(Address address) {
-        this.address = address;
-    }
-
-    public void setDetails(CardDetails details) {
-        this.details = details;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-    public void setTime(){
     }
 
     public HashMap<String, Stock> getProductInfo() {

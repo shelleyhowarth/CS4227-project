@@ -3,6 +3,7 @@ package com.example.cs4227_project.products;
 import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +25,10 @@ import com.example.cs4227_project.logs.LogTags;
 import com.example.cs4227_project.R;
 import com.example.cs4227_project.order.Stock;
 import com.example.cs4227_project.shop.Cart;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -79,7 +84,8 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter implements Ada
             final Product item = productList.get(pos);
             textViewProductName.setText(item.getName());
             textViewProductPrice.setText("€" + String.valueOf(item.getPrice()));
-            Picasso.get().load(item.getImageURL()).fit().centerCrop().into(imageViewProductPic);
+            setPicture(imageViewProductPic, item);
+            //Picasso.get().load(item.getImageURL()).fit().centerCrop().into(imageViewProductPic);
 
             productDialog.setContentView(R.layout.product_detail_page);
             productDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -99,7 +105,8 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter implements Ada
                     textViewProductName.setText(item.getName());
                     textViewProductPrice.setText("€" + String.valueOf(item.getPrice()));
                     size.setAdapter(setUpSpinner(item));
-                    Picasso.get().load(item.getImageURL()).fit().centerCrop().into(imageViewProductImage);
+                    setPicture(imageViewProductImage, item);
+                    //Picasso.get().load(item.getImageURL()).fit().centerCrop().into(imageViewProductImage);
 
                     addBtn.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -129,6 +136,23 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter implements Ada
                         }
                     });
                     productDialog.show();
+                }
+            });
+        }
+
+        void setPicture(final ImageView image, Product p){
+            StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+            String path = p.getImageURL();
+            storageReference.child(path).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    Log.d("PROFILE", "SUCESS" + uri);
+                    Picasso.get().load(uri).fit().centerCrop().into(image);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Handle any errors
                 }
             });
         }
