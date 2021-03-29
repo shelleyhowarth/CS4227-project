@@ -4,9 +4,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.example.cs4227_project.logs.LogTags;
-import com.example.cs4227_project.order.Order;
-import com.example.cs4227_project.order.Stock;
+import com.example.cs4227_project.misc.LogTags;
 import com.example.cs4227_project.user.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;

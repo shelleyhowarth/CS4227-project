@@ -1,7 +1,5 @@
 package com.example.cs4227_project.user;
 
-import com.example.cs4227_project.shop.Cart;
-
 public class User {
     private String id;
     private String email;

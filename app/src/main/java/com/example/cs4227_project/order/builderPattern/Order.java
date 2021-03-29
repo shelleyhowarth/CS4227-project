@@ -2,6 +2,8 @@ package com.example.cs4227_project.order.builderPattern;
 
 import com.example.cs4227_project.order.commandPattern.Stock;
 
+import java.util.ArrayList;
+
 public class Order{
 
     public ArrayList<Stock> productInfo;
@@ -20,7 +22,7 @@ public class Order{
         this.time ="";
     }
 
-    public HashMap<String, Stock> getProductInfo() {
+    public ArrayList<Stock> getProductInfo() {
         return productInfo;
     }
 

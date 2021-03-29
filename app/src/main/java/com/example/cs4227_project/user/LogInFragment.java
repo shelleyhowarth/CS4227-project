@@ -17,7 +17,6 @@ import android.widget.Toast;
 
 import com.example.cs4227_project.database.UserDatabaseController;
 import com.example.cs4227_project.database.UserReadListener;
-import com.example.cs4227_project.logs.LogTags;
 import com.example.cs4227_project.misc.LogTags;
 import com.example.cs4227_project.R;
 import com.google.android.gms.tasks.OnCompleteListener;
