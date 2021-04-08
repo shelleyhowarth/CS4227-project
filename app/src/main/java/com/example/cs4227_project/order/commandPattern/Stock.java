@@ -1,11 +1,14 @@
 package com.example.cs4227_project.order.commandPattern;
 
+import com.example.cs4227_project.order.mementoPattern.Memento;
+
 import java.util.HashMap;
 
 public class Stock {
     private String id;
     private HashMap<String, String> sizeQuantity;
     private String type;
+    private Stock state;
     boolean female;
 
     public Stock(String id, HashMap<String, String> sizeQuantity, String type, boolean female){

@@ -28,6 +28,9 @@ import com.example.cs4227_project.order.builderPattern.Order;
 import com.example.cs4227_project.order.commandPattern.SellStock;
 import com.example.cs4227_project.order.commandPattern.Stock;
 import com.example.cs4227_project.order.builderPattern.CustomerOrderBuilder;
+import com.example.cs4227_project.order.mementoPattern.CareTaker;
+import com.example.cs4227_project.order.mementoPattern.Memento;
+import com.example.cs4227_project.order.mementoPattern.Originator;
 import com.example.cs4227_project.products.abstractFactoryPattern.Product;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -36,6 +39,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -47,6 +51,8 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
     private final OrderDatabaseController orderDatabaseController = new OrderDatabaseController();
     private final StockDatabaseController stockDb = new StockDatabaseController(this);
     private final HashMap<Product, Stock> cartMap = new HashMap<>();
+    private Originator originator;
+    private CareTaker careTaker;
 
     public ViewCheckoutInputFragment() {
         // Required empty public constructor
@@ -181,6 +187,8 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
      */
     public void changeStock(ArrayList<Stock> stock){
         CommandControl commandController = new CommandControl();
+        originator = new Originator();
+        careTaker = new CareTaker();
         for(Map.Entry<Product, Stock> entry: cartMap.entrySet()){
             String productId = entry.getKey().getId();
             Stock stockToChange = entry.getValue();
@@ -191,6 +199,9 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
             for(Stock s : stock){
                 if(s.getId().equals(productId)){
                     Stock stockFromDb = s;
+                    originator.setState(stockFromDb);
+                    careTaker.add(originator.saveStateToMemento());
+                    Log.d("Memento", "Stock being saved " + stockFromDb.getSizeQuantity());
                     SellStock sellStock= new SellStock(stockFromDb, quantity, size);
                     commandController.addCommand(sellStock);
                 }
@@ -219,6 +230,22 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
                     }
                 });
 
+        builder.setNeutralButton("Undo Order",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Log.d("CareTaker", "Undo button pressed");
+                        List<Memento> mementoList = careTaker.getMementoList();
+                        for(int i = 0; i < mementoList.size(); i++){
+                            Log.d("Memento", "memento list " + careTaker.get(i).getState().getSizeQuantity());
+                            originator.getStateFromMemento(careTaker.get(i));
+                            Stock s = originator.getState();
+                            Log.d("Memento", "Restored state " + s.getSizeQuantity());
+                            stockDb.updateStock(s.getId(), "sizeQuantity", s.getSizeQuantity());
+                        }
+                        popBackToHome();
+                    }
+                });
         AlertDialog dialog = builder.create();
         dialog.show();
     }

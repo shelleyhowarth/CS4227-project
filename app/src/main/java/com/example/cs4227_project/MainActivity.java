@@ -114,11 +114,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void setUpView(){
         Button addStockBtn = findViewById(R.id.stockBtn);
         addStockBtn.setOnClickListener(this);
-        if(currentUser.isAdmin()){
-            addStockBtn.setVisibility(View.VISIBLE);
+        if(currentUser != null){
+            if(currentUser.isAdmin()){
+                addStockBtn.setVisibility(View.VISIBLE);
+            }
         }else{
             addStockBtn.setVisibility(View.INVISIBLE);
         }
+
 
         genderTab.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
