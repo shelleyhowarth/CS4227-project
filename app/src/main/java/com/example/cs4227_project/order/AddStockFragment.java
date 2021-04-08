@@ -222,17 +222,17 @@ public class AddStockFragment extends Fragment implements View.OnClickListener {
         }
 
         Log.d(LogTags.COMMAND_DP, "Product type" + pType.getValue());
-        if(s1 != null && quant1 != null){
+        if(s1 != "" && quant1 != ""){
             sizeQuantities.put(s1, quant1);
         }
-        if(s2 != null && quant2 != null){
+        if(s2 != "" && quant2 != ""){
             sizeQuantities.put(s2, quant2);
         }
-        if(s3 != null && quant3 != null){
+        if(s3 != "" && quant3 != ""){
             sizeQuantities.put(s3, quant3);
         }
 
-        if(productName == null){
+        if(productName == ""){
             pName.setError("Must have product name");
         }else if(sizeQuantities.size() == 0){
             Toast.makeText(getActivity(), "Product must contain stock", Toast.LENGTH_SHORT).show();

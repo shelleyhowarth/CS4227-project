@@ -1,9 +1,11 @@
 package com.example.cs4227_project.products;
 
 import android.app.Dialog;
+import android.content.ContextWrapper;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,13 +20,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cs4227_project.misc.LogTags;
 import com.example.cs4227_project.R;
 import com.example.cs4227_project.order.commandPattern.Stock;
 import com.example.cs4227_project.order.Cart;
+import com.example.cs4227_project.order.commandPattern.UpdateStockFragment;
+import com.example.cs4227_project.user.UserController;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
@@ -47,10 +54,11 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter implements Ada
     private ImageView imageViewProductPic;
     private CardView cardViewProduct;
     private Dialog productDialog;
-    private Button addBtn;
+    private Button addBtn, addStock;
     private String chosenSize;
     private static final String all = "All";
     private Spinner size;
+    private Product product;
 
     private  RecyclerView mRecyclerView;
 
@@ -74,7 +82,7 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter implements Ada
         ((ProductHolder)holder).bindView(pos);
     }
 
-    class ProductHolder extends RecyclerView.ViewHolder{
+    class ProductHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         public ProductHolder(View itemView) {
             super(itemView);
             textViewProductName = itemView.findViewById(R.id.productName);
@@ -85,6 +93,7 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter implements Ada
 
         void bindView(int pos){
             final Product item = productList.get(pos);
+            product = item;
             textViewProductName.setText(item.getName());
             textViewProductPrice.setText("€" + String.valueOf(item.getPrice()));
             setPicture(imageViewProductPic, item);
@@ -102,6 +111,15 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter implements Ada
                     final EditText editQuantity = productDialog.findViewById(R.id.quantity);
 
                     addBtn = productDialog.findViewById(R.id.addToCart);
+                    addStock = productDialog.findViewById(R.id.addStock);
+                    if(UserController.getUser().isAdmin()){
+                        addStock.setVisibility(View.VISIBLE);
+                    }else{
+                        addStock.setVisibility(View.INVISIBLE);
+                    }
+                    Log.d("CLICK", "Listener set");
+                    addStock.setOnClickListener(this);
+
                     inCart(item);
                     size = productDialog.findViewById(R.id.spinner);
                     size.setOnItemSelectedListener(size.getOnItemSelectedListener());
@@ -138,6 +156,7 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter implements Ada
                             size.setAdapter(setUpSpinner(item));
                         }
                     });
+
                     productDialog.show();
                 }
             });
@@ -158,6 +177,24 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter implements Ada
                     // Handle any errors
                 }
             });
+        }
+
+        @Override
+        public void onClick(View v){
+            int i = v.getId();
+            Log.d("CLICK", "In on click");
+            if(i == R.id.addStock){
+                Log.d("CLICK", "Add stock button clicked");
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("product", product);
+                UpdateStockFragment fragment = new UpdateStockFragment();
+                fragment.setArguments(bundle);
+                AppCompatActivity activity = (AppCompatActivity) v.getContext();
+                FragmentManager fm = activity.getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fm.beginTransaction().replace(R.id.content, fragment);
+                fragmentTransaction.addToBackStack("updateStock");
+                fragmentTransaction.commit();
+            }
         }
     }
 
