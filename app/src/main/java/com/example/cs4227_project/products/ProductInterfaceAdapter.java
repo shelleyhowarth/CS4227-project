@@ -89,12 +89,6 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter implements Ada
             textViewProductPrice = itemView.findViewById(R.id.productPrice);
             imageViewProductPic = itemView.findViewById(R.id.productViewImage);
             cardViewProduct = itemView.findViewById(R.id.productCard);
-            addStock = itemView.findViewById(R.id.addStock);
-            if(UserController.getUser().isAdmin()){
-                addStock.setVisibility(View.VISIBLE);
-            }else{
-                addStock.setVisibility(View.INVISIBLE);
-            }
         }
 
         void bindView(int pos){
@@ -102,7 +96,6 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter implements Ada
             product = item;
             textViewProductName.setText(item.getName());
             textViewProductPrice.setText("€" + String.valueOf(item.getPrice()));
-            addStock.setOnClickListener(this);
             setPicture(imageViewProductPic, item);
             //Picasso.get().load(item.getImageURL()).fit().centerCrop().into(imageViewProductPic);
 
@@ -118,6 +111,16 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter implements Ada
                     final EditText editQuantity = productDialog.findViewById(R.id.quantity);
 
                     addBtn = productDialog.findViewById(R.id.addToCart);
+                    addStock = productDialog.findViewById(R.id.addStock);
+                    if(UserController.getUser() != null) {
+                        if(UserController.getUser().isAdmin()){
+                            addStock.setVisibility(View.VISIBLE);
+                        }else{
+                            addStock.setVisibility(View.INVISIBLE);
+                        }
+                        Log.d("CLICK", "Listener set");
+                        addStock.setOnClickListener(this);
+                    }
 
                     inCart(item);
                     size = productDialog.findViewById(R.id.spinner);
