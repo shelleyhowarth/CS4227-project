@@ -199,11 +199,21 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
             for(Stock s : stock){
                 if(s.getId().equals(productId)){
                     Stock stockFromDb = s;
-                    originator.setState(stockFromDb);
-                    careTaker.add(originator.saveStateToMemento());
-                    Log.d("Memento", "Stock being saved " + stockFromDb.getSizeQuantity());
+                    HashMap<String,String> sizes = s.getSizeQuantity();
+
+                    final Stock tempStock = s;
+                    final HashMap<String,String> tempSizes = new HashMap<>();
+                    for(Map.Entry<String, String> item : sizes.entrySet()){
+                        tempSizes.put(item.getKey(), item.getValue());
+                    }
+
                     SellStock sellStock= new SellStock(stockFromDb, quantity, size);
                     commandController.addCommand(sellStock);
+
+                    tempStock.setSizeQuantity(tempSizes);
+                    originator.setState(tempStock);
+                    careTaker.add(originator.saveStateToMemento());
+                    Log.d("Memento", "Stock being saved " + careTaker.get(0).getState().getSizeQuantity());
                 }
             }
         }
@@ -234,12 +244,13 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Log.d("CareTaker", "Undo button pressed");
                         List<Memento> mementoList = careTaker.getMementoList();
                         for(int i = 0; i < mementoList.size(); i++){
-                            Log.d("Memento", "memento list " + careTaker.get(i).getState().getSizeQuantity());
+                            //Getting stock state from memento list
                             originator.getStateFromMemento(careTaker.get(i));
                             Stock s = originator.getState();
+
+                            //Update database with old stock state
                             Log.d("Memento", "Restored state " + s.getSizeQuantity());
                             stockDb.updateStock(s.getId(), "sizeQuantity", s.getSizeQuantity());
                         }
