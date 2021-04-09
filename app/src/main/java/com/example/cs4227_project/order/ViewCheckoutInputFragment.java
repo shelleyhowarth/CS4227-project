@@ -189,25 +189,30 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
         CommandControl commandController = new CommandControl();
         originator = new Originator();
         careTaker = new CareTaker();
-        for(Map.Entry<Product, Stock> entry: cartMap.entrySet()){
+        for(Map.Entry<Product, Stock> entry: cartMap.entrySet()) {
             String productId = entry.getKey().getId();
             Stock stockToChange = entry.getValue();
             Log.d("STOCKS", "Stock list to change " + stockToChange.toString());
-            Map.Entry<String,String> sizeQ = stockToChange.getSizeQuantity().entrySet().iterator().next();
+            Map.Entry<String, String> sizeQ = stockToChange.getSizeQuantity().entrySet().iterator().next();
             String size = sizeQ.getKey();
             int quantity = Integer.parseInt(sizeQ.getValue());
-            for(Stock s : stock){
-                if(s.getId().equals(productId)){
+            for (Stock s : stock) {
+                if (s.getId().equals(productId)) {
                     Stock stockFromDb = s;
-                    originator.setState(stockFromDb);
+                    Stock tempS = new Stock();
+                    tempS = s;
+                    originator.setState(tempS);
                     careTaker.add(originator.saveStateToMemento());
                     Log.d("Memento", "Stock being saved " + stockFromDb.getSizeQuantity());
-                    SellStock sellStock= new SellStock(stockFromDb, quantity, size);
+                    SellStock sellStock = new SellStock(stockFromDb, quantity, size);
+                    Log.d("Checkout", "Stock before sellStock() " + careTaker.get(0).getState().getSizeQuantity());
                     commandController.addCommand(sellStock);
                 }
             }
         }
+        Log.d("Checkout", "Stock before executeCommands() " + careTaker.get(0).getState().getSizeQuantity());
         commandController.executeCommands();
+        Log.d("Checkout", "Stock after executeCommands() " + careTaker.get(0).getState().getSizeQuantity());
     }
 
     public void createDialog(ArrayList<String> texts, double price) {

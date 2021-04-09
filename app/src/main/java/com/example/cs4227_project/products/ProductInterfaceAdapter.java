@@ -112,13 +112,15 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter implements Ada
 
                     addBtn = productDialog.findViewById(R.id.addToCart);
                     addStock = productDialog.findViewById(R.id.addStock);
-                    if(UserController.getUser().isAdmin()){
-                        addStock.setVisibility(View.VISIBLE);
-                    }else{
-                        addStock.setVisibility(View.INVISIBLE);
+                    if(UserController.getUser() != null) {
+                        if(UserController.getUser().isAdmin()){
+                            addStock.setVisibility(View.VISIBLE);
+                        }else{
+                            addStock.setVisibility(View.INVISIBLE);
+                        }
+                        Log.d("CLICK", "Listener set");
+                        addStock.setOnClickListener(this);
                     }
-                    Log.d("CLICK", "Listener set");
-                    addStock.setOnClickListener(this);
 
                     inCart(item);
                     size = productDialog.findViewById(R.id.spinner);

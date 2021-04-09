@@ -18,6 +18,8 @@ public class Stock {
         this.female = female;
     }
 
+    public Stock() {}
+
     //For admin adding products to site
     public void addStock(){
         System.out.println("Stock added");
