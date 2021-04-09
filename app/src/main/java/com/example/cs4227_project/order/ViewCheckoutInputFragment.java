@@ -198,9 +198,20 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
             int quantity = Integer.parseInt(sizeQ.getValue());
             for (Stock s : stock) {
                 if (s.getId().equals(productId)) {
+                    //Originals
                     Stock stockFromDb = s;
-                    Stock tempS = new Stock();
-                    tempS = s;
+                    HashMap<String, String> sizeQuantity = s.getSizeQuantity();
+
+                    //Temps
+                    Stock tempS = s;
+                    HashMap<String, String> tempMap = new HashMap<String, String>();
+
+                    //Make deep copy
+                    for(Map.Entry<String, String> item : sizeQuantity.entrySet()) {
+                        tempMap.put(item.getKey(), item.getValue());
+                    }
+                    tempS.setSizeQuantity(tempMap);
+
                     originator.setState(tempS);
                     careTaker.add(originator.saveStateToMemento());
                     Log.d("Memento", "Stock being saved " + stockFromDb.getSizeQuantity());
