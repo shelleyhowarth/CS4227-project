@@ -3,6 +3,7 @@ package com.example.cs4227_project.order.commandPattern;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -74,13 +75,19 @@ public class UpdateStockFragment extends Fragment implements View.OnClickListene
         String quant2 = q2.getText().toString();
         String quant3 = q3.getText().toString();
 
-        if(s1 != "" && quant1 != ""){
+        Log.d(LogTags.COMMAND_DP, "Items to add s1: " + s1);
+        Log.d(LogTags.COMMAND_DP, "Items to add s2: " + s2);
+        Log.d(LogTags.COMMAND_DP, "Items to add s3: " + s3);
+        Log.d(LogTags.COMMAND_DP, "Items to add q1: " + quant1);
+        Log.d(LogTags.COMMAND_DP, "Items to add q2: " + quant2);
+
+        if(!s1.isEmpty() && !quant1.isEmpty()){
             sizeQuantities.put(s1, quant1);
         }
-        if(s2 != "" && quant2 != ""){
+        if(!s2.isEmpty() && !quant2.isEmpty()){
             sizeQuantities.put(s2, quant2);
         }
-        if(s3 != "" && quant3 != ""){
+        if(!s3.isEmpty() && !quant3.isEmpty()){
             sizeQuantities.put(s3, quant3);
         }
 
@@ -94,10 +101,12 @@ public class UpdateStockFragment extends Fragment implements View.OnClickListene
         for(Map.Entry<String, String> entry : sizeQuantities.entrySet()){
             String size = entry.getKey();
             int quantity = Integer.parseInt(entry.getValue());
+            Log.d(LogTags.COMMAND_DP, "Add stock values: quantity = " + quantity + " Size = " + size);
             AddStock addStock = new AddStock(stockToUpdate, quantity, size);
             controller.addCommand(addStock);
         }
         controller.executeCommands();
+        getFragmentManager().popBackStack();
     }
 
     @Override

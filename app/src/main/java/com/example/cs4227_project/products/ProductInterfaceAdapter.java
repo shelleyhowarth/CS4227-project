@@ -97,10 +97,21 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter implements Ada
             textViewProductName.setText(item.getName());
             textViewProductPrice.setText("€" + String.valueOf(item.getPrice()));
             setPicture(imageViewProductPic, item);
+
+            addStock = itemView.findViewById(R.id.addStock);
+            if(UserController.getUser().isAdmin()){
+                addStock.setVisibility(View.VISIBLE);
+            }else{
+                addStock.setVisibility(View.INVISIBLE);
+            }
+            Log.d("CLICK", "Listener set");
+            addStock.setOnClickListener(this);
             //Picasso.get().load(item.getImageURL()).fit().centerCrop().into(imageViewProductPic);
 
             productDialog.setContentView(R.layout.product_detail_page);
             productDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+            addBtn = productDialog.findViewById(R.id.addToCart);
 
             cardViewProduct.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -109,16 +120,6 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter implements Ada
                     TextView textViewProductPrice = productDialog.findViewById(R.id.productPrice);
                     ImageView imageViewProductImage = productDialog.findViewById(R.id.productImage);
                     final EditText editQuantity = productDialog.findViewById(R.id.quantity);
-
-                    addBtn = productDialog.findViewById(R.id.addToCart);
-                    addStock = productDialog.findViewById(R.id.addStock);
-                    if(UserController.getUser().isAdmin()){
-                        addStock.setVisibility(View.VISIBLE);
-                    }else{
-                        addStock.setVisibility(View.INVISIBLE);
-                    }
-                    Log.d("CLICK", "Listener set");
-                    addStock.setOnClickListener(this);
 
                     inCart(item);
                     size = productDialog.findViewById(R.id.spinner);
