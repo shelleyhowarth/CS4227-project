@@ -7,8 +7,8 @@ import com.example.cs4227_project.database.StockDatabaseController;
 import java.util.HashMap;
 
 public class SellStock implements Command {
-    private Stock abcStock;
-    private StockDatabaseController stockDb = new StockDatabaseController();
+    private final Stock abcStock;
+    private final StockDatabaseController stockDb = new StockDatabaseController();
     private HashMap<String, String> sizesQ = new HashMap<>();
 
     /**

@@ -5,8 +5,8 @@ import com.example.cs4227_project.database.StockDatabaseController;
 import java.util.HashMap;
 
 public class AddStock implements Command {
-    private Stock abcStock;
-    private StockDatabaseController stockDb = new StockDatabaseController();
+    private final Stock abcStock;
+    private final StockDatabaseController stockDb = new StockDatabaseController();
 
     public AddStock(Stock abcStock, int quantity, String size){
         this.abcStock = abcStock;
