@@ -63,7 +63,7 @@ public class ViewCartFragment extends Fragment {
             public void onClick(View v) {
                 cart.removeAllProductsFromCart();
                 refreshCart();
-                Log.d(LogTags.CHECK_CARD, "We yeeting products");
+                Log.d(LogTags.CHECK_CARD, "Products have been removed from the cart");
             }
         });
         Button checkoutBtn = view.findViewById(R.id.checkout);
@@ -71,15 +71,15 @@ public class ViewCartFragment extends Fragment {
         checkoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(LogTags.CHECK_CARD, "We checkin out");
+                Log.d(LogTags.CHECK_CARD, "Preparing to check out cart");
                 HashMap<Product, Stock> products = cart.getCart();
                 if (products.isEmpty()){
                     Toast.makeText(getActivity(), "There are no items in your cart", Toast.LENGTH_LONG).show();
-                    Log.d(LogTags.CHECK_CARD, "We ain't checkin out");
+                    Log.d(LogTags.CHECK_CARD, "Failed to check out. No items currently in cart");
                 }
                 else if (mAuth.getCurrentUser() == null) {
                     Toast.makeText(getActivity(), "You must be logged in to go to checkout", Toast.LENGTH_LONG).show();
-                    Log.d(LogTags.CHECK_CARD, "We ain't checkin out");
+                    Log.d(LogTags.CHECK_CARD, "Failed to check out. No user currently logged in");
                 }
                 else {
                     goToCheckout();
