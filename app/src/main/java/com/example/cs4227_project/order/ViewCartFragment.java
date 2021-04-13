@@ -16,6 +16,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cs4227_project.R;
+import com.example.cs4227_project.interceptorPattern.InterceptorFramework;
+import com.example.cs4227_project.interceptorPattern.contextObjects.LogInContext;
 import com.example.cs4227_project.misc.LogTags;
 import com.example.cs4227_project.order.commandPattern.Stock;
 import com.example.cs4227_project.products.abstractFactoryPattern.Product;
@@ -31,6 +33,7 @@ public class ViewCartFragment extends Fragment {
     private ProductInterfaceAdapter adapter;
     private FragmentActivity myContext;
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private InterceptorFramework interceptorFramework;
 
     public ViewCartFragment() {
         // Required empty public constructor
@@ -94,6 +97,10 @@ public class ViewCartFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         recyclerView.setAdapter(adapter);
         return view;
+    }
+
+    public void setUpInterceptor() {
+        interceptorFramework = new InterceptorFramework(new LogInContext());
     }
 
     public void refreshCart(){

@@ -25,7 +25,7 @@ public class Dispatcher {
     }
 
     public void dispatchInterceptors(Context context) {
-        // validate context type matches dispatcher type
+        // validate context type matches
         if(contextType == context.getClass()) {
             for (Interceptor i : interceptors) {
                 i.execute(context);

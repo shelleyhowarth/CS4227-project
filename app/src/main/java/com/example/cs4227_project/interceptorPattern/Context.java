@@ -1,11 +1,19 @@
 package com.example.cs4227_project.interceptorPattern;
 
 public class Context {
-    Framework framework;
+    protected String message;
 
-    Context() { }
+    public Context() {}
 
-    Context(Framework framework) {
-        this.framework = framework;
+    public Context(String message) {
+        this.message = message;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }
