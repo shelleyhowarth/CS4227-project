@@ -46,6 +46,15 @@ public class OrderDatabaseController {
         cart.removeAllProductsFromCart();
     }
 
+    public void addOrderToDB(Order order, String id) {
+        db.PUT("orders", id, order);
+        cart.removeAllProductsFromCart();
+    }
+
+    public void deleteOrderFromDB(String id){
+        db.DELETE("orders", id);
+    }
+
     public Map<String, List<Integer>> decreaseSizeQuantities() {
         List<Integer> sizesQuantities;
         Map<String, List<Integer>> updatedQuantities = new HashMap<>();

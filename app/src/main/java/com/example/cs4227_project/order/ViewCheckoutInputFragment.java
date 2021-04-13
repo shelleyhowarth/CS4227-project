@@ -32,6 +32,7 @@ import com.example.cs4227_project.order.mementoPattern.CareTaker;
 import com.example.cs4227_project.order.mementoPattern.Memento;
 import com.example.cs4227_project.products.abstractFactoryPattern.Product;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -51,6 +52,7 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
     private final HashMap<Product, Stock> cartMap = new HashMap<>();
     private Stock originator;
     private CareTaker careTaker;
+    private String orderId;
 
     public ViewCheckoutInputFragment() {
         // Required empty public constructor
@@ -138,9 +140,12 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
         orderBuilder.setPrice(totalPrice);
         orderBuilder.setTime();
 
+        FirebaseFirestore dbref = FirebaseFirestore.getInstance();
+        orderId = dbref.collection("orders").document().getId();
+
         updateStock();
         Order order = orderBuilder.getOrder();
-        orderDatabaseController.addOrderToDB(order);
+        orderDatabaseController.addOrderToDB(order, orderId);
         createDialog(texts, totalPrice);
     }
 
@@ -260,6 +265,7 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
                             //Update database with old stock state
                             Log.d("Memento", "Restored state " + s.getSizeQuantity());
                             stockDb.updateStock(s.getId(), "sizeQuantity", s.getSizeQuantity());
+                            orderDatabaseController.deleteOrderFromDB(orderId);
                         }
                         popBackToHome();
                     }
