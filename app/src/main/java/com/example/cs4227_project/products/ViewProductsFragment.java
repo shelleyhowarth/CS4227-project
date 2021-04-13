@@ -59,8 +59,7 @@ public class ViewProductsFragment extends Fragment implements AdapterView.OnItem
                              Bundle savedInstanceState) {
         //Retrieve data from previous activity
         products = (ArrayList<Product>) getArguments().getSerializable("Products");
-        AttributeManager attributeManager = (AttributeManager) getArguments().getSerializable("AttributeManager");
-
+        AttributeManager attributeManager = AttributeManager.getInstance();
         // Inflate the layout for this fragment
         Log.d(LogTags.CHECK_CARD, ProductTypeController.getType().getValue());
         View view = inflater.inflate(R.layout.fragment_view_products, container, false);

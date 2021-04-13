@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mAuth = FirebaseAuth.getInstance();
         productDataC = new ProductDatabaseController(this);
         orderDb = new OrderDatabaseController(this);
-        attributeManager = new AttributeManager();
+        attributeManager = AttributeManager.getInstance();
         attributeManager.fillAttributes();
 
         //Buttons
@@ -177,7 +177,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         alProd.addAll(products);
         Bundle bundle = new Bundle();
         bundle.putSerializable("Products", alProd);
-        bundle.putSerializable("AttributeManager", attributeManager);
         ViewProductsFragment fragment = new ViewProductsFragment();
         fragment.setArguments(bundle);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
