@@ -122,7 +122,10 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
         ArrayList<Stock> productInfo = new ArrayList<>();
         for(Map.Entry<Product, Stock> entry: cart.getCart().entrySet()){
             Log.d("ORDER", "Products to checkout =" + entry.getKey().toString());
-            totalPrice += entry.getKey().getPrice();
+            HashMap<String, String> sizeQ = entry.getValue().getSizeQuantity();
+            Map.Entry<String,String> sizeEntry = sizeQ.entrySet().iterator().next();
+            int quantity = Integer.parseInt(sizeEntry.getValue());
+            totalPrice += (entry.getKey().getPrice() * quantity);
             cartMap.put(entry.getKey(), entry.getValue());
             productInfo.add(entry.getValue());
         }
@@ -265,6 +268,7 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
                             //Update database with old stock state
                             Log.d("Memento", "Restored state " + s.getSizeQuantity());
                             stockDb.updateStock(s.getId(), "sizeQuantity", s.getSizeQuantity());
+                            //Delete order that was created in database
                             orderDatabaseController.deleteOrderFromDB(orderId);
                         }
                         popBackToHome();

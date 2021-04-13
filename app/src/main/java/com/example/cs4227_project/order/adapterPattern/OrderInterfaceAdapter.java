@@ -120,6 +120,7 @@ public class OrderInterfaceAdapter extends RecyclerView.Adapter implements Adapt
     }
 
     public void orderCallback(String result) {
+        products = new ArrayList<>();
         products = db.getDescStrings();
     }
 
