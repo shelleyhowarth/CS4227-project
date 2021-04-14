@@ -17,6 +17,7 @@ import com.example.cs4227_project.database.OrderDatabaseController;
 import com.example.cs4227_project.database.OrderReadListener;
 import com.example.cs4227_project.database.ProductDatabaseController;
 import com.example.cs4227_project.database.ProductReadListener;
+import com.example.cs4227_project.misc.FragmentController;
 import com.example.cs4227_project.misc.ProductType;
 import com.example.cs4227_project.misc.LogTags;
 import com.example.cs4227_project.order.builderPattern.Order;
@@ -51,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private FirebaseAuth mAuth;
     private OrderDatabaseController orderDb;
     private AttributeManager attributeManager;
+    private FragmentController fragmentController;
 
     private final String login = "Log In";
     private  final String logout = "Log Out";
@@ -67,6 +69,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         orderDb = new OrderDatabaseController(this);
         attributeManager = AttributeManager.getInstance();
         attributeManager.fillAttributes();
+        fragmentController = FragmentController.getInstance();
+        fragmentController.setCurrentFragmentManager(getSupportFragmentManager());
 
         //Buttons
         clothesButton = findViewById(R.id.clothesButton);
@@ -145,11 +149,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //Opens login fragment
     public void goToLogIn(View v)
     {
-        Fragment fr = new LogInFragment();
-        FragmentManager fm = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fm.beginTransaction().replace(R.id.content, fr);
-        fragmentTransaction.addToBackStack("login");
-        fragmentTransaction.commit();
+        fragmentController.startFragment(new LogInFragment(), R.id.content, "login");
     }
 
     @Override
@@ -179,10 +179,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         bundle.putSerializable("Products", alProd);
         ViewProductsFragment fragment = new ViewProductsFragment();
         fragment.setArguments(bundle);
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.contentWithToolbar, fragment);
-        transaction.addToBackStack("viewProducts");
-        transaction.commit();
+        fragmentController.startFragment(fragment, R.id.contentWithToolbar, "viewProducts");
     }
 
     public void goToCart(){
@@ -194,10 +191,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         bundle.putSerializable("Products", alProd);
         ViewCartFragment fragment = new ViewCartFragment();
         fragment.setArguments(bundle);
-        FragmentManager manager = getSupportFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction().replace(R.id.contentWithToolbar, fragment);
-        transaction.addToBackStack("viewCart");
-        transaction.commit();
+        fragmentController.startFragment(fragment, R.id.contentWithToolbar, "viewCart");
     }
 
     public void goToOrders() {

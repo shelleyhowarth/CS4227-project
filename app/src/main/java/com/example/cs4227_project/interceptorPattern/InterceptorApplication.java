@@ -11,7 +11,6 @@ public class InterceptorApplication {
         return instance;
     }
 
-
     public void setInterceptorFramework(InterceptorFramework framework) {
         this.interceptorFramework = framework;
     }

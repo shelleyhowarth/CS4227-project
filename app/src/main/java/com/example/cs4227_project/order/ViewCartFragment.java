@@ -22,6 +22,7 @@ import com.example.cs4227_project.interceptorPattern.InterceptorFramework;
 import com.example.cs4227_project.interceptorPattern.Target;
 import com.example.cs4227_project.interceptorPattern.interceptors.LogInAuthenticationInterceptor;
 import com.example.cs4227_project.interceptorPattern.interceptors.LoggingInterceptor;
+import com.example.cs4227_project.misc.FragmentController;
 import com.example.cs4227_project.misc.LogTags;
 import com.example.cs4227_project.order.commandPattern.Stock;
 import com.example.cs4227_project.products.abstractFactoryPattern.Product;
@@ -86,7 +87,7 @@ public class ViewCartFragment extends Fragment implements Target {
                     Log.d(LogTags.CHECK_CARD, "Failed to check out. No items currently in cart");
                 }
                 else {
-                    InterceptorContext context = new InterceptorContext("purchase products", myContext);
+                    InterceptorContext context = new InterceptorContext("processing preconditions for going to checkout");
                     interceptorApplication.sendRequest(context);
                 }
             }
@@ -127,17 +128,15 @@ public class ViewCartFragment extends Fragment implements Target {
         Bundle bundle = new Bundle();
         ViewCheckoutInputFragment fragment = new ViewCheckoutInputFragment();
         fragment.setArguments(bundle);
-        FragmentTransaction transaction = myContext.getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.content, fragment);
-        transaction.addToBackStack("viewCheckout");
-        transaction.commit();
+        FragmentController fragmentController = FragmentController.getInstance();
+        fragmentController.startFragment(fragment, R.id.content, "viewCheckout");
     }
 
     @Override
     public void execute(InterceptorContext context) {
         Log.d(LogTags.INTERCEPTOR, "executing target");
         switch (context.getMessage()) {
-            case "purchase products":
+            case "processing preconditions for going to checkout":
                 if(mAuth.getCurrentUser() != null) {
                     goToCheckout();
                 }
