@@ -9,7 +9,7 @@ import java.util.Locale;
 
 public class CustomerOrderBuilder implements OrderBuilder {
 
-    private Order order;
+    private final Order order;
 
     public CustomerOrderBuilder(){
         this.order = new Order();

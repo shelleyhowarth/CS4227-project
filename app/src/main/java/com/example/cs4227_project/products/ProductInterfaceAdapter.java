@@ -122,6 +122,8 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter implements Ada
             productDialog.setContentView(R.layout.product_detail_page);
             productDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
+            addBtn = productDialog.findViewById(R.id.addToCart);
+
             cardViewProduct.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View productView) {

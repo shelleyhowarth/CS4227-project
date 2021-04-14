@@ -10,9 +10,7 @@ public class CardDetails {
     private String cvv;
     private String expiryDate;
 
-    public CardDetails(){
-
-    }
+    public CardDetails(){ }
 
     public CardDetails(String cardNum, String cardName,String cvv, String date){
         this.cardNum = cardNum;
@@ -20,7 +18,6 @@ public class CardDetails {
         this.cvv = cvv;
         this.expiryDate = date;
     }
-
 
     public String getCardNum() {
         return cardNum;
