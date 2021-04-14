@@ -245,8 +245,7 @@
                     android:layout_height="wrap_content"
                     android:padding="10dp"
                     android:layout_weight="1"
-                    android:hint="Colour"
-                    android:inputType="number"/>
+                    android:hint="Colour" />
             </LinearLayout>
 
             <TextView

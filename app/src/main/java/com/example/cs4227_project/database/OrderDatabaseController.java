@@ -55,24 +55,6 @@ public class OrderDatabaseController {
         db.DELETE("orders", id);
     }
 
-    public Map<String, List<Integer>> decreaseSizeQuantities() {
-        List<Integer> sizesQuantities;
-        Map<String, List<Integer>> updatedQuantities = new HashMap<>();
-        int sizeIndex;
-        for(Map.Entry<Product, Stock> entry: cart.getCart().entrySet()){
-            Product p = entry.getKey();
-            sizesQuantities = p.getSizeQuantities();
-            Map.Entry<String,String> sizeQ = entry.getValue().getSizeQuantity().entrySet().iterator().next();
-            String size = sizeQ.getKey();
-            sizeIndex = p.getSizes().indexOf(size);
-            //Integer num = (int) sizesQuantities.get(sizeIndex);
-            //num--;
-            //sizesQuantities.set(sizeIndex, num);
-            updatedQuantities.put(p.getId(), sizesQuantities);
-        }
-        return updatedQuantities;
-    }
-
     public void getOrderCollection() {
         orders.clear();
         //get reference to collection from database

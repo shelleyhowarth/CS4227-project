@@ -222,17 +222,17 @@ public class AddStockFragment extends Fragment implements View.OnClickListener {
         }
 
         Log.d(LogTags.COMMAND_DP, "Product type" + pType.getValue());
-        if(s1 != "" && quant1 != ""){
+        if(!s1.isEmpty() && !quant1.isEmpty()){
             sizeQuantities.put(s1, quant1);
         }
-        if(s2 != "" && quant2 != ""){
+        if(!s2.isEmpty() && !quant2.isEmpty()){
             sizeQuantities.put(s2, quant2);
         }
-        if(s3 != "" && quant3 != ""){
+        if(!s3.isEmpty() && !quant3.isEmpty()){
             sizeQuantities.put(s3, quant3);
         }
 
-        if(productName == ""){
+        if(productName.isEmpty()){
             pName.setError("Must have product name");
         }else if(sizeQuantities.size() == 0){
             Toast.makeText(getActivity(), "Product must contain stock", Toast.LENGTH_SHORT).show();
@@ -246,29 +246,27 @@ public class AddStockFragment extends Fragment implements View.OnClickListener {
     public void createProduct(HashMap<String, String> sizeQuantities, String productName, String color, String brandName, String cost, String style){
         HashMap<String, Object> productData = new HashMap<>();
         productFactory = FactoryProducer.getFactory(female);
-        List<String> sizes = new ArrayList<>();
-        List<String> quantities = new ArrayList<>();
-        for(Map.Entry<String, String> entry :  sizeQuantities.entrySet()){
-            sizes.add(entry.getKey());
-            quantities.add(entry.getValue());
-        }
+
+        //Create Id to use as product id and for the stock id.
+        String collection = pType.getValue() + female;
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference ref = db.collection(collection).document();
+        String productId = ref.getId();
+
         //Create hashmap containing product values.
+        productData.put("id", productId);
         productData.put("name", productName);
         productData.put("price", Double.parseDouble(cost));
-        productData.put("sizes", sizes);
-        productData.put("sizeQuantities", quantities);
         productData.put("brand", brandName);
         productData.put("colour", color);
         productData.put("style", style);
         productData.put("imageURL", path);
 
-        String collection = pType.getValue() + female;
+
         //Create product and add to database
         Product p = productFactory.getProduct(pType, productData);
         Log.d(LogTags.COMMAND_DP, "New Product create: " + p.toString());
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference ref = db.collection(collection).document();
-        String productId = ref.getId();
+
         ProductDatabaseController productDb = new ProductDatabaseController();
         productDb.addProductToDB(collection, productId, p);
 
@@ -281,14 +279,12 @@ public class AddStockFragment extends Fragment implements View.OnClickListener {
         AddStock addStock = new AddStock(stock);
         commandController.addCommand(addStock);
         commandController.executeCommands();
-        FragmentManager fm = getActivity().getSupportFragmentManager();
-        fm.popBackStack ("addProduct", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        getFragmentManager().popBackStack();
     }
 
     @Override
     public void onClick(View v){
         int i = v.getId();
-
         if(i == R.id.uploadImage){
             selectImage();
         }

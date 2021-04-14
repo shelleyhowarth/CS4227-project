@@ -127,6 +127,7 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter implements Ada
             cardViewProduct.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View productView) {
+                    stockDb.getStockDoc(item.getId());
                     TextView textViewProductName = productDialog.findViewById(R.id.productName);
                     TextView textViewProductPrice = productDialog.findViewById(R.id.productPrice);
                     ImageView imageViewProductImage = productDialog.findViewById(R.id.productImage);
@@ -255,6 +256,7 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter implements Ada
         ArrayList<Product> products = new ArrayList<>(productList);
         ProductInterfaceAdapter adapter = new ProductInterfaceAdapter(products);
         mRecyclerView.setAdapter(adapter);
+        stockDb.getStockDoc(product.getId());
         inCart(item);
     }
 
