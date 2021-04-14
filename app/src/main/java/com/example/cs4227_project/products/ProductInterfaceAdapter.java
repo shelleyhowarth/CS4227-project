@@ -100,7 +100,7 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter implements Ada
         void bindView(int pos){
             final Product item = productList.get(pos);
             product = item;
-            stockDb.getStockDoc(item.getId());
+            Log.d("ProductInterfaceAdapter", "product: " + product.getId());
             textViewProductName.setText(item.getName());
             textViewProductPrice.setText("€" + String.valueOf(item.getPrice()));
             setPicture(imageViewProductPic, item);
@@ -128,6 +128,7 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter implements Ada
                 @Override
                 public void onClick(View productView) {
                     stockDb.getStockDoc(item.getId());
+                    Log.d("ProductInterfaceAdapter", "getStockDoc: " + item.getId());
                     TextView textViewProductName = productDialog.findViewById(R.id.productName);
                     TextView textViewProductPrice = productDialog.findViewById(R.id.productPrice);
                     ImageView imageViewProductImage = productDialog.findViewById(R.id.productImage);
@@ -140,7 +141,6 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter implements Ada
                     size.setOnItemSelectedListener(size.getOnItemSelectedListener());
                     textViewProductName.setText(item.getName());
                     textViewProductPrice.setText("€" + String.valueOf(item.getPrice()));
-                    size.setAdapter(setUpSpinner());
                     setPicture(imageViewProductImage, item);
                     //Picasso.get().load(item.getImageURL()).fit().centerCrop().into(imageViewProductImage);
 
@@ -168,7 +168,7 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter implements Ada
                                 Toast.makeText(productDialog.getContext(), "Removed the item from cart", Toast.LENGTH_SHORT).show();
                                 refreshInstance(item);
                             }
-                            size.setAdapter(setUpSpinner());
+                            //size.setAdapter(setUpSpinner());
                         }
                     });
 
@@ -272,9 +272,10 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter implements Ada
         productSizeQuantities = new HashMap<>();
         Stock s = stockDb.getStockItem();
         productSizeQuantities = s.getSizeQuantity();
+        setUpSpinner();
     }
 
-    public ArrayAdapter setUpSpinner(){
+    public void setUpSpinner(){
         List<String> sizes = new ArrayList<String>();
 
         //Add each size from the stock of the product into the arraylist and set as adapter
@@ -285,6 +286,6 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter implements Ada
 
         ArrayAdapter<String> aa = new ArrayAdapter(productDialog.getContext(), android.R.layout.simple_spinner_item, sizes);
         aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        return aa;
+        size.setAdapter(aa);
     }
 }
