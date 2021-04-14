@@ -15,10 +15,6 @@ public interface Product extends Serializable {
 
     double getPrice();
 
-    List<String> getSizes();
-
-    List<Integer> getSizeQuantities();
-
     String getBrand();
 
     String getColour();

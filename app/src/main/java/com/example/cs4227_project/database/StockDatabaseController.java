@@ -22,6 +22,7 @@ public class StockDatabaseController {
     private Database db = Database.getInstance();
     private ArrayList<Stock> stock = new ArrayList<>();
     private StockReadListener stockL;
+    private Stock stockItem;
 
     public StockDatabaseController() {}
 
@@ -105,6 +106,28 @@ public class StockDatabaseController {
         }
     }
 
+    public void getStockDoc(String id){
+        DocumentReference docref = db.GET("stock", id);
+        docref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = document = task.getResult();
+                        if (document.exists()) {
+                            Stock s = getStock(document.getData());
+                            stockItem = s;
+                            Log.d(LogTags.DB_GET, "DocumentSnapshot data: " + document.getData());
+                        } else {
+                            Log.d(LogTags.DB_GET, "No such document");
+                        }
+                    } else {
+                        Log.d(LogTags.DB_GET, "get failed with ", task.getException());
+                    }
+                    stockL.stockCallback("success");
+                }
+            });
+    }
+
     /**
      * Converts Map into stock object
      * @author Aine Reynolds
@@ -132,4 +155,6 @@ public class StockDatabaseController {
     public ArrayList<Stock> getStockArray() {
         return stock;
     }
+
+    public Stock getStockItem(){ return stockItem; }
 }

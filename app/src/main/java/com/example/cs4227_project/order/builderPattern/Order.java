@@ -4,7 +4,7 @@ import com.example.cs4227_project.order.commandPattern.Stock;
 
 import java.util.ArrayList;
 
-public class Order implements OrderBuilder {
+public class Order{
 
     public ArrayList<Stock> productInfo;
     public Address address;
@@ -20,29 +20,6 @@ public class Order implements OrderBuilder {
         this.email = "";
         this.price = 0.0;
         this.time ="";
-    }
-
-    public void setProductInfo(ArrayList<Stock> productInfo) {
-        this.productInfo = productInfo;
-    }
-
-    public void setAddress(Address address) {
-        this.address = address;
-    }
-
-    public void setDetails(CardDetails details) {
-        this.details = details;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-    public void setTime(){
     }
 
     public ArrayList<Stock> getProductInfo() {

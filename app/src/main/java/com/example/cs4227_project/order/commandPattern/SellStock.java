@@ -7,8 +7,9 @@ import com.example.cs4227_project.database.StockDatabaseController;
 import java.util.HashMap;
 
 public class SellStock implements Command {
-    private Stock abcStock;
-    private StockDatabaseController stockDb = new StockDatabaseController();
+    private final Stock abcStock;
+    private final StockDatabaseController stockDb = new StockDatabaseController();
+    private HashMap<String, String> sizesQ = new HashMap<>();
 
     /**
      * Command DP - SellStock
@@ -18,16 +19,16 @@ public class SellStock implements Command {
      */
     public SellStock(Stock abcStock, int quantity, String size){
         this.abcStock = abcStock;
-        HashMap<String, String> sizesQ = abcStock.getSizeQuantity();
+        this.sizesQ = abcStock.getSizeQuantity();
         int val = Integer.parseInt(sizesQ.get(size));
         sizesQ.put(size, Integer.toString(val-quantity));
-        abcStock.setSizeQuantity(sizesQ);
-        Log.d("STOCKS", "update db for " + abcStock.getId());
-        stockDb.updateStock(abcStock.getId(), "sizeQuantity", sizesQ);
+        //abcStock.setSizeQuantity(sizesQ);
+        //Log.d("STOCKS", "update db for " + abcStock.getId());
     }
 
     public void execute() {
         Log.d("STOCKS", "Executing sellStock");
+        stockDb.updateStock(abcStock.getId(), "sizeQuantity", sizesQ);
         abcStock.sell();
     }
 }

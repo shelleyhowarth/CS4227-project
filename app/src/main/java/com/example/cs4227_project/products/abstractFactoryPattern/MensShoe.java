@@ -7,8 +7,6 @@ public class MensShoe implements Product {
     private String id = "";
     private String name = "";
     private double price = (long) 0.0;
-    private List<String> sizes = new ArrayList<>();
-    private List<Integer> sizeQuantities = new ArrayList<>();
     private String brand = "";
     private String colour = "";
     private String style = null;
@@ -16,23 +14,19 @@ public class MensShoe implements Product {
 
     MensShoe() { }
 
-    MensShoe(String name, double price, List<String> sizes, List<Integer> quantity, String brand, String colour, String style, String imageUrl){
+    MensShoe(String name, double price,  String brand, String colour, String style, String imageUrl){
         this.name = name;
         this.price = price;
-        this.sizes = sizes;
-        this.sizeQuantities = quantity;
         this.brand = brand;
         this.colour = colour;
         this.style = style;
         this.imageURL = imageUrl;
     }
 
-    MensShoe(String id, String name, double price, List<String> sizes, List<Integer> quantity, String brand, String colour, String style, String imageUrl){
+    MensShoe(String id, String name, double price, String brand, String colour, String style, String imageUrl){
         this.id = id;
         this.name = name;
         this.price = price;
-        this.sizes = sizes;
-        this.sizeQuantities = quantity;
         this.brand = brand;
         this.colour = colour;
         this.style = style;
@@ -51,10 +45,6 @@ public class MensShoe implements Product {
 
     public double getPrice() {return this.price;}
 
-    public List<String> getSizes() {return this.sizes;}
-
-    public List<Integer> getSizeQuantities() {return this.sizeQuantities;}
-
     public String getBrand() {return this.brand;}
 
     public String getColour() {return this.colour;}
@@ -64,10 +54,6 @@ public class MensShoe implements Product {
     public void setName(String name) { this.name = name; }
 
     public void setPrice(double price) { this.price = price; }
-
-    public void setSizes(List<String> sizes) { this.sizes = sizes; }
-
-    public void setSizeQuantities(List<Integer> sizeQuantities) { this.sizeQuantities = sizeQuantities; }
 
     public void setBrand(String brand) { this.brand = brand;}
 

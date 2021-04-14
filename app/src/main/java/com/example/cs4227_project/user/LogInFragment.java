@@ -15,6 +15,8 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.example.cs4227_project.database.UserDatabaseController;
+import com.example.cs4227_project.database.UserReadListener;
 import com.example.cs4227_project.misc.LogTags;
 import com.example.cs4227_project.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -23,12 +25,13 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class LogInFragment extends Fragment implements View.OnClickListener {
+public class LogInFragment extends Fragment implements View.OnClickListener{
 
     private FirebaseAuth mAuth;
     private EditText mEmailField;
     private EditText mPasswordField;
     private RelativeLayout layout;
+    private UserDatabaseController userDb;
 
     public LogInFragment() {
         // Required empty public constructor
@@ -44,6 +47,7 @@ public class LogInFragment extends Fragment implements View.OnClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mAuth = FirebaseAuth.getInstance();
+        userDb = new UserDatabaseController();
     }
 
     @Override
@@ -94,7 +98,7 @@ public class LogInFragment extends Fragment implements View.OnClickListener {
     }
 
     //Method to register an account
-    private void register(String email, String password) {
+    private void register(final String email, final String password) {
         //Checks credentials first
         if (!validateForm(email, password)) {
             return;
@@ -106,8 +110,11 @@ public class LogInFragment extends Fragment implements View.OnClickListener {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             Log.d(LogTags.REGISTER_ACCOUNT, "Sign-up successful");
-                            Toast.makeText(getContext(), "Sign up successful.",
-                                    Toast.LENGTH_LONG).show();
+                            Toast.makeText(getContext(), "Sign up successful.", Toast.LENGTH_LONG).show();
+                            signIn(email, password);
+                            FirebaseUser currentUser = mAuth.getCurrentUser();
+                            String userId = currentUser.getUid();
+                            createUserProfile(userId, email);
                         } else {
                             Log.d(LogTags.REGISTER_ACCOUNT, "Sign-up failed");
                             Toast.makeText(getContext(), "Sign up failed. " + task.getException().getMessage(),
@@ -117,13 +124,19 @@ public class LogInFragment extends Fragment implements View.OnClickListener {
                 });
     }
 
+    //Creates document for user in the database;
+    public void createUserProfile(String id, String email){
+        User user = new User(id, email, false);
+        userDb.addUserToDB(user, id);
+    }
+
     //Hides fragment
     public void closeFragment(View v) {
         layout.setVisibility(v.INVISIBLE);
     }
 
     //Firebase sign in method
-    private void signIn(String email, String password, final View v) {
+    private void signIn(String email, String password) {
         //Checks credentials first
         if (!validateForm(email, password)) {
             return;
@@ -150,7 +163,7 @@ public class LogInFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         int i = v.getId();
         if (i == R.id.signIn) {
-            signIn(mEmailField.getText().toString(), mPasswordField.getText().toString(), v);
+            signIn(mEmailField.getText().toString(), mPasswordField.getText().toString());
         }
         if (i == R.id.register) {
             register(mEmailField.getText().toString(), mPasswordField.getText().toString());

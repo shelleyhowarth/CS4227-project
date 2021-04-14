@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -33,6 +34,7 @@ public class OrderInterfaceAdapter extends RecyclerView.Adapter implements Adapt
     private TextView textViewOrderItems;
     private CardView cardViewOrder;
     private Dialog orderDialog;
+    private Button undo;
     private OrderDatabaseController db = new OrderDatabaseController(this);
     ArrayList<String> products = new ArrayList<>();
 
@@ -118,6 +120,7 @@ public class OrderInterfaceAdapter extends RecyclerView.Adapter implements Adapt
     }
 
     public void orderCallback(String result) {
+        products = new ArrayList<>();
         products = db.getDescStrings();
     }
 
