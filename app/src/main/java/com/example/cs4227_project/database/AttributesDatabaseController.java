@@ -17,10 +17,11 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AttributesDatabaseController {
+public class AttributesDatabaseController implements Serializable {
     private Database db = Database.getInstance();
     private Map<String,Attributes> data = new HashMap<>();
     private AttributesReadListener myEventL;

@@ -16,8 +16,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cs4227_project.R;
+import com.example.cs4227_project.interceptorPattern.InterceptorApplication;
+import com.example.cs4227_project.interceptorPattern.InterceptorContext;
 import com.example.cs4227_project.interceptorPattern.InterceptorFramework;
-import com.example.cs4227_project.interceptorPattern.contextObjects.LogInContext;
+import com.example.cs4227_project.interceptorPattern.Target;
+import com.example.cs4227_project.interceptorPattern.interceptors.LogInAuthenticationInterceptor;
+import com.example.cs4227_project.interceptorPattern.interceptors.LoggingInterceptor;
 import com.example.cs4227_project.misc.LogTags;
 import com.example.cs4227_project.order.commandPattern.Stock;
 import com.example.cs4227_project.products.abstractFactoryPattern.Product;
@@ -27,13 +31,13 @@ import com.google.firebase.auth.FirebaseAuth;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class ViewCartFragment extends Fragment {
+public class ViewCartFragment extends Fragment implements Target {
     private final Cart cart = Cart.getInstance();
     private RecyclerView recyclerView;
     private ProductInterfaceAdapter adapter;
     private FragmentActivity myContext;
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
-    private InterceptorFramework interceptorFramework;
+    private InterceptorApplication interceptorApplication;
 
     public ViewCartFragment() {
         // Required empty public constructor
@@ -60,6 +64,7 @@ public class ViewCartFragment extends Fragment {
                              Bundle savedInstanceState) {
         ArrayList<Product> products = (ArrayList<Product>)getArguments().getSerializable("Products");
         final View view = inflater.inflate(R.layout.fragment_cart, container, false);
+        setUpInterceptor();
         Button emptyCartBtn = view.findViewById(R.id.clearCart);
         emptyCartBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,12 +85,9 @@ public class ViewCartFragment extends Fragment {
                     Toast.makeText(getActivity(), "There are no items in your cart", Toast.LENGTH_LONG).show();
                     Log.d(LogTags.CHECK_CARD, "Failed to check out. No items currently in cart");
                 }
-                else if (mAuth.getCurrentUser() == null) {
-                    Toast.makeText(getActivity(), "You must be logged in to go to checkout", Toast.LENGTH_LONG).show();
-                    Log.d(LogTags.CHECK_CARD, "Failed to check out. No user currently logged in");
-                }
                 else {
-                    goToCheckout();
+                    InterceptorContext context = new InterceptorContext("purchase products", myContext);
+                    interceptorApplication.sendRequest(context);
                 }
             }
         });
@@ -100,7 +102,13 @@ public class ViewCartFragment extends Fragment {
     }
 
     public void setUpInterceptor() {
-        interceptorFramework = new InterceptorFramework(new LogInContext());
+        //Set up interceptor framework with LogInContext
+        InterceptorFramework interceptorFramework = new InterceptorFramework(this);
+        interceptorFramework.addInterceptor(new LoggingInterceptor());
+        interceptorFramework.addInterceptor(new LogInAuthenticationInterceptor());
+
+        interceptorApplication = InterceptorApplication.getInstance();
+        interceptorApplication.setInterceptorFramework(interceptorFramework);
     }
 
     public void refreshCart(){
@@ -123,5 +131,16 @@ public class ViewCartFragment extends Fragment {
         transaction.replace(R.id.content, fragment);
         transaction.addToBackStack("viewCheckout");
         transaction.commit();
+    }
+
+    @Override
+    public void execute(InterceptorContext context) {
+        Log.d(LogTags.INTERCEPTOR, "executing target");
+        switch (context.getMessage()) {
+            case "purchase products":
+                if(mAuth.getCurrentUser() != null) {
+                    goToCheckout();
+                }
+        }
     }
 }

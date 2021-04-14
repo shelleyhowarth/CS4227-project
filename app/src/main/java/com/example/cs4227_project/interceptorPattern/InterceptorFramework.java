@@ -3,8 +3,8 @@ package com.example.cs4227_project.interceptorPattern;
 public class InterceptorFramework {
     Dispatcher dispatcher;
 
-    public InterceptorFramework(Context context) {
-        dispatcher = new Dispatcher(context);
+    public InterceptorFramework(Target target) {
+        dispatcher = new Dispatcher(target);
     }
 
     public void addInterceptor(Interceptor i) {
@@ -15,7 +15,7 @@ public class InterceptorFramework {
         dispatcher.detach(i);
     }
 
-    public void interceptorRequest(Context request) {
+    public void executeRequest(InterceptorContext request) {
         dispatcher.dispatchInterceptors(request);
     }
 }

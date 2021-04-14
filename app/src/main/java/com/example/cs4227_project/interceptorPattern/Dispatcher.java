@@ -5,15 +5,11 @@ import java.util.List;
 
 public class Dispatcher {
     private List<Interceptor> interceptors;
-    private Class contextType;
+    private Target target;
 
-    public Dispatcher(Context context) {
+    public Dispatcher(Target target) {
         interceptors = new ArrayList<>();
-        contextType = context.getClass();
-    }
-
-    public Class getContextType() {
-        return this.contextType;
+        this.target = target;
     }
 
     public void attach(Interceptor i) {
@@ -24,13 +20,11 @@ public class Dispatcher {
         interceptors.remove(i);
     }
 
-    public void dispatchInterceptors(Context context) {
-        // validate context type matches
-        if(contextType == context.getClass()) {
-            for (Interceptor i : interceptors) {
-                i.execute(context);
-            }
+    public void dispatchInterceptors(InterceptorContext request) {
+        for (Interceptor i : interceptors) {
+            i.execute(request);
         }
+        target.execute(request);
     }
 
 }

@@ -18,4 +18,5 @@ public class LogTags {
     public static final String COMMAND_DP = "COMMAND_DP";
     public static final String ATTRIBUTE_MANAGER = "ATTRIBUTE_MANAGER";
     public static final String ORDER = "ORDER";
+    public static final String INTERCEPTOR = "INTERCEPTOR";
 }
