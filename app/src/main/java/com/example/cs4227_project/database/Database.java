@@ -152,12 +152,14 @@ public class Database {
             .addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
+                    Log.d("Memento", "Patch db");
                     Log.d(LogTags.DB_UPDATE, "DocumentSnapshot successfully updated!");
                 }
             })
             .addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
+                    Log.d("Memento", "Error Patch db");
                     Log.w(LogTags.DB_UPDATE, "Error updating document", e);
                 }
             });

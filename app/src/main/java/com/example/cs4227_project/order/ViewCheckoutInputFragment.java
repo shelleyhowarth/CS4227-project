@@ -28,25 +28,31 @@ import com.example.cs4227_project.order.builderPattern.Order;
 import com.example.cs4227_project.order.commandPattern.SellStock;
 import com.example.cs4227_project.order.commandPattern.Stock;
 import com.example.cs4227_project.order.builderPattern.CustomerOrderBuilder;
+import com.example.cs4227_project.order.mementoPattern.CareTaker;
+import com.example.cs4227_project.order.mementoPattern.Memento;
 import com.example.cs4227_project.products.abstractFactoryPattern.Product;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 public class ViewCheckoutInputFragment extends Fragment implements StockReadListener {
     private final Cart cart = Cart.getInstance();
-
     private FragmentActivity myContext;
     private final FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private final OrderDatabaseController orderDatabaseController = new OrderDatabaseController();
     private final StockDatabaseController stockDb = new StockDatabaseController(this);
     private final HashMap<Product, Stock> cartMap = new HashMap<>();
+    private Stock originator;
+    private CareTaker careTaker;
+    private String orderId;
 
     public ViewCheckoutInputFragment() {
         // Required empty public constructor
@@ -116,7 +122,10 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
         ArrayList<Stock> productInfo = new ArrayList<>();
         for(Map.Entry<Product, Stock> entry: cart.getCart().entrySet()){
             Log.d("ORDER", "Products to checkout =" + entry.getKey().toString());
-            totalPrice += entry.getKey().getPrice();
+            HashMap<String, String> sizeQ = entry.getValue().getSizeQuantity();
+            Map.Entry<String,String> sizeEntry = sizeQ.entrySet().iterator().next();
+            int quantity = Integer.parseInt(sizeEntry.getValue());
+            totalPrice += (entry.getKey().getPrice() * quantity);
             cartMap.put(entry.getKey(), entry.getValue());
             productInfo.add(entry.getValue());
         }
@@ -134,9 +143,12 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
         orderBuilder.setPrice(totalPrice);
         orderBuilder.setTime();
 
+        FirebaseFirestore dbref = FirebaseFirestore.getInstance();
+        orderId = dbref.collection("orders").document().getId();
+
         updateStock();
         Order order = orderBuilder.getOrder();
-        orderDatabaseController.addOrderToDB(order);
+        orderDatabaseController.addOrderToDB(order, orderId);
         createDialog(texts, totalPrice);
     }
 
@@ -181,18 +193,42 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
      */
     public void changeStock(ArrayList<Stock> stock){
         CommandControl commandController = new CommandControl();
+        originator = new Stock();
+        careTaker = new CareTaker();
+        /*Go through each item in the customers cart to get the stock they would like to change
+        get the current stock from the database and apply the sellStock command to update database*/
         for(Map.Entry<Product, Stock> entry: cartMap.entrySet()){
+            //Id of product in customers cart
             String productId = entry.getKey().getId();
+            //Stock object that stores the amounts and sizes of the product the customer wants.
             Stock stockToChange = entry.getValue();
-            Log.d("STOCKS", "Stock list to change " + stockToChange.toString());
+
+            //Break down stock object to get the hashmap containing the sizes and quantities.
             Map.Entry<String,String> sizeQ = stockToChange.getSizeQuantity().entrySet().iterator().next();
             String size = sizeQ.getKey();
             int quantity = Integer.parseInt(sizeQ.getValue());
+
+            //Go through the stock retrieved from database that will be updated
             for(Stock s : stock){
                 if(s.getId().equals(productId)){
+                    //get original stock from database and the hashmap of its sizes and quantities
                     Stock stockFromDb = s;
+                    HashMap<String,String> sizes = s.getSizeQuantity();
+
+                    //create a deep copy of the stock and hashmap to use with memento - deep copy so state doesn't change when sellStock called.
+                    final Stock tempStock = s;
+                    final HashMap<String,String> tempSizes = new HashMap<>();
+                    for(Map.Entry<String, String> item : sizes.entrySet()){
+                        tempSizes.put(item.getKey(), item.getValue());
+                    }
+
                     SellStock sellStock= new SellStock(stockFromDb, quantity, size);
                     commandController.addCommand(sellStock);
+
+                    //Set the hashmap of original sizes and quantities and pass to memento.
+                    tempStock.setSizeQuantity(tempSizes);
+                    originator.setState(tempStock);
+                    careTaker.add(originator.saveStateToMemento());
                 }
             }
         }
@@ -219,6 +255,25 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
                     }
                 });
 
+        builder.setNeutralButton("Undo Order",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        List<Memento> mementoList = careTaker.getMementoList();
+                        for(int i = 0; i < mementoList.size(); i++){
+                            //Getting stock state from memento list
+                            originator.getStateFromMemento(careTaker.get(i));
+                            Stock s = originator.getState();
+
+                            //Update database with old stock state
+                            Log.d("Memento", "Restored state " + s.getSizeQuantity());
+                            stockDb.updateStock(s.getId(), "sizeQuantity", s.getSizeQuantity());
+                            //Delete order that was created in database
+                            orderDatabaseController.deleteOrderFromDB(orderId);
+                        }
+                        popBackToHome();
+                    }
+                });
         AlertDialog dialog = builder.create();
         dialog.show();
     }

@@ -46,22 +46,13 @@ public class OrderDatabaseController {
         cart.removeAllProductsFromCart();
     }
 
-    public Map<String, List<Integer>> decreaseSizeQuantities() {
-        List<Integer> sizesQuantities;
-        Map<String, List<Integer>> updatedQuantities = new HashMap<>();
-        int sizeIndex;
-        for(Map.Entry<Product, Stock> entry: cart.getCart().entrySet()){
-            Product p = entry.getKey();
-            sizesQuantities = p.getSizeQuantities();
-            Map.Entry<String,String> sizeQ = entry.getValue().getSizeQuantity().entrySet().iterator().next();
-            String size = sizeQ.getKey();
-            sizeIndex = p.getSizes().indexOf(size);
-            //Integer num = (int) sizesQuantities.get(sizeIndex);
-            //num--;
-            //sizesQuantities.set(sizeIndex, num);
-            updatedQuantities.put(p.getId(), sizesQuantities);
-        }
-        return updatedQuantities;
+    public void addOrderToDB(Order order, String id) {
+        db.PUT("orders", id, order);
+        cart.removeAllProductsFromCart();
+    }
+
+    public void deleteOrderFromDB(String id){
+        db.DELETE("orders", id);
     }
 
     public void getOrderCollection() {
@@ -98,8 +89,8 @@ public class OrderDatabaseController {
 
         for(int i = 0; i < stock.size(); i++) {
             HashMap<String, Object> map = stock.get(i);
-                Stock s = new Stock((String) map.get("id"), (HashMap<String, String>)map.get("sizeQuantity"), (String) map.get("type"), (boolean) map.get("female"));
-                orderStock.add(s);
+            Stock s = new Stock((String) map.get("id"), (HashMap<String, String>)map.get("sizeQuantity"), (String) map.get("type"), (boolean) map.get("female"));
+            orderStock.add(s);
         }
 
         CardDetails details = new CardDetails(cardDetails.get("cardNum"), cardDetails.get("cardName"), cardDetails.get("cvv"), cardDetails.get("expiryDate"));

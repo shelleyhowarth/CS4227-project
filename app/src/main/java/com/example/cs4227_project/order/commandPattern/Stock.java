@@ -1,11 +1,16 @@
 package com.example.cs4227_project.order.commandPattern;
 
+import android.util.Log;
+
+import com.example.cs4227_project.order.mementoPattern.Memento;
+
 import java.util.HashMap;
 
 public class Stock {
     private String id;
     private HashMap<String, String> sizeQuantity;
     private String type;
+    private Stock state;
     boolean female;
 
     public Stock(String id, HashMap<String, String> sizeQuantity, String type, boolean female){
@@ -14,6 +19,8 @@ public class Stock {
         this.type = type;
         this.female = female;
     }
+
+    public Stock() {}
 
     //For admin adding products to site
     public void addStock(){
@@ -43,5 +50,19 @@ public class Stock {
 
     public String toString(){
         return this.id;
+    }
+
+    public void setState(Stock state){ this.state = state; }
+
+    public Stock getState(){
+        return state;
+    }
+
+    public Memento saveStateToMemento(){
+        return new Memento(state);
+    }
+
+    public void getStateFromMemento(Memento memento){
+        state = memento.getState();
     }
 }

@@ -44,6 +44,13 @@ public class ProductDatabaseController {
         db.POST(ProductTypeController.getType().getValue(), product);
     }
 
+    public void addProductToDB(String collection, Product product) {
+        db.POST(collection, product);
+    }
+
+    public void addProductToDB(String collection, String id, Product product) {
+        db.PUT(collection, id, product);
+    }
     /**
      * Retrieves a collection from the database which it then reads into the data List
      * @author Carla Warde

@@ -16,6 +16,8 @@ import com.example.cs4227_project.order.builderPattern.Order;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
