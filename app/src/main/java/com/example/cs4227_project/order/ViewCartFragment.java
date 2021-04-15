@@ -88,7 +88,7 @@ public class ViewCartFragment extends Fragment implements Target {
                     Log.d(LogTags.CHECK_CARD, "Failed to check out. No items currently in cart");
                 }
                 else {
-                    InterceptorContext context = new InterceptorContext("processing preconditions for going to checkout");
+                    InterceptorContext context = new InterceptorContext("You must be logged-in to purchase products!");
                     interceptorApplication.sendRequest(context);
                 }
             }
@@ -106,8 +106,8 @@ public class ViewCartFragment extends Fragment implements Target {
     public void setUpInterceptor() {
         //Set up interceptor framework with LogInContext
         InterceptorFramework interceptorFramework = new InterceptorFramework(new PostMarshallDispatcher(this));
-        interceptorFramework.addInterceptor(new LoggingInterceptor());
         interceptorFramework.addInterceptor(new LogInAuthenticationInterceptor());
+        interceptorFramework.addInterceptor(new LoggingInterceptor());
 
         interceptorApplication = InterceptorApplication.getInstance();
         interceptorApplication.setInterceptorFramework(interceptorFramework);
@@ -135,7 +135,7 @@ public class ViewCartFragment extends Fragment implements Target {
     public void execute(InterceptorContext context) {
         Log.d(LogTags.INTERCEPTOR, "executing target");
         switch (context.getMessage()) {
-            case "processing preconditions for going to checkout":
+            case "You must be logged-in to purchase products!":
                 goToCheckout();
         }
     }

@@ -20,11 +20,12 @@ public class LogInAuthenticationInterceptor implements Interceptor {
             Log.d(LogTags.INTERCEPTOR, "User is not logged-in. Cannot start checkout process");
             FragmentController fragmentController = FragmentController.getInstance();
             Bundle bundle = new Bundle();
-            bundle.putString("toast","You must be logged-in to purchase products!");
+            bundle.putString("toast", context.getMessage());
+            context.setMessage("Launching log-in screen");
             fragmentController.startFragment(new LogInFragment(), R.id.content, "log_in", bundle);
         }
         else {
-            Log.d(LogTags.INTERCEPTOR, "User is logged-in. Further action not required");
+            context.setMessage("User already logged-in");
         }
     }
 }
