@@ -11,11 +11,11 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cs4227_project.R;
+import com.example.cs4227_project.interceptorPattern.dispatchers.PostMarshallDispatcher;
 import com.example.cs4227_project.interceptorPattern.InterceptorApplication;
 import com.example.cs4227_project.interceptorPattern.InterceptorContext;
 import com.example.cs4227_project.interceptorPattern.InterceptorFramework;
@@ -27,8 +27,6 @@ import com.example.cs4227_project.misc.LogTags;
 import com.example.cs4227_project.order.commandPattern.Stock;
 import com.example.cs4227_project.products.abstractFactoryPattern.Product;
 import com.example.cs4227_project.products.ProductInterfaceAdapter;
-import com.example.cs4227_project.user.User;
-import com.example.cs4227_project.user.UserController;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
@@ -107,7 +105,7 @@ public class ViewCartFragment extends Fragment implements Target {
 
     public void setUpInterceptor() {
         //Set up interceptor framework with LogInContext
-        InterceptorFramework interceptorFramework = new InterceptorFramework(this);
+        InterceptorFramework interceptorFramework = new InterceptorFramework(new PostMarshallDispatcher(this));
         interceptorFramework.addInterceptor(new LoggingInterceptor());
         interceptorFramework.addInterceptor(new LogInAuthenticationInterceptor());
 
@@ -127,10 +125,8 @@ public class ViewCartFragment extends Fragment implements Target {
         }
     }
 
-    public void goToCheckout(){
-        Bundle bundle = new Bundle();
+    public void goToCheckout() {
         ViewCheckoutInputFragment fragment = new ViewCheckoutInputFragment();
-        fragment.setArguments(bundle);
         FragmentController fragmentController = FragmentController.getInstance();
         fragmentController.startFragment(fragment, R.id.content, "viewCheckout");
     }
@@ -140,9 +136,7 @@ public class ViewCartFragment extends Fragment implements Target {
         Log.d(LogTags.INTERCEPTOR, "executing target");
         switch (context.getMessage()) {
             case "processing preconditions for going to checkout":
-                if(mAuth.getCurrentUser() != null) {
-                    goToCheckout();
-                }
+                goToCheckout();
         }
     }
 }

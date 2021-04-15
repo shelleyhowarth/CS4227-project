@@ -1,5 +1,8 @@
 package com.example.cs4227_project.misc;
 
+import android.os.Bundle;
+import android.util.Log;
+
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -15,19 +18,22 @@ public class FragmentController {
         return instance;
     }
 
-    public void startFragment(Fragment fragment, int replacedContentID) {
-        FragmentTransaction transaction = currentFragmentManager.beginTransaction();
-        transaction.replace(replacedContentID, fragment);
-        transaction.addToBackStack(null);
-        transaction.setReorderingAllowed(true);
-        transaction.commit();
-    }
-
     public void startFragment(Fragment fragment, int replacedContentID,  String fragmentName) {
+        Bundle bundle = new Bundle();
+        fragment.setArguments(bundle);
+        Log.d(LogTags.FRAGMENT_CONTROLLER, "Starting fragment transaction");
         FragmentTransaction transaction = currentFragmentManager.beginTransaction();
         transaction.replace(replacedContentID, fragment);
         transaction.addToBackStack(fragmentName);
-        transaction.setReorderingAllowed(true);
+        transaction.commit();
+    }
+
+    public void startFragment(Fragment fragment, int replacedContentID, String fragmentName, Bundle bundle) {
+        fragment.setArguments(bundle);
+        Log.d(LogTags.FRAGMENT_CONTROLLER, "Starting "+fragmentName+" fragment transaction");
+        FragmentTransaction transaction = currentFragmentManager.beginTransaction();
+        transaction.replace(replacedContentID, fragment);
+        transaction.addToBackStack(fragmentName);
         transaction.commit();
     }
 

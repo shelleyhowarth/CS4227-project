@@ -16,7 +16,6 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.example.cs4227_project.database.UserDatabaseController;
-import com.example.cs4227_project.database.UserReadListener;
 import com.example.cs4227_project.misc.LogTags;
 import com.example.cs4227_project.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -32,6 +31,7 @@ public class LogInFragment extends Fragment implements View.OnClickListener{
     private EditText mPasswordField;
     private RelativeLayout layout;
     private UserDatabaseController userDb;
+    private String bundleText;
 
     public LogInFragment() {
         // Required empty public constructor
@@ -48,6 +48,12 @@ public class LogInFragment extends Fragment implements View.OnClickListener{
         super.onCreate(savedInstanceState);
         mAuth = FirebaseAuth.getInstance();
         userDb = new UserDatabaseController();
+
+        if (getArguments().containsKey("toast")) {
+            String toastText = getArguments().getString("toast");
+            bundleText = toastText;
+            Log.d(LogTags.LOG_IN, "Bundle Text: "+toastText);
+        }
     }
 
     @Override
@@ -68,6 +74,16 @@ public class LogInFragment extends Fragment implements View.OnClickListener{
         rootView.findViewById(R.id.signIn).setOnClickListener(this);
 
         return rootView;
+    }
+
+    @Override
+    public void onStart() {
+        if(bundleText != null) {
+            Toast.makeText(getContext(), bundleText,
+                    Toast.LENGTH_LONG).show();
+        }
+
+        super.onStart();
     }
 
     //Checks to make sure login credentials are valid
@@ -150,6 +166,7 @@ public class LogInFragment extends Fragment implements View.OnClickListener{
                             Log.d(LogTags.LOG_IN, "Logged in with "+user.getEmail());
                             //Close fragment when successfully logged in
                             getActivity().getSupportFragmentManager().popBackStackImmediate();
+
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.d(LogTags.LOG_IN, "Failed to log in");

@@ -20,11 +20,11 @@ import com.example.cs4227_project.R;
 import com.example.cs4227_project.database.OrderDatabaseController;
 import com.example.cs4227_project.database.StockDatabaseController;
 import com.example.cs4227_project.database.StockReadListener;
+import com.example.cs4227_project.interceptorPattern.dispatchers.PreMarshallDispatcher;
 import com.example.cs4227_project.interceptorPattern.InterceptorApplication;
 import com.example.cs4227_project.interceptorPattern.InterceptorContext;
 import com.example.cs4227_project.interceptorPattern.InterceptorFramework;
 import com.example.cs4227_project.interceptorPattern.Target;
-import com.example.cs4227_project.interceptorPattern.interceptors.LogInAuthenticationInterceptor;
 import com.example.cs4227_project.interceptorPattern.interceptors.LoggingInterceptor;
 import com.example.cs4227_project.misc.LogTags;
 import com.example.cs4227_project.order.builderPattern.Address;
@@ -348,7 +348,7 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
 
     public void setUpInterceptor() {
         //Set up interceptor framework with LogInContext
-        InterceptorFramework interceptorFramework = new InterceptorFramework(this);
+        InterceptorFramework interceptorFramework = new InterceptorFramework(new PreMarshallDispatcher(this));
         interceptorFramework.addInterceptor(new LoggingInterceptor());
 
         interceptorApplication = InterceptorApplication.getInstance();
