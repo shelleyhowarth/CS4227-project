@@ -71,13 +71,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //Instances
+        //DB instances
         mAuth = FirebaseAuth.getInstance();
         productDataC = new ProductDatabaseController(this);
         orderDb = new OrderDatabaseController(this);
-        attributeManager = AttributeManager.getInstance();
         userDb = new UserDatabaseController(this);
-        attributeManager = new AttributeManager();
+
+        //Controllers instances
+        attributeManager = AttributeManager.getInstance();
         attributeManager.fillAttributes();
         fragmentController = FragmentController.getInstance();
         fragmentController.setCurrentFragmentManager(getSupportFragmentManager());
