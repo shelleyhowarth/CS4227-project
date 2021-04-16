@@ -13,12 +13,21 @@ import java.util.ArrayList;
 import java.util.Map;
 
 public class AttributeManager implements AttributesReadListener, Serializable {
+    private static AttributeManager instance;
+
     private Attributes brands;
     private Attributes colours;
     private Attributes styles;
     private Attributes sizes;
 
-    private AttributesDatabaseController attributesDataC;
+    private final AttributesDatabaseController attributesDataC;
+
+    public static AttributeManager getInstance() {
+        if(instance == null) {
+            instance = new AttributeManager();
+        }
+        return instance;
+    }
 
     public AttributeManager() {
         brands = new Brands();

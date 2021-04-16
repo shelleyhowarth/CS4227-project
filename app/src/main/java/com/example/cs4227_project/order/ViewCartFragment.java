@@ -11,28 +11,34 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cs4227_project.R;
+import com.example.cs4227_project.interceptorPattern.dispatchers.PostMarshallDispatcher;
+import com.example.cs4227_project.interceptorPattern.InterceptorApplication;
+import com.example.cs4227_project.interceptorPattern.InterceptorContext;
+import com.example.cs4227_project.interceptorPattern.InterceptorFramework;
+import com.example.cs4227_project.interceptorPattern.Target;
+import com.example.cs4227_project.interceptorPattern.interceptors.LogInAuthenticationInterceptor;
+import com.example.cs4227_project.interceptorPattern.interceptors.LoggingInterceptor;
+import com.example.cs4227_project.misc.FragmentController;
 import com.example.cs4227_project.misc.LogTags;
 import com.example.cs4227_project.order.commandPattern.Stock;
 import com.example.cs4227_project.products.abstractFactoryPattern.Product;
 import com.example.cs4227_project.products.ProductInterfaceAdapter;
-import com.example.cs4227_project.user.User;
-import com.example.cs4227_project.user.UserController;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class ViewCartFragment extends Fragment {
+public class ViewCartFragment extends Fragment implements Target {
     private final Cart cart = Cart.getInstance();
     private RecyclerView recyclerView;
     private ProductInterfaceAdapter adapter;
     private FragmentActivity myContext;
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private InterceptorApplication interceptorApplication;
 
     public ViewCartFragment() {
         // Required empty public constructor
@@ -59,13 +65,14 @@ public class ViewCartFragment extends Fragment {
                              Bundle savedInstanceState) {
         ArrayList<Product> products = (ArrayList<Product>)getArguments().getSerializable("Products");
         final View view = inflater.inflate(R.layout.fragment_cart, container, false);
+        setUpInterceptor();
         Button emptyCartBtn = view.findViewById(R.id.clearCart);
         emptyCartBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 cart.removeAllProductsFromCart();
                 refreshCart();
-                Log.d(LogTags.CHECK_CARD, "We yeeting products");
+                Log.d(LogTags.CHECK_CARD, "Products have been removed from the cart");
             }
         });
 
@@ -74,18 +81,15 @@ public class ViewCartFragment extends Fragment {
         checkoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(LogTags.CHECK_CARD, "We checkin out");
+                Log.d(LogTags.CHECK_CARD, "Preparing to check out cart");
                 HashMap<Product, Stock> products = cart.getCart();
                 if (products.isEmpty()){
                     Toast.makeText(getActivity(), "There are no items in your cart", Toast.LENGTH_LONG).show();
-                    Log.d(LogTags.CHECK_CARD, "We ain't checkin out");
-                }
-                else if (mAuth.getCurrentUser() == null) {
-                    Toast.makeText(getActivity(), "You must be logged in to go to checkout", Toast.LENGTH_LONG).show();
-                    Log.d(LogTags.CHECK_CARD, "We ain't checkin out");
+                    Log.d(LogTags.CHECK_CARD, "Failed to check out. No items currently in cart");
                 }
                 else {
-                    goToCheckout();
+                    InterceptorContext context = new InterceptorContext("You must be logged-in to purchase products!");
+                    interceptorApplication.sendRequest(context);
                 }
             }
         });
@@ -97,6 +101,16 @@ public class ViewCartFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         recyclerView.setAdapter(adapter);
         return view;
+    }
+
+    public void setUpInterceptor() {
+        //Set up interceptor framework with LogInContext
+        InterceptorFramework interceptorFramework = new InterceptorFramework(new PostMarshallDispatcher(this));
+        interceptorFramework.addInterceptor(new LogInAuthenticationInterceptor());
+        interceptorFramework.addInterceptor(new LoggingInterceptor());
+
+        interceptorApplication = InterceptorApplication.getInstance();
+        interceptorApplication.setInterceptorFramework(interceptorFramework);
     }
 
     public void refreshCart(){
@@ -111,13 +125,18 @@ public class ViewCartFragment extends Fragment {
         }
     }
 
-    public void goToCheckout(){
-        Bundle bundle = new Bundle();
+    public void goToCheckout() {
         ViewCheckoutInputFragment fragment = new ViewCheckoutInputFragment();
-        fragment.setArguments(bundle);
-        FragmentTransaction transaction = myContext.getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.content, fragment);
-        transaction.addToBackStack("viewCheckout");
-        transaction.commit();
+        FragmentController fragmentController = FragmentController.getInstance();
+        fragmentController.startFragment(fragment, R.id.content, "viewCheckout");
+    }
+
+    @Override
+    public void execute(InterceptorContext context) {
+        Log.d(LogTags.INTERCEPTOR, "executing target");
+        switch (context.getMessage()) {
+            case "You must be logged-in to purchase products!":
+                goToCheckout();
+        }
     }
 }

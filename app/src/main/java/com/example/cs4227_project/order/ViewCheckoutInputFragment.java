@@ -20,6 +20,12 @@ import com.example.cs4227_project.R;
 import com.example.cs4227_project.database.OrderDatabaseController;
 import com.example.cs4227_project.database.StockDatabaseController;
 import com.example.cs4227_project.database.StockReadListener;
+import com.example.cs4227_project.interceptorPattern.dispatchers.PreMarshallDispatcher;
+import com.example.cs4227_project.interceptorPattern.InterceptorApplication;
+import com.example.cs4227_project.interceptorPattern.InterceptorContext;
+import com.example.cs4227_project.interceptorPattern.InterceptorFramework;
+import com.example.cs4227_project.interceptorPattern.Target;
+import com.example.cs4227_project.interceptorPattern.interceptors.LoggingInterceptor;
 import com.example.cs4227_project.misc.LogTags;
 import com.example.cs4227_project.order.builderPattern.Address;
 import com.example.cs4227_project.order.builderPattern.CardDetails;
@@ -43,13 +49,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public class ViewCheckoutInputFragment extends Fragment implements StockReadListener {
+public class ViewCheckoutInputFragment extends Fragment implements StockReadListener, Target {
     private final Cart cart = Cart.getInstance();
     private FragmentActivity myContext;
     private final FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private final OrderDatabaseController orderDatabaseController = new OrderDatabaseController();
     private final StockDatabaseController stockDb = new StockDatabaseController(this);
     private final HashMap<Product, Stock> cartMap = new HashMap<>();
+    private InterceptorApplication interceptorApplication;
     private Stock originator;
     private CareTaker careTaker;
     private String orderId;
@@ -61,6 +68,7 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setUpInterceptor();
     }
 
     @Override
@@ -148,6 +156,7 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
 
         updateStock();
         Order order = orderBuilder.getOrder();
+        interceptorApplication.sendRequest(new InterceptorContext("adding order to db"));
         orderDatabaseController.addOrderToDB(order, orderId);
         createDialog(texts, totalPrice);
     }
@@ -166,6 +175,7 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
             Log.d(LogTags.COMMAND_DP, "Reading ids into list:" + productId);
             productIds.add(productId);
         }
+        interceptorApplication.sendRequest(new InterceptorContext("updating stocks"));
         stockDb.getStockDocs(productIds);
     }
 
@@ -334,5 +344,19 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
 
     public void popBackToHome() {
         myContext.getSupportFragmentManager().popBackStack(null, myContext.getSupportFragmentManager().POP_BACK_STACK_INCLUSIVE);
+    }
+
+    public void setUpInterceptor() {
+        //Set up interceptor framework with LogInContext
+        InterceptorFramework interceptorFramework = new InterceptorFramework(new PreMarshallDispatcher(this));
+        interceptorFramework.addInterceptor(new LoggingInterceptor());
+
+        interceptorApplication = InterceptorApplication.getInstance();
+        interceptorApplication.setInterceptorFramework(interceptorFramework);
+    }
+
+    @Override
+    public void execute(InterceptorContext context) {
+
     }
 }
