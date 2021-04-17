@@ -39,5 +39,5 @@ public class Address {
         this.county = county;
     }
 
-    public String toString() { return "\n" + line1 + ", \n" + city + ", \n" + county; }
+    public String toString() { return line1 + ", \n" + city + ", \n" + county; }
 }

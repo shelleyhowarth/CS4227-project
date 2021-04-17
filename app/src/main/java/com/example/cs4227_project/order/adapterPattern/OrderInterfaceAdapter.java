@@ -105,14 +105,15 @@ public class OrderInterfaceAdapter extends RecyclerView.Adapter implements Adapt
                     textViewOrderName.setText("Name: " + item.getDetails().getCardName());
                     textViewOrderTotal.setText("Total: " + "€" + String.valueOf(item.getPrice()));
                     textViewOrderTime.setText("Date purchased: " + item.getTime());
+
                     int count = 1;
                     for(String s: products) {
                         descriptionText += count + ". " + s;
                         count++;
                     }
+
                     textViewOrderItems.setText("Products purchased: \n" + descriptionText);
                     textViewOrderAddress.setText("Address: " + item.getAddress());
-
                     orderDialog.show();
                 }
             });
