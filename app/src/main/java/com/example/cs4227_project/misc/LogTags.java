@@ -1,6 +1,7 @@
 package com.example.cs4227_project.misc;
 
 public class LogTags {
+
     // Used to keep track of logs
     public static final String DB_GET= "DB_GET";
     public static final String DB_GET_FILTERED = "DB_GET_FILTERED";
@@ -22,4 +23,8 @@ public class LogTags {
     public static final String FRAGMENT_CONTROLLER = "FRAGMENT_CONTROLLER";
     public static final String ADDSTOCK = "ADDSTOCK";
     public static final String PRODUCT_INTERFACE_ADAPTER = "ProductInterfaceAdapter";
+
+    private LogTags() {
+        throw new IllegalStateException("Utility class");
+    }
 }
