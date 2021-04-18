@@ -32,11 +32,11 @@ public class StockDatabaseController {
 
 
     public void addStockToDB(Stock s) {
-        db.POST("stock", s);
+        db.post("stock", s);
     }
 
     public void addStockToDB(String id, Stock s) {
-        db.PUT("stock", id, s);
+        db.put("stock", id, s);
     }
 
     /**
@@ -47,7 +47,7 @@ public class StockDatabaseController {
      * @param val - the object to updated the field to.
      */
     public void updateStock(String id, String field, Object val){
-        db.PATCH("stock", id, field, val);
+        db.patch("stock", id, field, val);
     }
 
     /**
@@ -57,7 +57,7 @@ public class StockDatabaseController {
     public void getStockCollection() {
         stock.clear();
         //get reference to collection from database
-        CollectionReference colRef = db.GET("stock");
+        CollectionReference colRef = db.get("stock");
         colRef.get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -84,7 +84,7 @@ public class StockDatabaseController {
     public void getStockDocs(final ArrayList<String> ids){
         stock.clear();
         for(String id : ids){
-            DocumentReference docref = db.GET("stock", id);
+            DocumentReference docref = db.get("stock", id);
             docref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -107,7 +107,7 @@ public class StockDatabaseController {
     }
 
     public void getStockDoc(String id){
-        DocumentReference docref = db.GET("stock", id);
+        DocumentReference docref = db.get("stock", id);
         docref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
