@@ -20,23 +20,23 @@ import com.example.cs4227_project.R;
 import com.example.cs4227_project.database.OrderDatabaseController;
 import com.example.cs4227_project.database.StockDatabaseController;
 import com.example.cs4227_project.database.StockReadListener;
-import com.example.cs4227_project.interceptorPattern.dispatchers.PreMarshallDispatcher;
-import com.example.cs4227_project.interceptorPattern.InterceptorApplication;
-import com.example.cs4227_project.interceptorPattern.InterceptorContext;
-import com.example.cs4227_project.interceptorPattern.InterceptorFramework;
-import com.example.cs4227_project.interceptorPattern.Target;
-import com.example.cs4227_project.interceptorPattern.interceptors.LoggingInterceptor;
+import com.example.cs4227_project.interceptor_pattern.dispatchers.PreMarshallDispatcher;
+import com.example.cs4227_project.interceptor_pattern.InterceptorApplication;
+import com.example.cs4227_project.interceptor_pattern.InterceptorContext;
+import com.example.cs4227_project.interceptor_pattern.InterceptorFramework;
+import com.example.cs4227_project.interceptor_pattern.Target;
+import com.example.cs4227_project.interceptor_pattern.interceptors.LoggingInterceptor;
 import com.example.cs4227_project.misc.LogTags;
-import com.example.cs4227_project.order.builderPattern.Address;
-import com.example.cs4227_project.order.builderPattern.CardDetails;
-import com.example.cs4227_project.order.commandPattern.CommandControl;
-import com.example.cs4227_project.order.builderPattern.Order;
-import com.example.cs4227_project.order.commandPattern.SellStock;
-import com.example.cs4227_project.order.commandPattern.Stock;
-import com.example.cs4227_project.order.builderPattern.CustomerOrderBuilder;
-import com.example.cs4227_project.order.mementoPattern.CareTaker;
-import com.example.cs4227_project.order.mementoPattern.Memento;
-import com.example.cs4227_project.products.abstractFactoryPattern.Product;
+import com.example.cs4227_project.order.builder_pattern.Address;
+import com.example.cs4227_project.order.builder_pattern.CardDetails;
+import com.example.cs4227_project.order.command_pattern.CommandControl;
+import com.example.cs4227_project.order.builder_pattern.Order;
+import com.example.cs4227_project.order.command_pattern.SellStock;
+import com.example.cs4227_project.order.command_pattern.Stock;
+import com.example.cs4227_project.order.builder_pattern.CustomerOrderBuilder;
+import com.example.cs4227_project.order.memento_pattern.CareTaker;
+import com.example.cs4227_project.order.memento_pattern.Memento;
+import com.example.cs4227_project.products.abstract_factory_pattern.Product;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -222,7 +222,6 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
                 if(s.getId().equals(productId)){
 
                     //get original stock from database and the hashmap of its sizes and quantities
-                    Stock stockFromDb = s;
                     Map<String,String> sizes = s.getSizeQuantity();
 
                     //create a deep copy of the stock and HashMap to use with memento - deep copy so state doesn't change when sellStock called.

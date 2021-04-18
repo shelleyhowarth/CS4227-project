@@ -21,8 +21,8 @@ import com.example.cs4227_project.database.ProductDatabaseController;
 import com.example.cs4227_project.database.ProductReadListener;
 import com.example.cs4227_project.misc.FilterAttributes;
 import com.example.cs4227_project.misc.LogTags;
-import com.example.cs4227_project.products.abstractFactoryPattern.Product;
-import com.example.cs4227_project.products.facadePattern.AttributeManager;
+import com.example.cs4227_project.products.abstract_factory_pattern.Product;
+import com.example.cs4227_project.products.facade_pattern.AttributeManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;

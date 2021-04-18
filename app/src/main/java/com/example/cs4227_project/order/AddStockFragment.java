@@ -9,7 +9,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
 import android.provider.MediaStore;
 import android.util.Log;
@@ -23,18 +22,15 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.example.cs4227_project.R;
-import com.example.cs4227_project.database.Database;
 import com.example.cs4227_project.database.ProductDatabaseController;
-import com.example.cs4227_project.database.StockDatabaseController;
 import com.example.cs4227_project.misc.ProductType;
 import com.example.cs4227_project.misc.LogTags;
-import com.example.cs4227_project.order.commandPattern.AddStock;
-import com.example.cs4227_project.order.commandPattern.CommandControl;
-import com.example.cs4227_project.order.commandPattern.Stock;
-import com.example.cs4227_project.products.abstractFactoryPattern.AbstractFactory;
-import com.example.cs4227_project.products.abstractFactoryPattern.FactoryProducer;
-import com.example.cs4227_project.products.abstractFactoryPattern.Product;
-import com.example.cs4227_project.products.ProductTypeController;
+import com.example.cs4227_project.order.command_pattern.AddStock;
+import com.example.cs4227_project.order.command_pattern.CommandControl;
+import com.example.cs4227_project.order.command_pattern.Stock;
+import com.example.cs4227_project.products.abstract_factory_pattern.AbstractFactory;
+import com.example.cs4227_project.products.abstract_factory_pattern.FactoryProducer;
+import com.example.cs4227_project.products.abstract_factory_pattern.Product;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
@@ -46,9 +42,7 @@ import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
