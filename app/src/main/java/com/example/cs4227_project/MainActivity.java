@@ -59,9 +59,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private User currentUser;
 
-    private static final String LOGIN = "Log In";
-    private static final String LOGOUT = "Log Out";
-
+    private final String LOGIN = "Log In";
+    private final String LOGOUT = "Log Out";
+    private final String CARDSELECTED = "Card View Selected ";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,11 +130,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 ProductTypeController.setFemale(mSelectedPosition == 0);
                 Log.d(LogTags.GENDER_TAB, "Gender tab female is "+ProductTypeController.isFemale());
             }
+
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
+                // Method required for TabLayout.OnTabSelectedListener interface
             }
+
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
+                // Method required for TabLayout.OnTabSelectedListener interface
             }
         });
     }
@@ -232,19 +236,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if(i == R.id.clothesButton){
             ProductTypeController.setType(ProductType.CLOTHES);
-            Log.d(LogTags.CHECK_CARD, "Card view selected " + ProductType.CLOTHES);
+            Log.d(LogTags.CHECK_CARD, CARDSELECTED + ProductType.CLOTHES);
             productDataC.getProductCollection();
         }
 
         if(i == R.id.accButton){
             ProductTypeController.setType(ProductType.ACCESSORIES);
-            Log.d(LogTags.CHECK_CARD, "Card view selected " + ProductType.ACCESSORIES);
+            Log.d(LogTags.CHECK_CARD, CARDSELECTED + ProductType.ACCESSORIES);
             productDataC.getProductCollection();
         }
 
         if(i == R.id.shoeButton) {
             ProductTypeController.setType(ProductType.SHOE);
-            Log.d(LogTags.CHECK_CARD, "Card view selected " + ProductType.SHOE);
+            Log.d(LogTags.CHECK_CARD, CARDSELECTED + ProductType.SHOE);
             productDataC.getProductCollection();
         }
 

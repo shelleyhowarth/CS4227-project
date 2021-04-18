@@ -12,7 +12,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class AttributeManager implements AttributesReadListener, Serializable {
+public class AttributeManager implements AttributesReadListener {
     private static AttributeManager instance;
 
     private Attributes brands;
