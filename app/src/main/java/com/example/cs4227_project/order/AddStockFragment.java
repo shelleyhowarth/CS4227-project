@@ -59,20 +59,18 @@ public class AddStockFragment extends Fragment implements View.OnClickListener {
     private String path;
     private EditText pName, size1, q1, size2, q2, size3, q3, price, colour, brand, style;
     private RadioGroup genderGroup, categoryGroup;
-    private AbstractFactory productFactory;
     private boolean female;
     private ProductType pType;
 
-    private final int PICK_IMAGE_REQUEST = 22;
-    private final int REQUEST_IMAGE_CAPTURE = 1;
+    private static final int PICK_IMAGE_REQUEST = 22;
+    private static final int REQUEST_IMAGE_CAPTURE = 1;
 
     public AddStockFragment() {
         // Required empty public constructor
     }
 
     public static AddStockFragment newInstance() {
-        AddStockFragment fragment = new AddStockFragment();
-        return fragment;
+        return new AddStockFragment();
     }
 
     @Override
@@ -90,8 +88,8 @@ public class AddStockFragment extends Fragment implements View.OnClickListener {
         Button submit = rootView.findViewById(R.id.finish);
 
         Random rand = new Random();
-        int int_random = rand.nextInt(10000);
-        path = "images/" + int_random;
+        int randomInt = rand.nextInt(10000);
+        path = "images/" + randomInt;
 
         pName = rootView.findViewById(R.id.productName);
         size1 = rootView.findViewById(R.id.size1);
@@ -253,7 +251,7 @@ public class AddStockFragment extends Fragment implements View.OnClickListener {
 
     public void createProduct(Map<String, String> sizeQuantities, String productName, String color, String brandName, String cost, String style){
         Map<String, Object> productData = new HashMap<>();
-        productFactory = FactoryProducer.getFactory(female);
+        AbstractFactory productFactory = FactoryProducer.getFactory(female);
 
         //Create Id to use as product id and for the stock id.
         String collection = pType.getValue() + female;
@@ -287,7 +285,7 @@ public class AddStockFragment extends Fragment implements View.OnClickListener {
         AddStock addStock = new AddStock(stock);
         commandController.addCommand(addStock);
         commandController.executeCommands();
-        getFragmentManager().popBackStack();
+        getParentFragmentManager().popBackStack();
     }
 
     @Override

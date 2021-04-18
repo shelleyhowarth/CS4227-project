@@ -205,7 +205,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void goToCart(){
         Cart cart = Cart.getInstance();
-        ArrayList<Product> products = new ArrayList<>();
+        List<Product> products = new ArrayList<>();
         products = cart.productArrayList(products);
         ArrayList<Product> alProd = new ArrayList<>(products.size());
         alProd.addAll(products);
