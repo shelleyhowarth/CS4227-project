@@ -21,7 +21,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AttributesDatabaseController implements Serializable {
+public class AttributesDatabaseController {
     private Database db = Database.getInstance();
     private Map<String,Attributes> data = new HashMap<>();
     private AttributesReadListener myEventL;
