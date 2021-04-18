@@ -55,7 +55,7 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
     private final FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private final OrderDatabaseController orderDatabaseController = new OrderDatabaseController();
     private final StockDatabaseController stockDb = new StockDatabaseController(this);
-    private final HashMap<Product, Stock> cartMap = new HashMap<>();
+    private final Map<Product, Stock> cartMap = new HashMap<>();
     private InterceptorApplication interceptorApplication;
     private Stock originator;
     private CareTaker careTaker;
@@ -164,7 +164,7 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
     /**
      * Gets a list of document ids needed from stock collection in database
      * @author Aine Reynolds
-     * @Description: Goes through user cart getting product ids then calls
+     * Goes through user cart getting product ids then calls
      * StockDatabaseController to retrieve docs from databse.
      */
     public void updateStock(){
@@ -182,13 +182,12 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
     /**
      * When the StockDatabaseController has finished executing the getStockDocsCommand
      * @author Aine Reynolds
-     * @Description: Retrieves an arraylist of type stock using the StockDatabaseController.
+     * Retrieves an arraylist of type stock using the StockDatabaseController.
      * Then calls changeStock method.
      */
     @Override
     public void stockCallback(String result){
-        ArrayList<Stock> stock = new ArrayList<>();
-        stock = stockDb.getStockArray();
+        List<Stock> stock = stockDb.getStockArray();
         Log.d("STOCKS", "Stocks in database " + stock.toString());
         changeStock(stock);
     }
@@ -197,11 +196,11 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
      * Implements the Command DP
      * @author Aine Reynolds
      * @param stock - the arraylist of stock from the database.
-     * @Description: Goes through each item in the user cart and gets the size and quantity
+     * Goes through each item in the user cart and gets the size and quantity
      * that needs to be changed in the database. Finds that stock from the list of stock that was
      * just read in from the database and implements the SellStock Command.
      */
-    public void changeStock(ArrayList<Stock> stock){
+    public void changeStock(List<Stock> stock){
         CommandControl commandController = new CommandControl();
         originator = new Stock();
         careTaker = new CareTaker();
@@ -221,23 +220,23 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
             //Go through the stock retrieved from database that will be updated
             for(Stock s : stock){
                 if(s.getId().equals(productId)){
+
                     //get original stock from database and the hashmap of its sizes and quantities
                     Stock stockFromDb = s;
                     Map<String,String> sizes = s.getSizeQuantity();
 
-                    //create a deep copy of the stock and hashmap to use with memento - deep copy so state doesn't change when sellStock called.
-                    final Stock tempStock = s;
+                    //create a deep copy of the stock and HashMap to use with memento - deep copy so state doesn't change when sellStock called.
                     final HashMap<String,String> tempSizes = new HashMap<>();
                     for(Map.Entry<String, String> item : sizes.entrySet()){
                         tempSizes.put(item.getKey(), item.getValue());
                     }
 
-                    SellStock sellStock= new SellStock(stockFromDb, quantity, size);
+                    SellStock sellStock= new SellStock(s, quantity, size);
                     commandController.addCommand(sellStock);
 
-                    //Set the hashmap of original sizes and quantities and pass to memento.
-                    tempStock.setSizeQuantity(tempSizes);
-                    originator.setState(tempStock);
+                    //Set the HashMap of original sizes and quantities and pass to memento.
+                    s.setSizeQuantity(tempSizes);
+                    originator.setState(s);
                     careTaker.add(originator.saveStateToMemento());
                 }
             }

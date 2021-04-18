@@ -35,11 +35,8 @@ public class OrderInterfaceAdapter extends RecyclerView.Adapter implements Adapt
     private CardView cardViewOrder;
     private Dialog orderDialog;
     private Button undo;
-    private OrderDatabaseController db = new OrderDatabaseController(this);
-    ArrayList<String> products = new ArrayList<>();
-
-
-
+    private final OrderDatabaseController db = new OrderDatabaseController(this);
+    private List<String> products = new ArrayList<>();
 
     public OrderInterfaceAdapter(ArrayList<Order> orders) {
         Log.d(LogTags.CHECK_CARD, orders.toString());

@@ -15,11 +15,12 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class UserDatabaseController {
-    private Database db = Database.getInstance();
-    private ArrayList<User> users = new ArrayList<>();
+    private final Database db = Database.getInstance();
+    private final ArrayList<User> users = new ArrayList<>();
     private UserReadListener myEventL;
     private User user;
 
@@ -57,12 +58,12 @@ public class UserDatabaseController {
     }
 
     public void getUserDoc(String id){
-        DocumentReference docref = db.get("user", id);
-        docref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        DocumentReference docRef = db.get("user", id);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
-                    DocumentSnapshot document = document = task.getResult();
+                    DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         user = getUser(document.getData());
                         Log.d(LogTags.DB_GET, "DocumentSnapshot data: " + document.getData());
@@ -78,8 +79,7 @@ public class UserDatabaseController {
     }
 
     public User getUser(Map<String, Object> user){
-        User u = new User((String)user.get("id"), (String)user.get("email"), (boolean)user.get("admin"));
-        return u;
+        return new User((String)user.get("id"), (String)user.get("email"), (boolean)user.get("admin"));
     }
 
     public void readUserIntoList(QueryDocumentSnapshot document) {
@@ -88,7 +88,7 @@ public class UserDatabaseController {
         users.add(u);
     }
 
-    public ArrayList<User> getAllUsers() {
+    public List<User> getAllUsers() {
         return users;
     }
 

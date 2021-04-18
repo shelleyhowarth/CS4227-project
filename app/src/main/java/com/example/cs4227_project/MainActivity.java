@@ -37,6 +37,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import java.util.List;
@@ -180,9 +181,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void orderCallback(String result){
-        ArrayList<Order> orders = orderDb.getAllOrders();
+        List<Order> orders = orderDb.getAllOrders();
         Bundle bundle = new Bundle();
-        bundle.putSerializable("Orders", orders);
+        bundle.putSerializable("Orders", (Serializable) orders);
         fragmentController.startFragment(new ViewOrdersFragment() , R.id.contentWithToolbar, "viewOrders", bundle);
     }
 

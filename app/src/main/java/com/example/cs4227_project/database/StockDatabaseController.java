@@ -16,11 +16,12 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class StockDatabaseController {
-    private Database db = Database.getInstance();
-    private ArrayList<Stock> stock = new ArrayList<>();
+    private final Database db = Database.getInstance();
+    private final List<Stock> stockList = new ArrayList<>();
     private StockReadListener stockL;
     private Stock stockItem;
 
@@ -59,7 +60,7 @@ public class StockDatabaseController {
      * @author Aine Reynolds
      */
     public void getStockCollection() {
-        stock.clear();
+        stockList.clear();
         //get reference to collection from database
         CollectionReference colRef = db.get(STOCK);
         colRef.get()
@@ -86,17 +87,17 @@ public class StockDatabaseController {
      * @param ids - list of the document ids that are wanted.
      */
     public void getStockDocs(final ArrayList<String> ids){
-        stock.clear();
+        stockList.clear();
         for(String id : ids){
-            DocumentReference docref = db.get(STOCK, id);
-            docref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            DocumentReference docRef = db.get(STOCK, id);
+            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                     if (task.isSuccessful()) {
-                        DocumentSnapshot document = document = task.getResult();
+                        DocumentSnapshot document = task.getResult();
                         if (document.exists()) {
                             Stock s = getStock(document.getData());
-                            stock.add(s);
+                            stockList.add(s);
                             Log.d(LogTags.DB_GET, "DocumentSnapshot data: " + document.getData());
                         } else {
                             Log.d(LogTags.DB_GET, "No such document");
@@ -111,12 +112,12 @@ public class StockDatabaseController {
     }
 
     public void getStockDoc(String id){
-        DocumentReference docref = db.get(STOCK, id);
-        docref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        DocumentReference docRef = db.get(STOCK, id);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                     if (task.isSuccessful()) {
-                        DocumentSnapshot document = document = task.getResult();
+                        DocumentSnapshot document = task.getResult();
                         if (document.exists()) {
                             Stock s = getStock(document.getData());
                             stockItem = s;
@@ -139,8 +140,7 @@ public class StockDatabaseController {
      * @return Stock object.
      */
     public Stock getStock(Map<String, Object> stock) {
-        Stock s = new Stock((String)stock.get("id"), (HashMap<String, String>)stock.get("sizeQuantity"), (String)stock.get("type"), (boolean)stock.get("female"));
-        return s;
+        return new Stock((String)stock.get("id"), (HashMap<String, String>)stock.get("sizeQuantity"), (String)stock.get("type"), (boolean)stock.get("female"));
     }
 
     /**
@@ -149,15 +149,15 @@ public class StockDatabaseController {
      */
     public void readStockIntoList(QueryDocumentSnapshot document) {
         Stock s = getStock(document.getData());
-        stock.add(s);
+        stockList.add(s);
     }
 
     /**
      * Returns list of Stock
      * @author Aine Reynolds
      */
-    public ArrayList<Stock> getStockArray() {
-        return stock;
+    public List<Stock> getStockArray() {
+        return stockList;
     }
 
     public Stock getStockItem(){ return stockItem; }
