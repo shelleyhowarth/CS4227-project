@@ -24,6 +24,10 @@ public class StockDatabaseController {
     private StockReadListener stockL;
     private Stock stockItem;
 
+    //constant strings
+    private static final String STOCK = "stock";
+    private static final String SUCCESS = "success";
+
     public StockDatabaseController() {}
 
     public StockDatabaseController(StockReadListener ml){
@@ -32,11 +36,11 @@ public class StockDatabaseController {
 
 
     public void addStockToDB(Stock s) {
-        db.post("stock", s);
+        db.post(STOCK, s);
     }
 
     public void addStockToDB(String id, Stock s) {
-        db.put("stock", id, s);
+        db.put(STOCK, id, s);
     }
 
     /**
@@ -47,7 +51,7 @@ public class StockDatabaseController {
      * @param val - the object to updated the field to.
      */
     public void updateStock(String id, String field, Object val){
-        db.patch("stock", id, field, val);
+        db.patch(STOCK, id, field, val);
     }
 
     /**
@@ -57,7 +61,7 @@ public class StockDatabaseController {
     public void getStockCollection() {
         stock.clear();
         //get reference to collection from database
-        CollectionReference colRef = db.get("stock");
+        CollectionReference colRef = db.get(STOCK);
         colRef.get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -68,7 +72,7 @@ public class StockDatabaseController {
                                 //convert document to Product and add to List of data
                                 readStockIntoList(document);
                             }
-                            stockL.stockCallback("success");
+                            stockL.stockCallback(SUCCESS);
                         } else {
                             Log.d(LogTags.DB_GET, "Error getting documents: ", task.getException());
                         }
@@ -84,7 +88,7 @@ public class StockDatabaseController {
     public void getStockDocs(final ArrayList<String> ids){
         stock.clear();
         for(String id : ids){
-            DocumentReference docRef = db.get("stock", id);
+            DocumentReference docRef = db.get(STOCK, id);
             docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -100,14 +104,14 @@ public class StockDatabaseController {
                     } else {
                         Log.d(LogTags.DB_GET, "get failed with ", task.getException());
                     }
-                    stockL.stockCallback("success");
+                    stockL.stockCallback(SUCCESS);
                 }
             });
         }
     }
 
     public void getStockDoc(String id){
-        DocumentReference docRef = db.get("stock", id);
+        DocumentReference docRef = db.get(STOCK, id);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -123,7 +127,7 @@ public class StockDatabaseController {
                     } else {
                         Log.d(LogTags.DB_GET, "get failed with ", task.getException());
                     }
-                    stockL.stockCallback("success");
+                    stockL.stockCallback(SUCCESS);
                 }
             });
     }
@@ -132,6 +136,7 @@ public class StockDatabaseController {
      * Converts Map into stock object
      * @author Aine Reynolds
      * @param stock - the map that was retrieved from the database
+     * @return Stock object.
      */
     public Stock getStock(Map<String, Object> stock) {
         return new Stock((String)stock.get("id"), (HashMap<String, String>)stock.get("sizeQuantity"), (String)stock.get("type"), (boolean)stock.get("female"));

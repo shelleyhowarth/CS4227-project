@@ -27,6 +27,8 @@ public class ProductDatabaseController {
     private ProductReadListener myEventL;
     private AbstractFactory productFactory;
 
+    private static final String NUMOFPRODUCTS = "Number of products: ";
+
     public ProductDatabaseController(){
 
     }
@@ -38,7 +40,7 @@ public class ProductDatabaseController {
     /**
      * Adds a product to the selected product collection in the db
      * @author Carla Warde
-     * @param product
+     * @param product - product to add to db
      */
     public void addProductToDB(Product product) {
         db.post(ProductTypeController.getType().getValue(), product);
@@ -71,7 +73,7 @@ public class ProductDatabaseController {
                             readProductIntoList(document);
                         }
                         myEventL.productCallback("success");
-                        Log.d(LogTags.DB_GET, "Number of products: " +data.size());
+                        Log.d(LogTags.DB_GET, NUMOFPRODUCTS +data.size());
                     } else {
                         Log.d(LogTags.DB_GET, "Error getting documents: ", task.getException());
                     }
@@ -115,7 +117,7 @@ public class ProductDatabaseController {
                             readProductIntoList(document);
                         }
                         myEventL.productCallback("success");
-                        Log.d(LogTags.DB_GET_FILTERED, "Number of products: " +data.size());
+                        Log.d(LogTags.DB_GET_FILTERED, NUMOFPRODUCTS +data.size());
                     } else {
                         Log.d(LogTags.DB_GET_FILTERED, "Error getting documents: ", task.getException());
                     }
@@ -149,7 +151,7 @@ public class ProductDatabaseController {
      * @return List<Product>
      */
     public List<Product> getProducts() {
-        Log.d(LogTags.DB_GET, "Number of products: " +data.size());
+        Log.d(LogTags.DB_GET, NUMOFPRODUCTS +data.size());
         return data;
     }
 
