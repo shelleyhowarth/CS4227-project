@@ -61,7 +61,7 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter implements Ada
     private static final String all = "All";
     private Spinner size;
     private Product product;
-    private HashMap<String, String> productSizeQuantities;
+    private Map<String, String> productSizeQuantities;
 
     private StockDatabaseController stockDb;
     private  RecyclerView mRecyclerView;

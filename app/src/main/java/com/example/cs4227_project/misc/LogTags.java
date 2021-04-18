@@ -20,4 +20,5 @@ public class LogTags {
     public static final String ORDER = "ORDER";
     public static final String INTERCEPTOR = "INTERCEPTOR";
     public static final String FRAGMENT_CONTROLLER = "FRAGMENT_CONTROLLER";
+    public static final String ADDSTOCK = "ADDSTOCK";
 }

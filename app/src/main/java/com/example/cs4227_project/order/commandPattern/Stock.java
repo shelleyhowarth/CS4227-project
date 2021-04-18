@@ -1,19 +1,17 @@
 package com.example.cs4227_project.order.commandPattern;
 
-import android.util.Log;
-
 import com.example.cs4227_project.order.mementoPattern.Memento;
 
-import java.util.HashMap;
+import java.util.Map;
 
 public class Stock {
     private String id;
-    private HashMap<String, String> sizeQuantity;
+    private Map<String, String> sizeQuantity;
     private String type;
     private Stock state;
     boolean female;
 
-    public Stock(String id, HashMap<String, String> sizeQuantity, String type, boolean female){
+    public Stock(String id, Map<String, String> sizeQuantity, String type, boolean female){
         this.id = id;
         this.sizeQuantity = sizeQuantity;
         this.type = type;
@@ -36,9 +34,9 @@ public class Stock {
 
     public void setId(String id) { this.id = id; }
 
-    public HashMap<String, String> getSizeQuantity() { return sizeQuantity; }
+    public Map<String, String> getSizeQuantity() { return sizeQuantity; }
 
-    public void setSizeQuantity(HashMap<String, String> sizeQuantity) { this.sizeQuantity = sizeQuantity; }
+    public void setSizeQuantity(Map<String, String> sizeQuantity) { this.sizeQuantity = sizeQuantity; }
 
     public String getType() { return type; }
 

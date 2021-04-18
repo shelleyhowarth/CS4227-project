@@ -130,7 +130,7 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
         ArrayList<Stock> productInfo = new ArrayList<>();
         for(Map.Entry<Product, Stock> entry: cart.getCart().entrySet()){
             Log.d("ORDER", "Products to checkout =" + entry.getKey().toString());
-            HashMap<String, String> sizeQ = entry.getValue().getSizeQuantity();
+            Map<String, String> sizeQ = entry.getValue().getSizeQuantity();
             Map.Entry<String,String> sizeEntry = sizeQ.entrySet().iterator().next();
             int quantity = Integer.parseInt(sizeEntry.getValue());
             totalPrice += (entry.getKey().getPrice() * quantity);
@@ -223,7 +223,7 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
                 if(s.getId().equals(productId)){
                     //get original stock from database and the hashmap of its sizes and quantities
                     Stock stockFromDb = s;
-                    HashMap<String,String> sizes = s.getSizeQuantity();
+                    Map<String,String> sizes = s.getSizeQuantity();
 
                     //create a deep copy of the stock and hashmap to use with memento - deep copy so state doesn't change when sellStock called.
                     final Stock tempStock = s;

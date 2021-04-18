@@ -165,44 +165,31 @@ public class AddStockFragment extends Fragment implements View.OnClickListener {
         if(requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null )
         {
             filePath = data.getData();
-            Log.d("Check",""+ filePath);
+            Log.d(LogTags.ADDSTOCK,""+ filePath);
             Picasso.get().load(filePath).centerCrop().fit().into(userPicture);
         }
 
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK){
-            Log.d("Check"," checking activity");
+            Log.d(LogTags.ADDSTOCK," checking activity");
             Bundle extras = data.getExtras();
             Bitmap photo = (Bitmap) extras.get("data");
-            Log.d("Check"," " + photo);
+            Log.d(LogTags.ADDSTOCK," " + photo);
             userPicture.setImageBitmap(photo);
             Uri tempUri = getImageUri(getContext(), photo);
             filePath = tempUri;
-            Log.d("Check"," " + tempUri);
+            Log.d(LogTags.ADDSTOCK," " + tempUri);
         }
     }
 
     public Uri getImageUri(Context inContext, Bitmap inImage) {
-        Log.d("Check","get bitmap");
+        Log.d(LogTags.ADDSTOCK,"get bitmap");
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
         String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
         return Uri.parse(path);
     }
 
-    public void validateInput(){
-        HashMap<String, String> sizeQuantities = new HashMap<>();
-        String productName = pName.getText().toString();
-        String cost = price.getText().toString();
-        String brandName = brand.getText().toString();
-        String color = colour.getText().toString();
-        String productStyle = style.getText().toString();
-        String s1 = size1.getText().toString();
-        String s2 = size2.getText().toString();
-        String s3 = size3.getText().toString();
-        String quant1 = q1.getText().toString();
-        String quant2 = q2.getText().toString();
-        String quant3 = q3.getText().toString();
-
+    public void validateGenderInput() {
         int genderId = genderGroup.getCheckedRadioButtonId();
         if(genderId == R.id.female) {
             Log.d(LogTags.COMMAND_DP, "Is female selected= " + female);
@@ -211,7 +198,9 @@ public class AddStockFragment extends Fragment implements View.OnClickListener {
             Log.d(LogTags.COMMAND_DP, "Is female selected= " + female);
             female=false;
         }
+    }
 
+    public void validateCategoryInput() {
         int checkedId = categoryGroup.getCheckedRadioButtonId();
         if(checkedId == R.id.clothes){
             pType = ProductType.CLOTHES;
@@ -220,8 +209,19 @@ public class AddStockFragment extends Fragment implements View.OnClickListener {
         }else if(checkedId == R.id.accessories){
             pType = ProductType.ACCESSORIES;
         }
-
         Log.d(LogTags.COMMAND_DP, "Product type" + pType.getValue());
+    }
+
+    public Map<String, String> validateProductQuantitiesInput() {
+        Map<String, String> sizeQuantities = new HashMap<>();
+        //get text from inputs
+        String s1 = size1.getText().toString();
+        String s2 = size2.getText().toString();
+        String s3 = size3.getText().toString();
+        String quant1 = q1.getText().toString();
+        String quant2 = q2.getText().toString();
+        String quant3 = q3.getText().toString();
+
         if(!s1.isEmpty() && !quant1.isEmpty()){
             sizeQuantities.put(s1, quant1);
         }
@@ -231,6 +231,20 @@ public class AddStockFragment extends Fragment implements View.OnClickListener {
         if(!s3.isEmpty() && !quant3.isEmpty()){
             sizeQuantities.put(s3, quant3);
         }
+
+        return sizeQuantities;
+    }
+
+    public void validateInput(){
+        String productName = pName.getText().toString();
+        String cost = price.getText().toString();
+        String brandName = brand.getText().toString();
+        String color = colour.getText().toString();
+        String productStyle = style.getText().toString();
+
+        validateGenderInput();
+        validateCategoryInput();
+        Map<String, String> sizeQuantities = validateProductQuantitiesInput();
 
         if(productName.isEmpty()){
             pName.setError("Must have product name");
@@ -243,8 +257,8 @@ public class AddStockFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    public void createProduct(HashMap<String, String> sizeQuantities, String productName, String color, String brandName, String cost, String style){
-        HashMap<String, Object> productData = new HashMap<>();
+    public void createProduct(Map<String, String> sizeQuantities, String productName, String color, String brandName, String cost, String style){
+        Map<String, Object> productData = new HashMap<>();
         productFactory = FactoryProducer.getFactory(female);
 
         //Create Id to use as product id and for the stock id.
@@ -273,7 +287,7 @@ public class AddStockFragment extends Fragment implements View.OnClickListener {
         createStock(productId, sizeQuantities);
     }
 
-    public void createStock(String id, HashMap<String, String> sizeQ){
+    public void createStock(String id, Map<String, String> sizeQ){
         CommandControl commandController = new CommandControl();
         Stock stock = new Stock(id, sizeQ, pType.getValue(), female);
         AddStock addStock = new AddStock(stock);

@@ -61,7 +61,7 @@ public class Cart {
         String s = "";
         for(Map.Entry<Product,Stock> entry : products.entrySet()) {
             if(entry.getKey() == p) {
-                HashMap<String, String> sizes = entry.getValue().getSizeQuantity();
+                Map<String, String> sizes = entry.getValue().getSizeQuantity();
                 Map.Entry<String, String> sizeEntry = sizes.entrySet().iterator().next();
                 s = sizeEntry.getKey();
             }

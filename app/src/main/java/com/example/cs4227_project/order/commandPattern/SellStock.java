@@ -4,20 +4,21 @@ import android.util.Log;
 
 import com.example.cs4227_project.database.StockDatabaseController;
 
-import java.util.HashMap;
+import java.util.Map;
 
 public class SellStock implements Command {
     private final Stock abcStock;
-    private final StockDatabaseController stockDb = new StockDatabaseController();
-    private HashMap<String, String> sizesQ = new HashMap<>();
+    private final StockDatabaseController stockDb;
+    private Map<String, String> sizesQ;
 
     /**
      * Command DP - SellStock
      * @author Aine Reynolds
-     * @Description: Updates the quantity value for a particular stock.
+     * Updates the quantity value for a particular stock.
      * Then updates the database.
      */
     public SellStock(Stock abcStock, int quantity, String size){
+        this.stockDb = new StockDatabaseController();
         this.abcStock = abcStock;
         this.sizesQ = abcStock.getSizeQuantity();
         int val = Integer.parseInt(sizesQ.get(size));
