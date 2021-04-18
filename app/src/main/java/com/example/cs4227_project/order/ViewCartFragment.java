@@ -30,7 +30,6 @@ import com.example.cs4227_project.products.ProductInterfaceAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -38,7 +37,6 @@ public class ViewCartFragment extends Fragment implements Target {
     private final Cart cart = Cart.getInstance();
     private RecyclerView recyclerView;
     private ProductInterfaceAdapter adapter;
-    private FragmentActivity myContext;
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private InterceptorApplication interceptorApplication;
 
@@ -47,13 +45,12 @@ public class ViewCartFragment extends Fragment implements Target {
     }
 
     public static ViewCartFragment newInstance() {
-        ViewCartFragment fragment = new ViewCartFragment();
-        return fragment;
+        return new ViewCartFragment();
     }
 
+    @Deprecated
     @Override
     public void onAttach(Activity activity) {
-        myContext=(FragmentActivity) activity;
         super.onAttach(activity);
     }
 
@@ -79,7 +76,6 @@ public class ViewCartFragment extends Fragment implements Target {
         });
 
         Button checkoutBtn = view.findViewById(R.id.checkout);
-        final Button btn = view.findViewById(R.id.logInBtn);
         checkoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -118,10 +114,11 @@ public class ViewCartFragment extends Fragment implements Target {
     public void refreshCart(){
         //updates the recycler view with the empty cart
         Cart cart = Cart.getInstance();
-        List<Product> products = cart.productArrayList(new ArrayList<Product>());
+        List<Product> products = new ArrayList<>();
+        products = cart.productArrayList(products);
         adapter = new ProductInterfaceAdapter(products);
         recyclerView.setAdapter(adapter);
-        if(products.size() == 0) {
+        if(products.isEmpty()) {
             Toast toast = Toast.makeText(getActivity(), "The cart has been emptied", Toast.LENGTH_SHORT);
             toast.show();
         }
@@ -136,13 +133,10 @@ public class ViewCartFragment extends Fragment implements Target {
     @Override
     public void execute(InterceptorContext context) {
         Log.d(LogTags.INTERCEPTOR, "executing target");
-        switch (context.getMessage()) {
-            case "You must be logged-in to purchase products!":
-                goToCheckout();
-                break;
-            default:
-                Log.d(LogTags.INTERCEPTOR, "no request found under \""+context.getMessage()+"\"");
-                break;
+        if ("You must be logged-in to purchase products!".equals(context.getMessage())) {
+            goToCheckout();
+        } else {
+            Log.d(LogTags.INTERCEPTOR, "no request found under \"" + context.getMessage() + "\"");
         }
     }
 }
