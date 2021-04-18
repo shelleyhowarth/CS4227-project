@@ -42,9 +42,9 @@ import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
+import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -88,7 +88,7 @@ public class AddStockFragment extends Fragment implements View.OnClickListener {
         Button uploadPic = rootView.findViewById(R.id.uploadImage);
         Button submit = rootView.findViewById(R.id.finish);
 
-        Random rand = new Random();
+        SecureRandom rand = new SecureRandom();
         int randomInt = rand.nextInt(10000);
         path = "images/" + randomInt;
 

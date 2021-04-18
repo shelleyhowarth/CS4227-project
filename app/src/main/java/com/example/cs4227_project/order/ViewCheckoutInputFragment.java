@@ -331,7 +331,7 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
             format.setLenient(false);
             format.parse(x);
         } catch (ParseException e) {
-            e.printStackTrace();
+            Log.d(LogTags.PARSE_ERROR, e.getMessage());
             Toast.makeText(getActivity(), "The expiry date format is wrong", Toast.LENGTH_SHORT).show();
             text.requestFocus();
             text.setError(INVALID_ENTRY);

@@ -24,6 +24,7 @@ public class LogTags {
     public static final String ADDSTOCK = "ADDSTOCK";
     public static final String SELLSTOCK = "SELLSTOCK";
     public static final String PRODUCT_INTERFACE_ADAPTER = "ProductInterfaceAdapter";
+    public static final String PARSE_ERROR = "PARSE_ERROR";
 
     private LogTags() {
         throw new IllegalStateException("Utility class");
