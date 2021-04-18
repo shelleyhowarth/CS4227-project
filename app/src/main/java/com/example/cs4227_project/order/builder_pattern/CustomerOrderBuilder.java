@@ -3,8 +3,8 @@ package com.example.cs4227_project.order.builder_pattern;
 import com.example.cs4227_project.order.command_pattern.Stock;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class CustomerOrderBuilder implements OrderBuilder {
@@ -15,7 +15,7 @@ public class CustomerOrderBuilder implements OrderBuilder {
         this.order = new Order();
     }
 
-    public void setProductInfo(ArrayList<Stock> products){
+    public void setProductInfo(List<Stock> products){
         order.productInfo = products;
     }
 

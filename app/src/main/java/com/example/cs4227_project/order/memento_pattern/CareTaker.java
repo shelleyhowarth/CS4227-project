@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CareTaker {
-    private final List<Memento> mementoList = new ArrayList<Memento>();
+    private final List<Memento> mementoList = new ArrayList<>();
 
     public void add(Memento state){
         Log.d("CareTaker", "Saving state to list  " + state.getState().getSizeQuantity());

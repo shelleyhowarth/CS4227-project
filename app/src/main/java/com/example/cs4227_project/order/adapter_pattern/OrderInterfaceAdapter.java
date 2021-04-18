@@ -81,7 +81,7 @@ public class OrderInterfaceAdapter extends RecyclerView.Adapter implements Adapt
         @SuppressLint("SetTextI18n")
         void bindView(int pos){
             final Order item = orderList.get(pos);
-            ArrayList<Stock> stock = item.getProductInfo();
+            List<Stock> stock = item.getProductInfo();
             db.getProduct(stock);
 
             textViewOrderTotal.setText("€" + item.getPrice());

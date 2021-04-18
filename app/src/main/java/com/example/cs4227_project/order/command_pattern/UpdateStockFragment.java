@@ -23,7 +23,7 @@ import java.util.Map;
 public class UpdateStockFragment extends Fragment implements View.OnClickListener, StockReadListener {
 
     private EditText size1, size2, size3, q1, q2, q3;
-    private HashMap<String,String> sizeQuantities = new HashMap<>();
+    private HashMap<String,String> sizeQuantities;
     Product product;
     Stock stockToUpdate;
     StockDatabaseController stockDb;
@@ -33,8 +33,7 @@ public class UpdateStockFragment extends Fragment implements View.OnClickListene
     }
     
     public static UpdateStockFragment newInstance() {
-        UpdateStockFragment fragment = new UpdateStockFragment();
-        return fragment;
+        return new UpdateStockFragment();
     }
 
     @Override
@@ -52,6 +51,7 @@ public class UpdateStockFragment extends Fragment implements View.OnClickListene
 
         stockDb.getStockDoc(product.getId());
 
+        sizeQuantities = new HashMap<>();
         size1 = rootView.findViewById(R.id.size1);
         size2 = rootView.findViewById(R.id.size2);
         size3 = rootView.findViewById(R.id.size3);
@@ -103,7 +103,7 @@ public class UpdateStockFragment extends Fragment implements View.OnClickListene
             controller.addCommand(addStock);
         }
         controller.executeCommands();
-        getFragmentManager().popBackStack();
+        getParentFragmentManager().popBackStack();
     }
 
     @Override
