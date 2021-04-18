@@ -43,7 +43,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,6 +72,7 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
         setUpInterceptor();
     }
 
+    @Deprecated
     @Override
     public void onAttach(Activity activity) {
         myContext=(FragmentActivity) activity;
@@ -84,13 +84,13 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_checkout_input, container, false);
 
-        final ArrayList<EditText> texts = createTexts(view);
+        final List<EditText> texts = createTexts(view);
 
         Button nextButton = view.findViewById(R.id.submitButton);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ArrayList<String> inputtedTexts = new ArrayList<>();
+                List<String> inputtedTexts = new ArrayList<>();
                 for(EditText text : texts){
                     if(text.getText().toString().matches("")) {
                         Toast.makeText(getActivity(), "No input detected", Toast.LENGTH_SHORT).show();
@@ -125,7 +125,7 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
         return view;
     }
 
-    public void createOrder(ArrayList<String> texts) {
+    public void createOrder(List<String> texts) {
         Toast.makeText(getActivity(), "Your order has been confirmed", Toast.LENGTH_SHORT).show();
 
         double totalPrice = 0.0;
@@ -245,7 +245,7 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
         commandController.executeCommands();
     }
 
-    public void createDialog(ArrayList<String> texts, double price) {
+    public void createDialog(List<String> texts, double price) {
         AlertDialog.Builder builder = new AlertDialog.Builder(myContext);
         builder.setCancelable(true);
         if (price == 0) {
@@ -288,8 +288,8 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
         dialog.show();
     }
 
-    public ArrayList<EditText> createTexts(View view){
-        ArrayList<EditText> texts = new ArrayList<>();
+    public List<EditText> createTexts(View view){
+        List<EditText> texts = new ArrayList<>();
         texts.add((EditText) view.findViewById(R.id.townInput));
         texts.add((EditText) view.findViewById(R.id.cityInput));
         texts.add((EditText) view.findViewById(R.id.countyInput));
@@ -302,7 +302,7 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
 
     public boolean queryCardNum(String x, EditText text){
         boolean valid = true;
-        if(!(x.length() == 16)) {
+        if(x.length() != 16) {
             Toast.makeText(getActivity(), "Card Number must be 16 digits in length", Toast.LENGTH_SHORT).show();
             text.requestFocus();
             text.setError(INVALID_ENTRY);
@@ -313,7 +313,7 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
 
     public boolean queryCVV(String x, EditText text){
         boolean valid = true;
-        if(!(x.length() == 3)) {
+        if(x.length() != 3) {
             Toast.makeText(getActivity(), "CVV must be 3 digits in length", Toast.LENGTH_SHORT).show();
             text.requestFocus();
             text.setError(INVALID_ENTRY);
@@ -325,7 +325,9 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
     public boolean queryExpiryDate(String x, EditText text){
         boolean valid = true;
         try {
-            Date expiryDate = parseMonth(x);
+            @SuppressLint("SimpleDateFormat") SimpleDateFormat format = new SimpleDateFormat("MM/yyyy");
+            format.setLenient(false);
+            format.parse(x);
         } catch (ParseException e) {
             e.printStackTrace();
             Toast.makeText(getActivity(), "The expiry date format is wrong", Toast.LENGTH_SHORT).show();
@@ -334,12 +336,6 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
             valid = false;
         }
         return valid;
-    }
-
-    Date parseMonth(String str) throws ParseException {
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat format = new SimpleDateFormat("MM/yyyy");
-        format.setLenient(false);
-        return format.parse(str);
     }
 
     public void popBackToHome() {
@@ -361,7 +357,6 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
         switch (context.getMessage()) {
             default:
                 Log.d(LogTags.INTERCEPTOR, "no request found under \""+context.getMessage()+"\"");
-                break;
         }
     }
 }

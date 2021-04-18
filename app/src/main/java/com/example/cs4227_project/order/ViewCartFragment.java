@@ -10,7 +10,6 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -133,10 +132,12 @@ public class ViewCartFragment extends Fragment implements Target {
     @Override
     public void execute(InterceptorContext context) {
         Log.d(LogTags.INTERCEPTOR, "executing target");
-        if ("You must be logged-in to purchase products!".equals(context.getMessage())) {
-            goToCheckout();
-        } else {
-            Log.d(LogTags.INTERCEPTOR, "no request found under \"" + context.getMessage() + "\"");
+        switch (context.getMessage()) {
+            case "You must be logged-in to purchase products!":
+                goToCheckout();
+                break;
+            default:
+                Log.d(LogTags.INTERCEPTOR, "no request found under \""+context.getMessage()+"\"");
         }
     }
 }
