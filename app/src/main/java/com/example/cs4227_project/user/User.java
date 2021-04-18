@@ -14,7 +14,7 @@ public class User {
         this.admin = admin;
     }
 
-    public void setUser(User u){user = u;};
+    public void setUser(User u){this.user = u;};
 
     public String getId() { return id; }
 

@@ -55,7 +55,6 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter implements Ada
     private Dialog productDialog;
     private Button addBtn, addStock;
     private String chosenSize;
-    private static final String all = "All";
     private Spinner size;
     private Product product;
     private Map<String, String> productSizeQuantities;
@@ -97,7 +96,7 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter implements Ada
         void bindView(int pos){
             final Product item = productList.get(pos);
             product = item;
-            Log.d("ProductInterfaceAdapter", "product: " + product.getId());
+            Log.d(LogTags.PRODUCT_INTERFACE_ADAPTER, "product: " + product.getId());
             textViewProductName.setText(item.getName());
             textViewProductPrice.setText("€" + String.valueOf(item.getPrice()));
             setPicture(imageViewProductPic, item);
@@ -125,7 +124,7 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter implements Ada
                 @Override
                 public void onClick(View productView) {
                     stockDb.getStockDoc(item.getId());
-                    Log.d("ProductInterfaceAdapter", "getStockDoc: " + item.getId());
+                    Log.d(LogTags.PRODUCT_INTERFACE_ADAPTER, "getStockDoc: " + item.getId());
                     TextView textViewProductName = productDialog.findViewById(R.id.productName);
                     TextView textViewProductPrice = productDialog.findViewById(R.id.productPrice);
                     ImageView imageViewProductImage = productDialog.findViewById(R.id.productImage);
@@ -180,7 +179,7 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter implements Ada
             storageReference.child(path).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                 @Override
                 public void onSuccess(Uri uri) {
-                    Log.d("PROFILE", "SUCESS" + uri);
+                    Log.d(LogTags.PRODUCT_INTERFACE_ADAPTER, "SUCESS" + uri);
                     Picasso.get().load(uri).fit().centerCrop().into(image);
                 }
             }).addOnFailureListener(new OnFailureListener() {
@@ -194,9 +193,9 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter implements Ada
         @Override
         public void onClick(View v){
             int i = v.getId();
-            Log.d("CLICK", "In on click");
+            Log.d(LogTags.PRODUCT_INTERFACE_ADAPTER, "In on click");
             if(i == R.id.addStock){
-                Log.d("CLICK", "Add stock button clicked");
+                Log.d(LogTags.PRODUCT_INTERFACE_ADAPTER, "Add stock button clicked");
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("product", product);
                 UpdateStockFragment fragment = new UpdateStockFragment();
