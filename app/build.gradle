@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
+apply plugin: 'org.sonarqube'
 
 android {
     compileSdkVersion 29
@@ -22,6 +23,21 @@ android {
         }
     }
 
+}
+
+// added for SonarQube
+sonarqube {
+    properties {
+        property "sonar.projectName", "CS4227-Project"
+        property "sonar.projectKey", "CS4227-Project"
+        property "sonar.host.url", "http://localhost:9000"
+        property "sonar.language", "java"
+        property "sonar.sources", "src/main/java"
+        property "sonar.java.sources", "src/main/java"
+        property "sonar.sourceEncoding", "UTF-8"
+        property "sonar.login", "admin"
+        property "sonar.password", "password"
+    }
 }
 
 dependencies {
