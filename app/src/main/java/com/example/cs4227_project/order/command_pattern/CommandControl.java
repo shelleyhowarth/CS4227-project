@@ -7,10 +7,6 @@ import java.util.ArrayList;
 public class CommandControl {
     private ArrayList<Command> commandList = new ArrayList<>();
 
-    public CommandControl(){
-
-    }
-
     public void addCommand(Command command){
         Log.d("STOCKS", "Adding command");
         commandList.add(command);

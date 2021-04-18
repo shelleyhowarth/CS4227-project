@@ -152,7 +152,7 @@ public class AddStockFragment extends Fragment implements View.OnClickListener {
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) throws NullPointerException {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null )
         {
@@ -161,7 +161,7 @@ public class AddStockFragment extends Fragment implements View.OnClickListener {
             Picasso.get().load(filePath).centerCrop().fit().into(userPicture);
         }
 
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK){
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK  && data != null){
             Log.d(LogTags.ADDSTOCK," checking activity");
             Bundle extras = data.getExtras();
             Bitmap photo = (Bitmap) extras.get("data");
@@ -177,8 +177,8 @@ public class AddStockFragment extends Fragment implements View.OnClickListener {
         Log.d(LogTags.ADDSTOCK,"get bitmap");
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
-        return Uri.parse(path);
+        String imagePath = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(imagePath);
     }
 
     public void validateGenderInput() {
@@ -240,9 +240,9 @@ public class AddStockFragment extends Fragment implements View.OnClickListener {
 
         if(productName.isEmpty()){
             pName.setError("Must have product name");
-        }else if(sizeQuantities.size() == 0){
+        } else if(sizeQuantities.size() == 0){
             Toast.makeText(getActivity(), "Product must contain stock", Toast.LENGTH_SHORT).show();
-        }else if(brandName == null || color == null || cost == null || productStyle == null){
+        } else if(brandName.equals("") || color.equals("") || cost.equals("") || productStyle.equals("")) {
             Toast.makeText(getActivity(), "All fields must be filled", Toast.LENGTH_SHORT).show();
         }else{
             createProduct(sizeQuantities, productName, color, brandName, cost, productStyle);

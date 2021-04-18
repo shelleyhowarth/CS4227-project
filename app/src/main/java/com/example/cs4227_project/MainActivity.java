@@ -168,7 +168,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     //Opens login fragment
-    public void goToLogIn(View v)
+    public void goToLogIn()
     {
         fragmentController.startFragment(new LogInFragment(), R.id.content, "login");
     }
@@ -226,7 +226,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         int i = v.getId();
         if (i == R.id.logInBtn) {
             if(logInButton.getText().equals(LOGIN)) {
-                goToLogIn(v);
+                goToLogIn();
             } else {
                 //Signs user out
                 mAuth.signOut();

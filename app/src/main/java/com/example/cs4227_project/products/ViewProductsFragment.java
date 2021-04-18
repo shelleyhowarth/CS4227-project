@@ -37,7 +37,7 @@ public class ViewProductsFragment extends Fragment implements AdapterView.OnItem
     private ProductDatabaseController db;
     private ArrayList<Product> products;
     private Map<FilterAttributes, Spinner> filterSpinners;
-    private static final String all = "All";
+    private static final String ALL = "All";
 
     public ViewProductsFragment() {
         // Required empty public constructor
@@ -78,7 +78,7 @@ public class ViewProductsFragment extends Fragment implements AdapterView.OnItem
             Spinner spinner = view.findViewById(attributeManager.getSpinnerId(attribute));
             spinner.setOnItemSelectedListener(this);
             List<String> values = new ArrayList<>();
-            values.add(all);
+            values.add(ALL);
             values.addAll(attributeManager.getAttributes(attribute));
             spinner.setAdapter(initSpinner(values));
             filterSpinners.put(attribute, spinner);
