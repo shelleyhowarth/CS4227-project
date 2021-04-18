@@ -8,7 +8,7 @@ import com.example.cs4227_project.database.AttributesReadListener;
 import com.example.cs4227_project.misc.FilterAttributes;
 import com.example.cs4227_project.misc.LogTags;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class AttributeManager implements AttributesReadListener {
@@ -44,7 +44,7 @@ public class AttributeManager implements AttributesReadListener {
     }
 
     //Returns an ArrayList String of a specified attribute
-    public ArrayList<String> getAttributes(FilterAttributes attribute) {
+    public List<String> getAttributes(FilterAttributes attribute) {
         switch (attribute) {
             case BRANDS:
                 return brands.getAttributes();

@@ -4,24 +4,24 @@ import android.util.Log;
 
 import com.example.cs4227_project.misc.LogTags;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
 public class Colours implements Attributes {
-    private HashMap<String,ArrayList<String>> colours = new HashMap<>();
+    private Map<String,List<String>> colours = new HashMap<>();
 
     public Colours() {}
 
     public Colours(Map<String,Object> data) {
         for (Map.Entry<String,Object> entry: data.entrySet()) {
-            colours.put(entry.getKey(), (ArrayList<String>) entry.getValue());
+            colours.put(entry.getKey(), (List<String>) entry.getValue());
         }
     }
 
     @Override
-    public ArrayList<String> getAttributes() {
+    public List<String> getAttributes() {
         String type = findProductType();
         return colours.get(type);
     }
@@ -45,7 +45,7 @@ public class Colours implements Attributes {
     }
 
     @Override
-    public void addAttributes(HashMap<String,ArrayList<String>>attributes) {
+    public void addAttributes(Map<String,List<String>>attributes) {
         colours = attributes;
     }
 

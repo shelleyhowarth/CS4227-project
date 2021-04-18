@@ -25,6 +25,7 @@ import com.example.cs4227_project.products.abstract_factory_pattern.Product;
 import com.example.cs4227_project.products.facade_pattern.AttributeManager;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,8 +45,7 @@ public class ViewProductsFragment extends Fragment implements AdapterView.OnItem
     }
 
     public static ViewProductsFragment newInstance(String param1, String param2) {
-        ViewProductsFragment fragment = new ViewProductsFragment();
-        return fragment;
+        return new ViewProductsFragment();
     }
 
     @Override
@@ -73,7 +73,7 @@ public class ViewProductsFragment extends Fragment implements AdapterView.OnItem
         recyclerView.setAdapter(adapter);
 
         //Loop through FilterAttributes and set up spinners for each filter
-        filterSpinners = new HashMap<>();
+        filterSpinners = new EnumMap<>(FilterAttributes.class);
         for(FilterAttributes attribute : FilterAttributes.values()) {
             Spinner spinner = view.findViewById(attributeManager.getSpinnerId(attribute));
             spinner.setOnItemSelectedListener(this);
@@ -147,7 +147,7 @@ public class ViewProductsFragment extends Fragment implements AdapterView.OnItem
         //updates the recycler view with the new list of products
         adapter = new ProductInterfaceAdapter(products);
         recyclerView.setAdapter(adapter);
-        if(products.size() == 0) {
+        if(products.isEmpty()) {
             Toast toast = Toast.makeText(getActivity(), "No products found", Toast.LENGTH_SHORT);
             toast.show();
         }

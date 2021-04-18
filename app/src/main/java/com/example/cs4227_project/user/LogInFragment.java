@@ -39,8 +39,7 @@ public class LogInFragment extends Fragment implements View.OnClickListener{
 
     public static LogInFragment newInstance()
     {
-        LogInFragment myFragment = new LogInFragment();
-        return myFragment;
+        return new LogInFragment();
     }
 
     @Override

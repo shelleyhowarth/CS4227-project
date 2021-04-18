@@ -6,24 +6,24 @@ import com.example.cs4227_project.misc.ProductType;
 import com.example.cs4227_project.misc.LogTags;
 import com.example.cs4227_project.products.ProductTypeController;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 public class Sizes implements Attributes {
-    private HashMap<String,ArrayList<String>> sizes = new HashMap<>();
+    private Map<String,List<String>> sizes = new HashMap<>();
 
     public Sizes() {}
 
     public Sizes(Map<String,Object> data) {
         for (Map.Entry<String,Object> entry: data.entrySet()) {
-            sizes.put(entry.getKey(), (ArrayList<String>) entry.getValue());
+            sizes.put(entry.getKey(), (List<String>) entry.getValue());
         }
     }
 
     @Override
-    public ArrayList<String> getAttributes() {
+    public List<String> getAttributes() {
         String type = findProductType();
         return sizes.get(type);
     }
@@ -47,7 +47,7 @@ public class Sizes implements Attributes {
     }
 
     @Override
-    public void addAttributes(HashMap<String,ArrayList<String>> attributes) {
+    public void addAttributes(Map<String,List<String>> attributes) {
         sizes = attributes;
     }
 

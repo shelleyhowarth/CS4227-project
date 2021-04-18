@@ -58,7 +58,8 @@ public class AddStockFragment extends Fragment implements View.OnClickListener {
     private ImageView userPicture;
     private String path;
     private EditText pName, size1, q1, size2, q2, size3, q3, price, colour, brand, style;
-    private RadioGroup genderGroup, categoryGroup;
+    private RadioGroup genderGroup;
+    private RadioGroup categoryGroup;
     private boolean female;
     private ProductType pType;
 

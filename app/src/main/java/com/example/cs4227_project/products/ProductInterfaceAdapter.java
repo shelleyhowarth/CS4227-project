@@ -1,5 +1,6 @@
 package com.example.cs4227_project.products;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -53,13 +54,14 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter implements Ada
     private ImageView imageViewProductPic;
     private CardView cardViewProduct;
     private Dialog productDialog;
-    private Button addBtn, addStock;
+    private Button addBtn;
+    private Button addStock;
     private String chosenSize;
     private Spinner size;
     private Product product;
     private Map<String, String> productSizeQuantities;
 
-    private StockDatabaseController stockDb;
+    private final StockDatabaseController stockDb;
     private  RecyclerView mRecyclerView;
 
     public ProductInterfaceAdapter(List<Product> products) {
@@ -93,12 +95,13 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter implements Ada
             addStock = itemView.findViewById(R.id.addStock);
         }
 
+        @SuppressLint("SetTextI18n")
         void bindView(int pos){
             final Product item = productList.get(pos);
             product = item;
             Log.d(LogTags.PRODUCT_INTERFACE_ADAPTER, "product: " + product.getId());
             textViewProductName.setText(item.getName());
-            textViewProductPrice.setText("€" + String.valueOf(item.getPrice()));
+            textViewProductPrice.setText("€" + item.getPrice());
             setPicture(imageViewProductPic, item);
 
             if(UserController.getUser() != null) {
@@ -121,6 +124,7 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter implements Ada
             addBtn = productDialog.findViewById(R.id.addToCart);
 
             cardViewProduct.setOnClickListener(new View.OnClickListener() {
+                @SuppressLint("SetTextI18n")
                 @Override
                 public void onClick(View productView) {
                     stockDb.getStockDoc(item.getId());
@@ -136,7 +140,7 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter implements Ada
                     size = productDialog.findViewById(R.id.spinner);
                     size.setOnItemSelectedListener(size.getOnItemSelectedListener());
                     textViewProductName.setText(item.getName());
-                    textViewProductPrice.setText("€" + String.valueOf(item.getPrice()));
+                    textViewProductPrice.setText("€" + item.getPrice());
                     setPicture(imageViewProductImage, item);
                     //Picasso.get().load(item.getImageURL()).fit().centerCrop().into(imageViewProductImage);
 
@@ -179,7 +183,7 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter implements Ada
             storageReference.child(path).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                 @Override
                 public void onSuccess(Uri uri) {
-                    Log.d(LogTags.PRODUCT_INTERFACE_ADAPTER, "SUCESS" + uri);
+                    Log.d(LogTags.PRODUCT_INTERFACE_ADAPTER, "SUCCESS" + uri);
                     Picasso.get().load(uri).fit().centerCrop().into(image);
                 }
             }).addOnFailureListener(new OnFailureListener() {
@@ -272,7 +276,7 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter implements Ada
     }
 
     public void setUpSpinner(){
-        List<String> sizes = new ArrayList<String>();
+        List<String> sizes = new ArrayList<>();
 
         //Add each size from the stock of the product into the arraylist and set as adapter
         for(Map.Entry<String, String> entry : productSizeQuantities.entrySet()){
