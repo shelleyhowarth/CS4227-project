@@ -1,5 +1,6 @@
 package com.example.cs4227_project.order.adapter_pattern;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -26,7 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OrderInterfaceAdapter extends RecyclerView.Adapter implements AdapterView.OnItemSelectedListener, OrderReadListener {
-    private  RecyclerView mRecyclerView;
     private List<Order> orderList;
     private TextView textViewOrderName;
     private TextView textViewOrderTime;
@@ -35,15 +35,15 @@ public class OrderInterfaceAdapter extends RecyclerView.Adapter implements Adapt
     private CardView cardViewOrder;
     private Dialog orderDialog;
     private Button undo;
-    private final OrderDatabaseController db = new OrderDatabaseController(this);
-    private List<String> products = new ArrayList<>();
+    private OrderDatabaseController db;
+    private List<String> products;
 
-    public OrderInterfaceAdapter(ArrayList<Order> orders) {
+    public OrderInterfaceAdapter(List<Order> orders) {
         Log.d(LogTags.CHECK_CARD, orders.toString());
         setOrderList(orders);
     }
 
-    public void setOrderList(ArrayList<? extends Order> orderList) {
+    public void setOrderList(List<? extends Order> orderList) {
         if (this.orderList == null){
             this.orderList = new ArrayList<>();
         }
@@ -55,6 +55,7 @@ public class OrderInterfaceAdapter extends RecyclerView.Adapter implements Adapt
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType){
+        db = new OrderDatabaseController(this);
         View itemView;
         orderDialog = new Dialog(parent.getContext());
 
@@ -77,13 +78,13 @@ public class OrderInterfaceAdapter extends RecyclerView.Adapter implements Adapt
             cardViewOrder = itemView.findViewById(R.id.orderCard);
         }
 
+        @SuppressLint("SetTextI18n")
         void bindView(int pos){
             final Order item = orderList.get(pos);
             ArrayList<Stock> stock = item.getProductInfo();
             db.getProduct(stock);
 
-
-            textViewOrderTotal.setText("€" + String.valueOf(item.getPrice()));
+            textViewOrderTotal.setText("€" + item.getPrice());
             textViewOrderTime.setText(item.getTime());
             orderDialog.setContentView(R.layout.order_detail_page);
             orderDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -100,13 +101,15 @@ public class OrderInterfaceAdapter extends RecyclerView.Adapter implements Adapt
 
 
                     textViewOrderName.setText("Name: " + item.getDetails().getCardName());
-                    textViewOrderTotal.setText("Total: " + "€" + String.valueOf(item.getPrice()));
+                    textViewOrderTotal.setText("Total: " + "€" + item.getPrice());
                     textViewOrderTime.setText("Date purchased: " + item.getTime());
                     int count = 1;
+                    StringBuilder builder = new StringBuilder();
                     for(String s: products) {
-                        descriptionText += count + ". " + s;
+                        builder.append(count).append(". ").append(s);
                         count++;
                     }
+                    descriptionText = builder.toString();
                     textViewOrderItems.setText("Products purchased: \n" + descriptionText);
                     textViewOrderAddress.setText("Address: " + item.getAddress());
 
@@ -141,7 +144,6 @@ public class OrderInterfaceAdapter extends RecyclerView.Adapter implements Adapt
     public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
 
-        mRecyclerView = recyclerView;
     }
 
     @Override

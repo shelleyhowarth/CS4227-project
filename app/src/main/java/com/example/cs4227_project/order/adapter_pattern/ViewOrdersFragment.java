@@ -11,11 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.cs4227_project.R;
-import com.example.cs4227_project.database.OrderDatabaseController;
 import com.example.cs4227_project.order.builder_pattern.Order;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -24,21 +24,15 @@ import java.util.ArrayList;
  */
 public class ViewOrdersFragment extends Fragment {
 
-    private RecyclerView recyclerView;
     private ArrayList<Order> allOrders;
-    private ArrayList<String> result = new ArrayList<>();
     private String userEmail;
-    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
-    private OrderInterfaceAdapter adapter;
-    private OrderDatabaseController db;
 
     public ViewOrdersFragment() {
         // Required empty public constructor
     }
 
     public static ViewOrdersFragment newInstance() {
-        ViewOrdersFragment fragment = new ViewOrdersFragment();
-        return fragment;
+        return new ViewOrdersFragment();
     }
 
     @Override
@@ -51,23 +45,23 @@ public class ViewOrdersFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_view_orders, container, false);
-
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
         userEmail = mAuth.getCurrentUser().getEmail();
 
-        recyclerView = view.findViewById(R.id.simpleRecyclerView);
+        RecyclerView recyclerView = view.findViewById(R.id.simpleRecyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
 
         allOrders = (ArrayList<Order>)getArguments().getSerializable("Orders");
-        ArrayList<Order> userOrders = getUserOrders();
-        adapter = new OrderInterfaceAdapter(userOrders);
+        List<Order> userOrders = getUserOrders();
+        OrderInterfaceAdapter adapter = new OrderInterfaceAdapter(userOrders);
         recyclerView.setAdapter(adapter);
 
         return view;
     }
 
-    public ArrayList<Order> getUserOrders() {
-        ArrayList<Order> filtered = new ArrayList<Order>();
+    public List<Order> getUserOrders() {
+        List<Order> filtered = new ArrayList<>();
         for(Order o : allOrders) {
             if (o.getEmail().equalsIgnoreCase(userEmail)) {
                 filtered.add(o);
