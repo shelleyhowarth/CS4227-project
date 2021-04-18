@@ -10,8 +10,6 @@ import android.widget.Button;
 import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.example.cs4227_project.database.OrderDatabaseController;
 import com.example.cs4227_project.database.OrderReadListener;
@@ -62,9 +60,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private User currentUser;
 
-    private final String login = "Log In";
-    private  final String logout = "Log Out";
-
+    private final String LOGIN = "Log In";
+    private final String LOGOUT = "Log Out";
+    private final String CARDSELECTED = "Card View Selected ";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,11 +136,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 Log.d(LogTags.GENDER_TAB, "Gender tab female is "+ProductTypeController.isFemale());
             }
+
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
+                // Method required for TabLayout.OnTabSelectedListener interface
             }
+
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
+                // Method required for TabLayout.OnTabSelectedListener interface
             }
         });
     }
@@ -151,11 +153,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void isLoggedIn() {
         FirebaseUser user = mAuth.getCurrentUser();
         if(user != null) {
-            logInButton.setText(logout);
+            logInButton.setText(LOGOUT);
             ordersButton.setEnabled(true);
             userDb.getUserDoc(user.getUid());
         } else {
-            logInButton.setText(login);
+            logInButton.setText(LOGIN);
             ordersButton.setEnabled(false);
         }
     }
@@ -227,7 +229,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         int i = v.getId();
         if (i == R.id.logInBtn) {
-            if(logInButton.getText().equals(login)) {
+            if(logInButton.getText().equals(LOGIN)) {
                 goToLogIn(v);
             } else {
                 //Signs user out
@@ -239,19 +241,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if(i == R.id.clothesButton){
             ProductTypeController.setType(ProductType.CLOTHES);
-            Log.d(LogTags.CHECK_CARD, "Card view selected " + ProductType.CLOTHES);
+            Log.d(LogTags.CHECK_CARD, CARDSELECTED + ProductType.CLOTHES);
             productDataC.getProductCollection();
         }
 
         if(i == R.id.accButton){
             ProductTypeController.setType(ProductType.ACCESSORIES);
-            Log.d(LogTags.CHECK_CARD, "Card view selected " + ProductType.ACCESSORIES);
+            Log.d(LogTags.CHECK_CARD, CARDSELECTED + ProductType.ACCESSORIES);
             productDataC.getProductCollection();
         }
 
         if(i == R.id.shoeButton) {
             ProductTypeController.setType(ProductType.SHOE);
-            Log.d(LogTags.CHECK_CARD, "Card view selected " + ProductType.SHOE);
+            Log.d(LogTags.CHECK_CARD, CARDSELECTED + ProductType.SHOE);
             productDataC.getProductCollection();
         }
 
