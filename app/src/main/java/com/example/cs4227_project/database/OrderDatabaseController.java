@@ -11,7 +11,6 @@ import com.example.cs4227_project.order.builderPattern.CustomerOrderBuilder;
 import com.example.cs4227_project.order.Cart;
 import com.example.cs4227_project.misc.LogTags;
 import com.example.cs4227_project.order.builderPattern.Order;
-import com.example.cs4227_project.products.abstractFactoryPattern.Product;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -24,7 +23,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class OrderDatabaseController {
@@ -42,23 +40,23 @@ public class OrderDatabaseController {
 
 
     public void addOrderToDB(Order order) {
-        db.POST("orders", order);
+        db.post("orders", order);
         cart.removeAllProductsFromCart();
     }
 
     public void addOrderToDB(Order order, String id) {
-        db.PUT("orders", id, order);
+        db.put("orders", id, order);
         cart.removeAllProductsFromCart();
     }
 
     public void deleteOrderFromDB(String id){
-        db.DELETE("orders", id);
+        db.delete("orders", id);
     }
 
     public void getOrderCollection() {
         orders.clear();
         //get reference to collection from database
-        CollectionReference colRef = db.GET("orders");
+        CollectionReference colRef = db.get("orders");
         colRef.get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -123,7 +121,7 @@ public class OrderDatabaseController {
             String collection = s.getType() + s.isFemale();
             String id = s.getId();
 
-            DocumentReference docRef = db.GET(collection, id);
+            DocumentReference docRef = db.get(collection, id);
             docRef.get()
                     .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                         @Override

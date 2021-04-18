@@ -30,13 +30,13 @@ public class UserDatabaseController {
     }
 
     public void addUserToDB(User user, String id) {
-        db.PUT("user", id, user);
+        db.put("user", id, user);
     }
 
     public void getUserCollection() {
         users.clear();
         //get reference to collection from database
-        CollectionReference colRef = db.GET("user");
+        CollectionReference colRef = db.get("user");
         colRef.get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -57,7 +57,7 @@ public class UserDatabaseController {
     }
 
     public void getUserDoc(String id){
-        DocumentReference docref = db.GET("user", id);
+        DocumentReference docref = db.get("user", id);
         docref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {

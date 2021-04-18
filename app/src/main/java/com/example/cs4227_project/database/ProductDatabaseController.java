@@ -41,15 +41,15 @@ public class ProductDatabaseController {
      * @param product
      */
     public void addProductToDB(Product product) {
-        db.POST(ProductTypeController.getType().getValue(), product);
+        db.post(ProductTypeController.getType().getValue(), product);
     }
 
     public void addProductToDB(String collection, Product product) {
-        db.POST(collection, product);
+        db.post(collection, product);
     }
 
     public void addProductToDB(String collection, String id, Product product) {
-        db.PUT(collection, id, product);
+        db.put(collection, id, product);
     }
     /**
      * Retrieves a collection from the database which it then reads into the data List
@@ -59,7 +59,7 @@ public class ProductDatabaseController {
         data.clear();
         createFactory();
         //get reference to collection from database
-        CollectionReference colRef = db.GET(ProductTypeController.getType().getValue()+ProductTypeController.isFemale());
+        CollectionReference colRef = db.get(ProductTypeController.getType().getValue()+ProductTypeController.isFemale());
         colRef.get()
             .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
@@ -87,7 +87,7 @@ public class ProductDatabaseController {
     public void getFilteredProducts(Map<String, Object> filters) {
         data.clear();
         createFactory();
-        Query filteredResults = db.GET(ProductTypeController.getType().getValue()+ProductTypeController.isFemale());
+        Query filteredResults = db.get(ProductTypeController.getType().getValue()+ProductTypeController.isFemale());
         String key;
         Object value;
         //for each filter pair in the filters map, perform a query on the database
@@ -129,7 +129,7 @@ public class ProductDatabaseController {
      * @param productId - id of the product to be deleted
      */
     public void removeProductFromDB(String productId) {
-        db.DELETE(ProductTypeController.getType().getValue(),productId);
+        db.delete(ProductTypeController.getType().getValue(),productId);
     }
 
     /**
@@ -140,7 +140,7 @@ public class ProductDatabaseController {
      * @param newValue - the new value
      */
     public void updateProductField(String productId, ProductDatabaseFields field, Object newValue) {
-        db.PATCH(ProductTypeController.getType().getValue(), productId, field.getValue(), newValue);
+        db.patch(ProductTypeController.getType().getValue(), productId, field.getValue(), newValue);
     }
 
     /**

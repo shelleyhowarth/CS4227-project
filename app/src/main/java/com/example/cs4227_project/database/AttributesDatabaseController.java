@@ -36,7 +36,7 @@ public class AttributesDatabaseController implements Serializable {
     public void getAttributeCollection() {
         data.clear();
         //get reference to collection from database
-        CollectionReference colRef = db.GET("productfilters");
+        CollectionReference colRef = db.get("productfilters");
         colRef.get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
