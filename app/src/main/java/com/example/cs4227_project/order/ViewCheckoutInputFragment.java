@@ -61,6 +61,8 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
     private CareTaker careTaker;
     private String orderId;
 
+    private static final String INVALID_ENTRY = "Invalid Entry";
+
     public ViewCheckoutInputFragment() {
         // Required empty public constructor
     }
@@ -129,7 +131,7 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
         double totalPrice = 0.0;
         ArrayList<Stock> productInfo = new ArrayList<>();
         for(Map.Entry<Product, Stock> entry: cart.getCart().entrySet()){
-            Log.d("ORDER", "Products to checkout =" + entry.getKey().toString());
+            Log.d(LogTags.ORDER, "Products to checkout =" + entry.getKey().toString());
             Map<String, String> sizeQ = entry.getValue().getSizeQuantity();
             Map.Entry<String,String> sizeEntry = sizeQ.entrySet().iterator().next();
             int quantity = Integer.parseInt(sizeEntry.getValue());
@@ -138,7 +140,7 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
             productInfo.add(entry.getValue());
         }
 
-        Log.d("STOCKS", "Cart List" + cartMap.toString());
+        Log.d(LogTags.ORDER, "Cart List" + cartMap.toString());
 
         Address address = new Address(texts.get(0), texts.get(1), texts.get(2));
         CardDetails cardDetails = new CardDetails(texts.get(4), texts.get(3), texts.get(6), texts.get(5));
@@ -168,7 +170,7 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
      * StockDatabaseController to retrieve docs from databse.
      */
     public void updateStock(){
-        Log.d("STOCKS", "Get Stock");
+        Log.d(LogTags.ORDER, "Get Stock");
         ArrayList<String> productIds = new ArrayList<>();
         for(Map.Entry<Product, Stock> entry: cartMap.entrySet()){
             String productId = entry.getKey().getId();
@@ -188,7 +190,7 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
     @Override
     public void stockCallback(String result){
         List<Stock> stock = stockDb.getStockArray();
-        Log.d("STOCKS", "Stocks in database " + stock.toString());
+        Log.d(LogTags.ORDER, "Stocks in database " + stock.toString());
         changeStock(stock);
     }
 
@@ -303,7 +305,7 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
         if(!(x.length() == 16)) {
             Toast.makeText(getActivity(), "Card Number must be 16 digits in length", Toast.LENGTH_SHORT).show();
             text.requestFocus();
-            text.setError("Invalid Entry");
+            text.setError(INVALID_ENTRY);
             valid = false;
         }
         return valid;
@@ -314,7 +316,7 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
         if(!(x.length() == 3)) {
             Toast.makeText(getActivity(), "CVV must be 3 digits in length", Toast.LENGTH_SHORT).show();
             text.requestFocus();
-            text.setError("Invalid Entry");
+            text.setError(INVALID_ENTRY);
             valid = false;
         }
         return valid;
@@ -328,7 +330,7 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
             e.printStackTrace();
             Toast.makeText(getActivity(), "The expiry date format is wrong", Toast.LENGTH_SHORT).show();
             text.requestFocus();
-            text.setError("Invalid Entry");
+            text.setError(INVALID_ENTRY);
             valid = false;
         }
         return valid;
@@ -355,6 +357,10 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
 
     @Override
     public void execute(InterceptorContext context) {
-
+        Log.d(LogTags.INTERCEPTOR, "executing target");
+        switch (context.getMessage()) {
+            default:
+                Log.d(LogTags.INTERCEPTOR, "no request found under \""+context.getMessage()+"\"");
+        }
     }
 }
