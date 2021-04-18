@@ -137,6 +137,8 @@ public class ViewCartFragment extends Fragment implements Target {
         switch (context.getMessage()) {
             case "You must be logged-in to purchase products!":
                 goToCheckout();
+            default:
+                Log.d(LogTags.INTERCEPTOR, "no request found under \""+context.getMessage()+"\"");
         }
     }
 }
