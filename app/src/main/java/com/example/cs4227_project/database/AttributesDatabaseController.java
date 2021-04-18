@@ -5,11 +5,11 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.example.cs4227_project.misc.LogTags;
-import com.example.cs4227_project.products.facadePattern.Attributes;
-import com.example.cs4227_project.products.facadePattern.Brands;
-import com.example.cs4227_project.products.facadePattern.Colours;
-import com.example.cs4227_project.products.facadePattern.Sizes;
-import com.example.cs4227_project.products.facadePattern.Styles;
+import com.example.cs4227_project.products.facade_pattern.Attributes;
+import com.example.cs4227_project.products.facade_pattern.Brands;
+import com.example.cs4227_project.products.facade_pattern.Colours;
+import com.example.cs4227_project.products.facade_pattern.Sizes;
+import com.example.cs4227_project.products.facade_pattern.Styles;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;

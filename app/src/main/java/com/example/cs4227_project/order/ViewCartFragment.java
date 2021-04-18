@@ -15,17 +15,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cs4227_project.R;
-import com.example.cs4227_project.interceptorPattern.dispatchers.PostMarshallDispatcher;
-import com.example.cs4227_project.interceptorPattern.InterceptorApplication;
-import com.example.cs4227_project.interceptorPattern.InterceptorContext;
-import com.example.cs4227_project.interceptorPattern.InterceptorFramework;
-import com.example.cs4227_project.interceptorPattern.Target;
-import com.example.cs4227_project.interceptorPattern.interceptors.LogInAuthenticationInterceptor;
-import com.example.cs4227_project.interceptorPattern.interceptors.LoggingInterceptor;
+import com.example.cs4227_project.interceptor_pattern.dispatchers.PostMarshallDispatcher;
+import com.example.cs4227_project.interceptor_pattern.InterceptorApplication;
+import com.example.cs4227_project.interceptor_pattern.InterceptorContext;
+import com.example.cs4227_project.interceptor_pattern.InterceptorFramework;
+import com.example.cs4227_project.interceptor_pattern.Target;
+import com.example.cs4227_project.interceptor_pattern.interceptors.LogInAuthenticationInterceptor;
+import com.example.cs4227_project.interceptor_pattern.interceptors.LoggingInterceptor;
 import com.example.cs4227_project.misc.FragmentController;
 import com.example.cs4227_project.misc.LogTags;
-import com.example.cs4227_project.order.commandPattern.Stock;
-import com.example.cs4227_project.products.abstractFactoryPattern.Product;
+import com.example.cs4227_project.order.command_pattern.Stock;
+import com.example.cs4227_project.products.abstract_factory_pattern.Product;
 import com.example.cs4227_project.products.ProductInterfaceAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 

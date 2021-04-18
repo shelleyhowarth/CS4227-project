@@ -5,9 +5,9 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.example.cs4227_project.misc.LogTags;
-import com.example.cs4227_project.products.abstractFactoryPattern.AbstractFactory;
-import com.example.cs4227_project.products.abstractFactoryPattern.FactoryProducer;
-import com.example.cs4227_project.products.abstractFactoryPattern.Product;
+import com.example.cs4227_project.products.abstract_factory_pattern.AbstractFactory;
+import com.example.cs4227_project.products.abstract_factory_pattern.FactoryProducer;
+import com.example.cs4227_project.products.abstract_factory_pattern.Product;
 import com.example.cs4227_project.misc.ProductDatabaseFields;
 import com.example.cs4227_project.products.ProductTypeController;
 import com.google.android.gms.tasks.OnCompleteListener;

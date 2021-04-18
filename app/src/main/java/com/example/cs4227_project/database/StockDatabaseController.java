@@ -5,7 +5,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.example.cs4227_project.misc.LogTags;
-import com.example.cs4227_project.order.commandPattern.Stock;
+import com.example.cs4227_project.order.command_pattern.Stock;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
@@ -86,7 +86,7 @@ public class StockDatabaseController {
      * @author Aine Reynolds
      * @param ids - list of the document ids that are wanted.
      */
-    public void getStockDocs(final ArrayList<String> ids){
+    public void getStockDocs(final List<String> ids){
         stockList.clear();
         for(String id : ids){
             DocumentReference docRef = db.get(STOCK, id);

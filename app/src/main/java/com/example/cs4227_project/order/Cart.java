@@ -1,7 +1,7 @@
 package com.example.cs4227_project.order;
 
-import com.example.cs4227_project.order.commandPattern.Stock;
-import com.example.cs4227_project.products.abstractFactoryPattern.Product;
+import com.example.cs4227_project.order.command_pattern.Stock;
+import com.example.cs4227_project.products.abstract_factory_pattern.Product;
 
 import java.util.ArrayList;
 import java.util.HashMap;

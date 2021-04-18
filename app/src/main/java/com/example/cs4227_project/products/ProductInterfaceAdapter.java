@@ -1,7 +1,6 @@
 package com.example.cs4227_project.products;
 
 import android.app.Dialog;
-import android.content.ContextWrapper;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -30,17 +29,15 @@ import com.example.cs4227_project.database.StockDatabaseController;
 import com.example.cs4227_project.database.StockReadListener;
 import com.example.cs4227_project.misc.LogTags;
 import com.example.cs4227_project.R;
-import com.example.cs4227_project.order.commandPattern.Stock;
+import com.example.cs4227_project.order.command_pattern.Stock;
 import com.example.cs4227_project.order.Cart;
-import com.example.cs4227_project.order.commandPattern.UpdateStockFragment;
+import com.example.cs4227_project.order.command_pattern.UpdateStockFragment;
 import com.example.cs4227_project.user.UserController;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.example.cs4227_project.order.commandPattern.Stock;
-import com.example.cs4227_project.order.Cart;
-import com.example.cs4227_project.products.abstractFactoryPattern.Product;
+import com.example.cs4227_project.products.abstract_factory_pattern.Product;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
