@@ -118,7 +118,7 @@ public class OrderDatabaseController {
         return orders;
     }
 
-    public void getProduct(ArrayList<Stock> arr) {
+    public void getProduct(List<Stock> arr) {
         for(Stock s: arr) {
             String collection = s.getType() + s.isFemale();
             String id = s.getId();
