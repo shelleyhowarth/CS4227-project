@@ -136,7 +136,7 @@ public class StockDatabaseController {
      * Converts Map into stock object
      * @author Aine Reynolds
      * @param stock - the map that was retrieved from the database
-     * @returns Stock object.
+     * @return Stock object.
      */
     public Stock getStock(Map<String, Object> stock) {
         Stock s = new Stock((String)stock.get("id"), (HashMap<String, String>)stock.get("sizeQuantity"), (String)stock.get("type"), (boolean)stock.get("female"));
