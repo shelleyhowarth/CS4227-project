@@ -11,10 +11,9 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.io.Serializable;
 import java.util.Map;
 
-public class Database implements Serializable {
+public class Database {
     private static Database instance = null;
     private final FirebaseFirestore db;
 

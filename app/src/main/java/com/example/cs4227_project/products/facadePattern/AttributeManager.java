@@ -8,7 +8,6 @@ import com.example.cs4227_project.database.AttributesReadListener;
 import com.example.cs4227_project.misc.FilterAttributes;
 import com.example.cs4227_project.misc.LogTags;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Map;
 
