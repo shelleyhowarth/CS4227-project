@@ -3,10 +3,11 @@ package com.example.cs4227_project.order.builder_pattern;
 import com.example.cs4227_project.order.command_pattern.Stock;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Order{
 
-    public ArrayList<Stock> productInfo;
+    public List<Stock> productInfo;
     public Address address;
     public CardDetails details;
     public String email;
@@ -22,7 +23,7 @@ public class Order{
         this.time ="";
     }
 
-    public ArrayList<Stock> getProductInfo() {
+    public List<Stock> getProductInfo() {
         return productInfo;
     }
 
