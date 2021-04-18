@@ -23,14 +23,15 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class OrderDatabaseController {
-    private Database db = Database.getInstance();
-    private Cart cart = Cart.getInstance();
-    private ArrayList<Order> orders = new ArrayList<>();
+    private final Database db = Database.getInstance();
+    private final Cart cart = Cart.getInstance();
+    private final ArrayList<Order> orders = new ArrayList<>();
     private OrderReadListener myEventL;
-    private ArrayList<String> descStrings = new ArrayList<>();
+    private final ArrayList<String> descStrings = new ArrayList<>();
 
     public OrderDatabaseController() {}
 
@@ -102,8 +103,7 @@ public class OrderDatabaseController {
         builder.setPrice((double)order.get("price"));
         builder.setTime();
 
-        Order o = builder.getOrder();
-        return o;
+        return builder.getOrder();
     }
 
     public void readOrderIntoList(QueryDocumentSnapshot document) {
@@ -112,7 +112,7 @@ public class OrderDatabaseController {
         orders.add(o);
     }
 
-    public ArrayList<Order> getAllOrders() {
+    public List<Order> getAllOrders() {
         return orders;
     }
 
@@ -151,6 +151,6 @@ public class OrderDatabaseController {
         Log.d("desc", descStrings.toString());
     }
 
-    public ArrayList<String> getDescStrings() { return descStrings;}
+    public List<String> getDescStrings() { return descStrings;}
 
 }

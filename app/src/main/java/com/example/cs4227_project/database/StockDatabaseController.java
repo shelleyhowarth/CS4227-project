@@ -19,8 +19,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class StockDatabaseController {
-    private Database db = Database.getInstance();
-    private ArrayList<Stock> stock = new ArrayList<>();
+    private final Database db = Database.getInstance();
+    private final ArrayList<Stock> stock = new ArrayList<>();
     private StockReadListener stockL;
     private Stock stockItem;
 
@@ -84,12 +84,12 @@ public class StockDatabaseController {
     public void getStockDocs(final ArrayList<String> ids){
         stock.clear();
         for(String id : ids){
-            DocumentReference docref = db.get("stock", id);
-            docref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            DocumentReference docRef = db.get("stock", id);
+            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                     if (task.isSuccessful()) {
-                        DocumentSnapshot document = document = task.getResult();
+                        DocumentSnapshot document = task.getResult();
                         if (document.exists()) {
                             Stock s = getStock(document.getData());
                             stock.add(s);
@@ -107,12 +107,12 @@ public class StockDatabaseController {
     }
 
     public void getStockDoc(String id){
-        DocumentReference docref = db.get("stock", id);
-        docref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        DocumentReference docRef = db.get("stock", id);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                     if (task.isSuccessful()) {
-                        DocumentSnapshot document = document = task.getResult();
+                        DocumentSnapshot document = task.getResult();
                         if (document.exists()) {
                             Stock s = getStock(document.getData());
                             stockItem = s;
@@ -132,11 +132,9 @@ public class StockDatabaseController {
      * Converts Map into stock object
      * @author Aine Reynolds
      * @param stock - the map that was retrieved from the database
-     * @returns Stock object.
      */
     public Stock getStock(Map<String, Object> stock) {
-        Stock s = new Stock((String)stock.get("id"), (HashMap<String, String>)stock.get("sizeQuantity"), (String)stock.get("type"), (boolean)stock.get("female"));
-        return s;
+        return new Stock((String)stock.get("id"), (HashMap<String, String>)stock.get("sizeQuantity"), (String)stock.get("type"), (boolean)stock.get("female"));
     }
 
     /**
