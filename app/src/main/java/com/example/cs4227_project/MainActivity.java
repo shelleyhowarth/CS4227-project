@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //ui elements
     private Button logInButton;
     private Button ordersButton;
+    private Button stockButton;
     private ImageButton clothesButton;
     private ImageButton accButton;
     private ImageButton shoeButton;
@@ -88,6 +89,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Button cartButton = findViewById(R.id.cartBtn);
         ordersButton = findViewById(R.id.ordersBtn);
         genderTab = findViewById(R.id.genderTab);
+        stockButton = findViewById(R.id.stockBtn);
 
         //Load images for home screen
         loadImages();
@@ -99,6 +101,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         logInButton.setOnClickListener(this);
         cartButton.setOnClickListener(this);
         ordersButton.setOnClickListener(this);
+        stockButton.setOnClickListener(this);
 
         //Checking to see if user is logged in
         isLoggedIn();
@@ -114,16 +117,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void setUpView() {
-        Button addStockBtn = findViewById(R.id.stockBtn);
-        addStockBtn.setOnClickListener(this);
-        if(currentUser != null){
-            if(currentUser.isAdmin()){
-                addStockBtn.setVisibility(View.VISIBLE);
-            }
-        }else{
-            addStockBtn.setVisibility(View.INVISIBLE);
-        }
-
+        isLoggedIn();
         genderTab.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -150,10 +144,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if(user != null) {
             logInButton.setText(LOGOUT);
             ordersButton.setEnabled(true);
-            userDb.getUserDoc(user.getUid());
+            if(currentUser == null) {
+                userDb.getUserDoc(user.getUid());
+            }
         } else {
             logInButton.setText(LOGIN);
             ordersButton.setEnabled(false);
+            currentUser = null;
+            stockButton.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    private void isAdmin() {
+        if(currentUser.isAdmin()) {
+            stockButton.setVisibility(View.VISIBLE);
+        }
+        else {
+            stockButton.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -192,6 +199,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         User user = userDb.getSingleUser();
         UserController.setUser(user);
         currentUser = UserController.getUser();
+        isAdmin();
         setUpView();
     }
 
