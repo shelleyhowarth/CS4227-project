@@ -361,6 +361,7 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
         switch (context.getMessage()) {
             default:
                 Log.d(LogTags.INTERCEPTOR, "no request found under \""+context.getMessage()+"\"");
+                break;
         }
     }
 }
