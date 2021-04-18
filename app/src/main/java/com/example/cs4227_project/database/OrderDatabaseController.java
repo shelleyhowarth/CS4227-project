@@ -32,6 +32,8 @@ public class OrderDatabaseController {
     private OrderReadListener myEventL;
     private ArrayList<String> descStrings = new ArrayList<>();
 
+    private static final String sORDER = "orders";
+
     public OrderDatabaseController() {}
 
     public OrderDatabaseController(OrderReadListener ml){
@@ -40,23 +42,23 @@ public class OrderDatabaseController {
 
 
     public void addOrderToDB(Order order) {
-        db.post("orders", order);
+        db.post(sORDER, order);
         cart.removeAllProductsFromCart();
     }
 
     public void addOrderToDB(Order order, String id) {
-        db.put("orders", id, order);
+        db.put(sORDER, id, order);
         cart.removeAllProductsFromCart();
     }
 
     public void deleteOrderFromDB(String id){
-        db.delete("orders", id);
+        db.delete(sORDER, id);
     }
 
     public void getOrderCollection() {
         orders.clear();
         //get reference to collection from database
-        CollectionReference colRef = db.get("orders");
+        CollectionReference colRef = db.get(sORDER);
         colRef.get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
