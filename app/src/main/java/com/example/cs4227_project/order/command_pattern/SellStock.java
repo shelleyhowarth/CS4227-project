@@ -23,8 +23,6 @@ public class SellStock implements Command {
         this.sizesQ = abcStock.getSizeQuantity();
         int val = Integer.parseInt(sizesQ.get(size));
         sizesQ.put(size, Integer.toString(val-quantity));
-        //abcStock.setSizeQuantity(sizesQ);
-        //Log.d("STOCKS", "update db for " + abcStock.getId());
     }
 
     public void execute() {

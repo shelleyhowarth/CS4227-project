@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -28,13 +27,10 @@ import java.util.List;
 
 public class OrderInterfaceAdapter extends RecyclerView.Adapter implements AdapterView.OnItemSelectedListener, OrderReadListener {
     private List<Order> orderList;
-    private TextView textViewOrderName;
     private TextView textViewOrderTime;
     private TextView textViewOrderTotal;
-    private TextView textViewOrderItems;
     private CardView cardViewOrder;
     private Dialog orderDialog;
-    private Button undo;
     private OrderDatabaseController db;
     private List<String> products;
 
@@ -71,10 +67,10 @@ public class OrderInterfaceAdapter extends RecyclerView.Adapter implements Adapt
     class OrderHolder extends RecyclerView.ViewHolder{
         public OrderHolder(View itemView) {
             super(itemView);
-            textViewOrderName = itemView.findViewById(R.id.orderName);
+            TextView textViewOrderName = itemView.findViewById(R.id.orderName);
             textViewOrderTime = itemView.findViewById(R.id.orderTime);
             textViewOrderTotal = itemView.findViewById(R.id.orderTotal);
-            textViewOrderItems = itemView.findViewById(R.id.orderItems);
+            TextView textViewOrderItems = itemView.findViewById(R.id.orderItems);
             cardViewOrder = itemView.findViewById(R.id.orderCard);
         }
 

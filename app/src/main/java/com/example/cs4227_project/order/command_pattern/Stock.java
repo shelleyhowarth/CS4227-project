@@ -1,5 +1,8 @@
 package com.example.cs4227_project.order.command_pattern;
 
+import android.util.Log;
+
+import com.example.cs4227_project.misc.LogTags;
 import com.example.cs4227_project.order.memento_pattern.Memento;
 
 import java.util.Map;
@@ -22,12 +25,12 @@ public class Stock {
 
     //For admin adding products to site
     public void addStock(){
-        System.out.println("Stock added");
+        Log.d(LogTags.ADDSTOCK, "Stock added");
     }
 
     // When customer buys products
     public void sell(){
-        System.out.println("Stock sold");
+        Log.d(LogTags.SELLSTOCK, "Stock sold");
     }
 
     public String getId() { return id; }

@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 
 import com.example.cs4227_project.R;
 import com.example.cs4227_project.database.OrderDatabaseController;
@@ -26,6 +27,7 @@ import com.example.cs4227_project.interceptor_pattern.InterceptorContext;
 import com.example.cs4227_project.interceptor_pattern.InterceptorFramework;
 import com.example.cs4227_project.interceptor_pattern.Target;
 import com.example.cs4227_project.interceptor_pattern.interceptors.LoggingInterceptor;
+import com.example.cs4227_project.misc.FragmentController;
 import com.example.cs4227_project.misc.LogTags;
 import com.example.cs4227_project.order.builder_pattern.Address;
 import com.example.cs4227_project.order.builder_pattern.CardDetails;
@@ -75,7 +77,7 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
     @Deprecated
     @Override
     public void onAttach(Activity activity) {
-        myContext=(FragmentActivity) activity;
+        myContext= (FragmentActivity) activity;
         super.onAttach(activity);
     }
 
@@ -339,7 +341,8 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
     }
 
     public void popBackToHome() {
-        myContext.getSupportFragmentManager().popBackStack(null, myContext.getSupportFragmentManager().POP_BACK_STACK_INCLUSIVE);
+        FragmentController fragmentController = FragmentController.getInstance();
+        fragmentController.getCurrentFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
 
     public void setUpInterceptor() {

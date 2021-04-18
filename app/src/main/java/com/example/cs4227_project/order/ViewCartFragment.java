@@ -26,7 +26,6 @@ import com.example.cs4227_project.misc.LogTags;
 import com.example.cs4227_project.order.command_pattern.Stock;
 import com.example.cs4227_project.products.abstract_factory_pattern.Product;
 import com.example.cs4227_project.products.ProductInterfaceAdapter;
-import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +35,6 @@ public class ViewCartFragment extends Fragment implements Target {
     private final Cart cart = Cart.getInstance();
     private RecyclerView recyclerView;
     private ProductInterfaceAdapter adapter;
-    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private InterceptorApplication interceptorApplication;
 
     public ViewCartFragment() {
@@ -45,12 +43,6 @@ public class ViewCartFragment extends Fragment implements Target {
 
     public static ViewCartFragment newInstance() {
         return new ViewCartFragment();
-    }
-
-    @Deprecated
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
     }
 
     @Override
@@ -112,9 +104,9 @@ public class ViewCartFragment extends Fragment implements Target {
 
     public void refreshCart(){
         //updates the recycler view with the empty cart
-        Cart cart = Cart.getInstance();
+        Cart newCart = Cart.getInstance();
         List<Product> products = new ArrayList<>();
-        products = cart.productArrayList(products);
+        products = newCart.productArrayList(products);
         adapter = new ProductInterfaceAdapter(products);
         recyclerView.setAdapter(adapter);
         if(products.isEmpty()) {

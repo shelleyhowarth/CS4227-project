@@ -22,6 +22,7 @@ public class LogTags {
     public static final String INTERCEPTOR = "INTERCEPTOR";
     public static final String FRAGMENT_CONTROLLER = "FRAGMENT_CONTROLLER";
     public static final String ADDSTOCK = "ADDSTOCK";
+    public static final String SELLSTOCK = "SELLSTOCK";
     public static final String PRODUCT_INTERFACE_ADAPTER = "ProductInterfaceAdapter";
 
     private LogTags() {
