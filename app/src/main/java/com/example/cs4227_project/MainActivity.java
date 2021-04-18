@@ -44,7 +44,6 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, ProductReadListener, OrderReadListener, UserReadListener {
     //ui elements
     private Button logInButton;
-    private Button cartButton;
     private Button ordersButton;
     private ImageButton clothesButton;
     private ImageButton accButton;
@@ -85,12 +84,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         accButton = findViewById(R.id.accButton);
         shoeButton = findViewById(R.id.shoeButton);
         logInButton = findViewById(R.id.logInBtn);
-        cartButton = findViewById(R.id.cartBtn);
+        Button cartButton = findViewById(R.id.cartBtn);
         ordersButton = findViewById(R.id.ordersBtn);
         genderTab = findViewById(R.id.genderTab);
 
         //Load images for home screen
-        LoadImages();
+        loadImages();
 
         //Listeners
         clothesButton.setOnClickListener(this);
@@ -128,12 +127,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 int mSelectedPosition = genderTab.getSelectedTabPosition();
-                if(mSelectedPosition == 0) {
-                    ProductTypeController.setFemale(true);
-                }
-                else  {
-                    ProductTypeController.setFemale(false);
-                }
+                ProductTypeController.setFemale(mSelectedPosition == 0);
                 Log.d(LogTags.GENDER_TAB, "Gender tab female is "+ProductTypeController.isFemale());
             }
 
@@ -162,7 +156,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private void LoadImages(){
+    private void loadImages(){
         //Load Image
         String clothesUrl = "https://firebasestorage.googleapis.com/v0/b/system-analysis-6716f.appspot.com/o/Product%20Pics%2FTops%2Fjeans.jpg?alt=media&token=670863da-1f9f-427f-833c-cfc1f2c4b6a9";
         String accUrl = "https://firebasestorage.googleapis.com/v0/b/system-analysis-6716f.appspot.com/o/Product%20Pics%2FTops%2Fhandbag.jpg?alt=media&token=c304abaf-fe0b-4703-8488-2e8140d9a78f";
@@ -210,7 +204,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void goToCart(){
         Cart cart = Cart.getInstance();
-        ArrayList<Product> products = cart.productArrayList(new ArrayList<Product>());
+        ArrayList<Product> products = new ArrayList<>();
+        products = cart.productArrayList(products);
         ArrayList<Product> alProd = new ArrayList<>(products.size());
         alProd.addAll(products);
         Bundle bundle = new Bundle();
