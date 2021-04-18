@@ -59,9 +59,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private User currentUser;
 
-    private final String LOGIN = "Log In";
-    private final String LOGOUT = "Log Out";
-    private final String CARDSELECTED = "Card View Selected ";
+    private static final String LOGIN = "Log In";
+    private static final String LOGOUT = "Log Out";
+    private static final String CARDSELECTED = "Card View Selected ";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
