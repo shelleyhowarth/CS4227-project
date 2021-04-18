@@ -33,7 +33,7 @@ public class OrderDatabaseController {
     private OrderReadListener myEventL;
     private final ArrayList<String> descStrings = new ArrayList<>();
 
-    private static final String sORDER = "orders";
+    private static final String ORDER = "orders";
 
     public OrderDatabaseController() {}
 
@@ -43,23 +43,23 @@ public class OrderDatabaseController {
 
 
     public void addOrderToDB(Order order) {
-        db.post(sORDER, order);
+        db.post(ORDER, order);
         cart.removeAllProductsFromCart();
     }
 
     public void addOrderToDB(Order order, String id) {
-        db.put(sORDER, id, order);
+        db.put(ORDER, id, order);
         cart.removeAllProductsFromCart();
     }
 
     public void deleteOrderFromDB(String id){
-        db.delete(sORDER, id);
+        db.delete(ORDER, id);
     }
 
     public void getOrderCollection() {
         orders.clear();
         //get reference to collection from database
-        CollectionReference colRef = db.get(sORDER);
+        CollectionReference colRef = db.get(ORDER);
         colRef.get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override

@@ -29,6 +29,8 @@ public class OrderInterfaceAdapter extends RecyclerView.Adapter implements Adapt
     private List<Order> orderList;
     private TextView textViewOrderTime;
     private TextView textViewOrderTotal;
+    private TextView textViewOrderItems;
+    private TextView textViewOrderName;
     private CardView cardViewOrder;
     private Dialog orderDialog;
     private OrderDatabaseController db;
@@ -67,10 +69,10 @@ public class OrderInterfaceAdapter extends RecyclerView.Adapter implements Adapt
     class OrderHolder extends RecyclerView.ViewHolder{
         public OrderHolder(View itemView) {
             super(itemView);
-            TextView textViewOrderName = itemView.findViewById(R.id.orderName);
+            textViewOrderName = itemView.findViewById(R.id.orderName);
             textViewOrderTime = itemView.findViewById(R.id.orderTime);
             textViewOrderTotal = itemView.findViewById(R.id.orderTotal);
-            TextView textViewOrderItems = itemView.findViewById(R.id.orderItems);
+            textViewOrderItems = itemView.findViewById(R.id.orderItems);
             cardViewOrder = itemView.findViewById(R.id.orderCard);
         }
 
@@ -89,12 +91,11 @@ public class OrderInterfaceAdapter extends RecyclerView.Adapter implements Adapt
                 @Override
                 public void onClick(View productView) {
                     String descriptionText = "";
-                    TextView textViewOrderName = orderDialog.findViewById(R.id.orderName);
-                    TextView textViewOrderTime = orderDialog.findViewById(R.id.orderTime);
-                    TextView textViewOrderTotal = orderDialog.findViewById(R.id.orderTotal);
+                    textViewOrderName = orderDialog.findViewById(R.id.orderName);
+                    textViewOrderTime = orderDialog.findViewById(R.id.orderTime);
+                    textViewOrderTotal = orderDialog.findViewById(R.id.orderTotal);
                     TextView textViewOrderAddress = orderDialog.findViewById(R.id.orderAddress);
-                    TextView textViewOrderItems = orderDialog.findViewById(R.id.orderItems);
-
+                    textViewOrderItems = orderDialog.findViewById(R.id.orderItems);
 
                     textViewOrderName.setText("Name: " + item.getDetails().getCardName());
                     textViewOrderTotal.setText("Total: " + "€" + item.getPrice());

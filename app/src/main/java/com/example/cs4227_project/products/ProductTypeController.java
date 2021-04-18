@@ -6,6 +6,10 @@ public class ProductTypeController {
     private static ProductType type = ProductType.CLOTHES;
     private static boolean female = true;
 
+    private ProductTypeController() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static boolean isFemale() {
         return female;
     }

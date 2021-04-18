@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.example.cs4227_project.database.UserDatabaseController;
@@ -29,17 +28,11 @@ public class LogInFragment extends Fragment implements View.OnClickListener{
     private FirebaseAuth mAuth;
     private EditText mEmailField;
     private EditText mPasswordField;
-    private RelativeLayout layout;
     private UserDatabaseController userDb;
     private String bundleText;
 
     public LogInFragment() {
         // Required empty public constructor
-    }
-
-    public static LogInFragment newInstance()
-    {
-        return new LogInFragment();
     }
 
     @Override
@@ -60,9 +53,6 @@ public class LogInFragment extends Fragment implements View.OnClickListener{
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_log_in, container, false);
-
-        //Layout
-        layout = rootView.findViewById(R.id.fragment_log_in);
 
         //Text fields
         mEmailField = rootView.findViewById(R.id.fieldEmail);
@@ -109,13 +99,13 @@ public class LogInFragment extends Fragment implements View.OnClickListener{
             mPasswordField.setError(null);
         }
 
-        return valid;
+        return !valid;
     }
 
     //Method to register an account
     private void register(final String email, final String password) {
         //Checks credentials first
-        if (!validateForm(email, password)) {
+        if (validateForm(email, password)) {
             return;
         }
 
@@ -139,21 +129,16 @@ public class LogInFragment extends Fragment implements View.OnClickListener{
                 });
     }
 
-    //Creates document for user in the database;
+    //Creates document for user in the database
     public void createUserProfile(String id, String email){
         User user = new User(id, email, false);
         userDb.addUserToDB(user, id);
     }
 
-    //Hides fragment
-    public void closeFragment(View v) {
-        layout.setVisibility(v.INVISIBLE);
-    }
-
     //Firebase sign in method
     private void signIn(String email, String password) {
         //Checks credentials first
-        if (!validateForm(email, password)) {
+        if (validateForm(email, password)) {
             return;
         }
         mAuth.signInWithEmailAndPassword(email, password)

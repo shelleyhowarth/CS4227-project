@@ -8,6 +8,7 @@ import com.example.cs4227_project.database.AttributesReadListener;
 import com.example.cs4227_project.misc.FilterAttributes;
 import com.example.cs4227_project.misc.LogTags;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -55,7 +56,7 @@ public class AttributeManager implements AttributesReadListener {
             case STYLES:
                 return styles.getAttributes();
         }
-        return null;
+        return Collections.emptyList();
     }
 
     //returns ui id of spinner object for respective FilterAttribute

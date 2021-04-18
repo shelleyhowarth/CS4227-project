@@ -57,7 +57,7 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter implements Ada
     private Button addBtn;
     private Button addStock;
     private String chosenSize;
-    private Spinner size;
+    private Spinner sizeSpinner;
     private Product product;
     private Map<String, String> productSizeQuantities;
 
@@ -116,8 +116,6 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter implements Ada
                 addStock.setVisibility(View.INVISIBLE);
             }
 
-            //Picasso.get().load(item.getImageURL()).fit().centerCrop().into(imageViewProductPic);
-
             productDialog.setContentView(R.layout.product_detail_page);
             productDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
@@ -129,25 +127,24 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter implements Ada
                 public void onClick(View productView) {
                     stockDb.getStockDoc(item.getId());
                     Log.d(LogTags.PRODUCT_INTERFACE_ADAPTER, "getStockDoc: " + item.getId());
-                    TextView textViewProductName = productDialog.findViewById(R.id.productName);
-                    TextView textViewProductPrice = productDialog.findViewById(R.id.productPrice);
+                    textViewProductName = productDialog.findViewById(R.id.productName);
+                    textViewProductPrice = productDialog.findViewById(R.id.productPrice);
                     ImageView imageViewProductImage = productDialog.findViewById(R.id.productImage);
                     final EditText editQuantity = productDialog.findViewById(R.id.quantity);
 
                     addBtn = productDialog.findViewById(R.id.addToCart);
 
                     inCart(item);
-                    size = productDialog.findViewById(R.id.spinner);
-                    size.setOnItemSelectedListener(size.getOnItemSelectedListener());
+                    sizeSpinner = productDialog.findViewById(R.id.spinner);
+                    sizeSpinner.setOnItemSelectedListener(sizeSpinner.getOnItemSelectedListener());
                     textViewProductName.setText(item.getName());
                     textViewProductPrice.setText("€" + item.getPrice());
                     setPicture(imageViewProductImage, item);
-                    //Picasso.get().load(item.getImageURL()).fit().centerCrop().into(imageViewProductImage);
 
                     addBtn.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View productView) {
-                            chosenSize = size.getSelectedItem().toString();
+                            chosenSize = sizeSpinner.getSelectedItem().toString();
                             if(!(cart.inCart(item))) {
                                 String quantity = editQuantity.getText().toString();
                                 HashMap<String, String> sizeQ = new HashMap<>();
@@ -168,7 +165,6 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter implements Ada
                                 Toast.makeText(productDialog.getContext(), "Removed the item from cart", Toast.LENGTH_SHORT).show();
                                 refreshInstance(item);
                             }
-                            //size.setAdapter(setUpSpinner());
                         }
                     });
 
@@ -284,8 +280,8 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter implements Ada
             sizes.add(size);
         }
 
-        ArrayAdapter<String> aa = new ArrayAdapter(productDialog.getContext(), android.R.layout.simple_spinner_item, sizes);
+        ArrayAdapter<String> aa = new ArrayAdapter<>(productDialog.getContext(), android.R.layout.simple_spinner_item, sizes);
         aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        size.setAdapter(aa);
+        sizeSpinner.setAdapter(aa);
     }
 }

@@ -44,7 +44,7 @@ public class ViewProductsFragment extends Fragment implements AdapterView.OnItem
         // Required empty public constructor
     }
 
-    public static ViewProductsFragment newInstance(String param1, String param2) {
+    public static ViewProductsFragment newInstance() {
         return new ViewProductsFragment();
     }
 
@@ -120,8 +120,8 @@ public class ViewProductsFragment extends Fragment implements AdapterView.OnItem
         return view;
     }
 
-    private ArrayAdapter initSpinner(List<String> data) {
-        ArrayAdapter aa = new ArrayAdapter(getActivity(), android.R.layout.simple_spinner_item, data);
+    private ArrayAdapter<String> initSpinner(List<String> data) {
+        ArrayAdapter<String> aa = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, data);
         aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         return aa;
     }

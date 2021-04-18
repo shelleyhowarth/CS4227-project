@@ -10,27 +10,27 @@ import java.util.Map;
 import java.util.Objects;
 
 public class Brands implements Attributes {
-    private Map<String,List<String>> brands = new HashMap<>();
+    private Map<String,List<String>> brandsMap = new HashMap<>();
 
     public Brands() {}
 
     public Brands(Map<String,Object> data) {
         for (Map.Entry<String,Object> entry: data.entrySet()) {
-            brands.put(entry.getKey(), (List<String>) entry.getValue());
+            brandsMap.put(entry.getKey(), (List<String>) entry.getValue());
         }
     }
 
     @Override
     public List<String> getAttributes() {
         String type = findProductType();
-        return brands.get(type);
+        return brandsMap.get(type);
     }
 
     @Override
     public void removeAttribute(String attribute) {
         String type = findProductType();
-        if(Objects.requireNonNull(brands.get(type)).contains(attribute)) {
-            Objects.requireNonNull(brands.get(type)).remove(attribute);
+        if(Objects.requireNonNull(brandsMap.get(type)).contains(attribute)) {
+            Objects.requireNonNull(brandsMap.get(type)).remove(attribute);
             Log.d(LogTags.ATTRIBUTE_MANAGER,"Removed attribute from "+ findProductType()+" styles");
         }
     }
@@ -38,15 +38,15 @@ public class Brands implements Attributes {
     @Override
     public void addAttribute(String attribute) {
         String type = findProductType();
-        if(!(Objects.requireNonNull(brands.get(type)).contains(attribute))) {
-            Objects.requireNonNull(brands.get(type)).add(attribute);
+        if(!(Objects.requireNonNull(brandsMap.get(type)).contains(attribute))) {
+            Objects.requireNonNull(brandsMap.get(type)).add(attribute);
             Log.d(LogTags.ATTRIBUTE_MANAGER,"Added attribute to "+ findProductType()+" styles");
         }
     }
 
     @Override
     public void addAttributes(Map<String,List<String>> attributes) {
-        brands = attributes;
+        brandsMap = attributes;
     }
 
     @Override
