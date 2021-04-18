@@ -31,6 +31,8 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ViewCartFragment extends Fragment implements Target {
     private final Cart cart = Cart.getInstance();
@@ -82,7 +84,7 @@ public class ViewCartFragment extends Fragment implements Target {
             @Override
             public void onClick(View v) {
                 Log.d(LogTags.CHECK_CARD, "Preparing to check out cart");
-                HashMap<Product, Stock> products = cart.getCart();
+                Map<Product, Stock> products = cart.getCart();
                 if (products.isEmpty()){
                     Toast.makeText(getActivity(), "There are no items in your cart", Toast.LENGTH_LONG).show();
                     Log.d(LogTags.CHECK_CARD, "Failed to check out. No items currently in cart");
@@ -116,7 +118,7 @@ public class ViewCartFragment extends Fragment implements Target {
     public void refreshCart(){
         //updates the recycler view with the empty cart
         Cart cart = Cart.getInstance();
-        ArrayList<Product> products = cart.productArrayList(new ArrayList<Product>());
+        List<Product> products = cart.productArrayList(new ArrayList<Product>());
         adapter = new ProductInterfaceAdapter(products);
         recyclerView.setAdapter(adapter);
         if(products.size() == 0) {

@@ -63,7 +63,7 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter implements Ada
     private StockDatabaseController stockDb;
     private  RecyclerView mRecyclerView;
 
-    public ProductInterfaceAdapter(ArrayList<Product> products) {
+    public ProductInterfaceAdapter(List<Product> products) {
         Log.d(LogTags.CHECK_CARD, products.toString());
         setProductList(products);
         stockDb = new StockDatabaseController(this);
@@ -219,7 +219,7 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter implements Ada
         }
     }
 
-    public void setProductList(ArrayList<? extends Product> productList) {
+    public void setProductList(List<? extends Product> productList) {
         if (this.productList == null){
             this.productList = new ArrayList<>();
         }
@@ -250,7 +250,7 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter implements Ada
     }
 
     public void refreshInstance(Product item){
-        ArrayList<Product> products = new ArrayList<>(productList);
+        List<Product> products = new ArrayList<>(productList);
         ProductInterfaceAdapter adapter = new ProductInterfaceAdapter(products);
         mRecyclerView.setAdapter(adapter);
         stockDb.getStockDoc(product.getId());
