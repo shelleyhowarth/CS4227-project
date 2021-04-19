@@ -26,7 +26,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.cs4227_project.util.ProductTypeController;
+import com.example.cs4227_project.util.ui_controllers.ProductTypeController;
 import com.example.cs4227_project.util.database_controllers.StockDatabaseController;
 import com.example.cs4227_project.database.StockReadListener;
 import com.example.cs4227_project.util.LogTags;
@@ -34,7 +34,7 @@ import com.example.cs4227_project.R;
 import com.example.cs4227_project.order.command_pattern.Stock;
 import com.example.cs4227_project.order.Cart;
 import com.example.cs4227_project.order.command_pattern.UpdateStockFragment;
-import com.example.cs4227_project.util.UserController;
+import com.example.cs4227_project.util.ui_controllers.UserController;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;

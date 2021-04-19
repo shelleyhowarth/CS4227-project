@@ -1,4 +1,4 @@
-package com.example.cs4227_project.util;
+package com.example.cs4227_project.util.ui_controllers;
 
 import com.example.cs4227_project.user.User;
 
