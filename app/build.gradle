@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'org.sonarqube'
+apply plugin: 'jacoco'
 
 android {
     compileSdkVersion 29
@@ -21,8 +22,23 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+        debug {
+            testCoverageEnabled = true
+        }
     }
 
+    testOptions {
+        unitTests.all {
+            jacoco {
+                includeNoLocationClasses = true
+            }
+        }
+    }
+
+}
+
+jacoco {
+    version "0.7.1.201405082137"
 }
 
 // added for SonarQube
@@ -37,6 +53,8 @@ sonarqube {
         property "sonar.sourceEncoding", "UTF-8"
         property "sonar.login", "admin"
         property "sonar.password", "password"
+        property "sonar.java.coveragePlugin", "jacoco"
+        property "sonar.coverage.jacoco.xmlReportPaths", "${project.buildDir}/reports/coverage/debug/report.xml"
     }
 }
 
