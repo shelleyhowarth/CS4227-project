@@ -41,6 +41,11 @@ public class CustomerOrderBuilder implements OrderBuilder {
         order.time = sfd.format(timeNow);
     }
 
+    public void setTime(String time) {
+        order.time = time;
+    }
+
+
     public Order getOrder() {
         return order;
     }
