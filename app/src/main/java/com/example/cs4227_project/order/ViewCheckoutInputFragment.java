@@ -42,6 +42,7 @@ import com.example.cs4227_project.products.abstract_factory_pattern.Product;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -141,6 +142,9 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
             cartMap.put(entry.getKey(), entry.getValue());
             productInfo.add(entry.getValue());
         }
+
+        DecimalFormat df2 = new DecimalFormat("#####.##");
+        totalPrice = Double.parseDouble(df2.format(totalPrice));
 
         Log.d(LogTags.ORDER, "Cart List" + cartMap.toString());
 
