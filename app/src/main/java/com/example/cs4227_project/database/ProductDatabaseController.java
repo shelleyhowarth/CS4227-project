@@ -5,9 +5,9 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.example.cs4227_project.misc.LogTags;
-import com.example.cs4227_project.products.abstractFactoryPattern.AbstractFactory;
-import com.example.cs4227_project.products.abstractFactoryPattern.FactoryProducer;
-import com.example.cs4227_project.products.abstractFactoryPattern.Product;
+import com.example.cs4227_project.products.abstract_factory_pattern.AbstractFactory;
+import com.example.cs4227_project.products.abstract_factory_pattern.FactoryProducer;
+import com.example.cs4227_project.products.abstract_factory_pattern.Product;
 import com.example.cs4227_project.misc.ProductDatabaseFields;
 import com.example.cs4227_project.products.ProductTypeController;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -27,6 +27,8 @@ public class ProductDatabaseController {
     private ProductReadListener myEventL;
     private AbstractFactory productFactory;
 
+    private static final String NUMOFPRODUCTS = "Number of products: ";
+
     public ProductDatabaseController(){
 
     }
@@ -38,18 +40,18 @@ public class ProductDatabaseController {
     /**
      * Adds a product to the selected product collection in the db
      * @author Carla Warde
-     * @param product
+     * @param product - product to add to db
      */
     public void addProductToDB(Product product) {
-        db.POST(ProductTypeController.getType().getValue(), product);
+        db.post(ProductTypeController.getType().getValue(), product);
     }
 
     public void addProductToDB(String collection, Product product) {
-        db.POST(collection, product);
+        db.post(collection, product);
     }
 
     public void addProductToDB(String collection, String id, Product product) {
-        db.PUT(collection, id, product);
+        db.put(collection, id, product);
     }
     /**
      * Retrieves a collection from the database which it then reads into the data List
@@ -59,7 +61,7 @@ public class ProductDatabaseController {
         data.clear();
         createFactory();
         //get reference to collection from database
-        CollectionReference colRef = db.GET(ProductTypeController.getType().getValue()+ProductTypeController.isFemale());
+        CollectionReference colRef = db.get(ProductTypeController.getType().getValue()+ProductTypeController.isFemale());
         colRef.get()
             .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
@@ -71,7 +73,7 @@ public class ProductDatabaseController {
                             readProductIntoList(document);
                         }
                         myEventL.productCallback("success");
-                        Log.d(LogTags.DB_GET, "Number of products: " +data.size());
+                        Log.d(LogTags.DB_GET, NUMOFPRODUCTS +data.size());
                     } else {
                         Log.d(LogTags.DB_GET, "Error getting documents: ", task.getException());
                     }
@@ -87,7 +89,7 @@ public class ProductDatabaseController {
     public void getFilteredProducts(Map<String, Object> filters) {
         data.clear();
         createFactory();
-        Query filteredResults = db.GET(ProductTypeController.getType().getValue()+ProductTypeController.isFemale());
+        Query filteredResults = db.get(ProductTypeController.getType().getValue()+ProductTypeController.isFemale());
         String key;
         Object value;
         //for each filter pair in the filters map, perform a query on the database
@@ -115,7 +117,7 @@ public class ProductDatabaseController {
                             readProductIntoList(document);
                         }
                         myEventL.productCallback("success");
-                        Log.d(LogTags.DB_GET_FILTERED, "Number of products: " +data.size());
+                        Log.d(LogTags.DB_GET_FILTERED, NUMOFPRODUCTS +data.size());
                     } else {
                         Log.d(LogTags.DB_GET_FILTERED, "Error getting documents: ", task.getException());
                     }
@@ -129,7 +131,7 @@ public class ProductDatabaseController {
      * @param productId - id of the product to be deleted
      */
     public void removeProductFromDB(String productId) {
-        db.DELETE(ProductTypeController.getType().getValue(),productId);
+        db.delete(ProductTypeController.getType().getValue(),productId);
     }
 
     /**
@@ -140,7 +142,7 @@ public class ProductDatabaseController {
      * @param newValue - the new value
      */
     public void updateProductField(String productId, ProductDatabaseFields field, Object newValue) {
-        db.PATCH(ProductTypeController.getType().getValue(), productId, field.getValue(), newValue);
+        db.patch(ProductTypeController.getType().getValue(), productId, field.getValue(), newValue);
     }
 
     /**
@@ -149,7 +151,7 @@ public class ProductDatabaseController {
      * @return List<Product>
      */
     public List<Product> getProducts() {
-        Log.d(LogTags.DB_GET, "Number of products: " +data.size());
+        Log.d(LogTags.DB_GET, NUMOFPRODUCTS +data.size());
         return data;
     }
 

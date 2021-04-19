@@ -1,15 +1,15 @@
 package com.example.cs4227_project.order;
 
-import com.example.cs4227_project.order.commandPattern.Stock;
-import com.example.cs4227_project.products.abstractFactoryPattern.Product;
+import com.example.cs4227_project.order.command_pattern.Stock;
+import com.example.cs4227_project.products.abstract_factory_pattern.Product;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Cart {
     private static Cart instance = null;
-    private final HashMap<Product, Stock> products;
+    private final Map<Product, Stock> products;
 
     public static Cart getInstance() {
         if(instance == null) {
@@ -22,7 +22,7 @@ public class Cart {
         products = new HashMap<>();
     }
 
-    public HashMap<Product, Stock> getCart() {
+    public Map<Product, Stock> getCart() {
         return products;
     }
 
@@ -50,7 +50,7 @@ public class Cart {
         return false;
     }
 
-    public ArrayList<Product> productArrayList(ArrayList<Product> p) {
+    public List<Product> productArrayList(List<Product> p) {
         for(Map.Entry<Product,Stock> entry : products.entrySet()) {
             p.add(entry.getKey());
         }
@@ -61,7 +61,7 @@ public class Cart {
         String s = "";
         for(Map.Entry<Product,Stock> entry : products.entrySet()) {
             if(entry.getKey() == p) {
-                HashMap<String, String> sizes = entry.getValue().getSizeQuantity();
+                Map<String, String> sizes = entry.getValue().getSizeQuantity();
                 Map.Entry<String, String> sizeEntry = sizes.entrySet().iterator().next();
                 s = sizeEntry.getKey();
             }

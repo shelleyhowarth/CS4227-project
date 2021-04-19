@@ -5,11 +5,11 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.example.cs4227_project.misc.LogTags;
-import com.example.cs4227_project.products.facadePattern.Attributes;
-import com.example.cs4227_project.products.facadePattern.Brands;
-import com.example.cs4227_project.products.facadePattern.Colours;
-import com.example.cs4227_project.products.facadePattern.Sizes;
-import com.example.cs4227_project.products.facadePattern.Styles;
+import com.example.cs4227_project.products.facade_pattern.Attributes;
+import com.example.cs4227_project.products.facade_pattern.Brands;
+import com.example.cs4227_project.products.facade_pattern.Colours;
+import com.example.cs4227_project.products.facade_pattern.Sizes;
+import com.example.cs4227_project.products.facade_pattern.Styles;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
@@ -17,11 +17,10 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AttributesDatabaseController implements Serializable {
+public class AttributesDatabaseController {
     private Database db = Database.getInstance();
     private Map<String,Attributes> data = new HashMap<>();
     private AttributesReadListener myEventL;
@@ -36,7 +35,7 @@ public class AttributesDatabaseController implements Serializable {
     public void getAttributeCollection() {
         data.clear();
         //get reference to collection from database
-        CollectionReference colRef = db.GET("productfilters");
+        CollectionReference colRef = db.get("productfilters");
         colRef.get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override

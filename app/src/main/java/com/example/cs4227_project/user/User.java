@@ -4,7 +4,6 @@ public class User {
     private String id;
     private String email;
     private boolean admin;
-    public static User user;
 
     public User(){}
 
@@ -13,8 +12,6 @@ public class User {
         this.email = email;
         this.admin = admin;
     }
-
-    public void setUser(User u){user = u;};
 
     public String getId() { return id; }
 

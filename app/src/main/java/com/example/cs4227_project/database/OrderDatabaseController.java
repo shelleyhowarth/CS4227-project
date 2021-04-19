@@ -4,14 +4,13 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.example.cs4227_project.order.builderPattern.Address;
-import com.example.cs4227_project.order.builderPattern.CardDetails;
-import com.example.cs4227_project.order.commandPattern.Stock;
-import com.example.cs4227_project.order.builderPattern.CustomerOrderBuilder;
+import com.example.cs4227_project.order.builder_pattern.Address;
+import com.example.cs4227_project.order.builder_pattern.CardDetails;
+import com.example.cs4227_project.order.command_pattern.Stock;
+import com.example.cs4227_project.order.builder_pattern.CustomerOrderBuilder;
 import com.example.cs4227_project.order.Cart;
 import com.example.cs4227_project.misc.LogTags;
-import com.example.cs4227_project.order.builderPattern.Order;
-import com.example.cs4227_project.products.abstractFactoryPattern.Product;
+import com.example.cs4227_project.order.builder_pattern.Order;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -28,11 +27,13 @@ import java.util.List;
 import java.util.Map;
 
 public class OrderDatabaseController {
-    private Database db = Database.getInstance();
-    private Cart cart = Cart.getInstance();
-    private ArrayList<Order> orders = new ArrayList<>();
+    private final Database db = Database.getInstance();
+    private final Cart cart = Cart.getInstance();
+    private final ArrayList<Order> orders = new ArrayList<>();
     private OrderReadListener myEventL;
-    private ArrayList<String> descStrings = new ArrayList<>();
+    private final ArrayList<String> descStrings = new ArrayList<>();
+
+    private static final String ORDER = "orders";
 
     public OrderDatabaseController() {}
 
@@ -42,23 +43,23 @@ public class OrderDatabaseController {
 
 
     public void addOrderToDB(Order order) {
-        db.POST("orders", order);
+        db.post(ORDER, order);
         cart.removeAllProductsFromCart();
     }
 
     public void addOrderToDB(Order order, String id) {
-        db.PUT("orders", id, order);
+        db.put(ORDER, id, order);
         cart.removeAllProductsFromCart();
     }
 
     public void deleteOrderFromDB(String id){
-        db.DELETE("orders", id);
+        db.delete(ORDER, id);
     }
 
     public void getOrderCollection() {
         orders.clear();
         //get reference to collection from database
-        CollectionReference colRef = db.GET("orders");
+        CollectionReference colRef = db.get(ORDER);
         colRef.get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -104,8 +105,7 @@ public class OrderDatabaseController {
         builder.setPrice((double)order.get("price"));
         builder.setTime();
 
-        Order o = builder.getOrder();
-        return o;
+        return builder.getOrder();
     }
 
     public void readOrderIntoList(QueryDocumentSnapshot document) {
@@ -114,16 +114,16 @@ public class OrderDatabaseController {
         orders.add(o);
     }
 
-    public ArrayList<Order> getAllOrders() {
+    public List<Order> getAllOrders() {
         return orders;
     }
 
-    public void getProduct(ArrayList<Stock> arr) {
+    public void getProduct(List<Stock> arr) {
         for(Stock s: arr) {
             String collection = s.getType() + s.isFemale();
             String id = s.getId();
 
-            DocumentReference docRef = db.GET(collection, id);
+            DocumentReference docRef = db.get(collection, id);
             docRef.get()
                     .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                         @Override
@@ -153,6 +153,6 @@ public class OrderDatabaseController {
         Log.d("desc", descStrings.toString());
     }
 
-    public ArrayList<String> getDescStrings() { return descStrings;}
+    public List<String> getDescStrings() { return descStrings;}
 
 }

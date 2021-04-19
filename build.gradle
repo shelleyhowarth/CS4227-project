@@ -10,6 +10,8 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:4.1.3'
         classpath 'com.google.gms:google-services:4.3.5'
+        // added for SonarQube
+        classpath 'org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.6.1'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -26,4 +28,31 @@ allprojects {
 
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+
+task combineTestResultsForSonarqube {
+    group = "Reporting"
+    def modules = ["app", "and", "other", "modules"];
+    doLast {
+        modules.each { module ->
+            File combined = file("${module}/build/combined-test-results")
+            if (combined.exists()) {
+                combined.deleteDir()
+            }
+            combined.mkdirs();
+
+            def testDirs = [file("${module}/build/test-results/debug/"),
+                            file("${module}/build/outputs/androidTest-results/connected/")];
+            testDirs.each { testDir ->
+                if (!testDir.exists()) {
+                    logging.captureStandardOutput LogLevel.WARN
+                    println "WARNING: ignoring non-existant ${testDir.path}"
+                    return;
+                }
+                files(testDir.listFiles()).each { file ->
+                    new File(combined, file.getName()) << file.text
+                }
+            }
+        }
+    }
 }

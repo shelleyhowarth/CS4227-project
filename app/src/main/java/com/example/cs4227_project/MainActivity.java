@@ -10,8 +10,6 @@ import android.widget.Button;
 import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.example.cs4227_project.database.OrderDatabaseController;
 import com.example.cs4227_project.database.OrderReadListener;
@@ -23,12 +21,12 @@ import com.example.cs4227_project.database.UserReadListener;
 import com.example.cs4227_project.misc.ProductType;
 import com.example.cs4227_project.misc.LogTags;
 import com.example.cs4227_project.order.AddStockFragment;
-import com.example.cs4227_project.order.builderPattern.Order;
-import com.example.cs4227_project.order.adapterPattern.ViewOrdersFragment;
-import com.example.cs4227_project.products.abstractFactoryPattern.Product;
+import com.example.cs4227_project.order.builder_pattern.Order;
+import com.example.cs4227_project.order.adapter_pattern.ViewOrdersFragment;
+import com.example.cs4227_project.products.abstract_factory_pattern.Product;
 import com.example.cs4227_project.products.ProductTypeController;
 import com.example.cs4227_project.products.ViewProductsFragment;
-import com.example.cs4227_project.products.facadePattern.AttributeManager;
+import com.example.cs4227_project.products.facade_pattern.AttributeManager;
 import com.example.cs4227_project.order.Cart;
 import com.example.cs4227_project.order.ViewCartFragment;
 import com.example.cs4227_project.user.LogInFragment;
@@ -39,6 +37,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import java.util.List;
@@ -46,8 +45,8 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, ProductReadListener, OrderReadListener, UserReadListener {
     //ui elements
     private Button logInButton;
-    private Button cartButton;
     private Button ordersButton;
+    private Button stockButton;
     private ImageButton clothesButton;
     private ImageButton accButton;
     private ImageButton shoeButton;
@@ -62,9 +61,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private User currentUser;
 
-    private final String login = "Log In";
-    private  final String logout = "Log Out";
-
+    private static final String LOGIN = "Log In";
+    private static final String LOGOUT = "Log Out";
+    private static final String CARDSELECTED = "Card View Selected ";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,12 +86,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         accButton = findViewById(R.id.accButton);
         shoeButton = findViewById(R.id.shoeButton);
         logInButton = findViewById(R.id.logInBtn);
-        cartButton = findViewById(R.id.cartBtn);
+        Button cartButton = findViewById(R.id.cartBtn);
         ordersButton = findViewById(R.id.ordersBtn);
         genderTab = findViewById(R.id.genderTab);
+        stockButton = findViewById(R.id.stockBtn);
 
         //Load images for home screen
-        LoadImages();
+        loadImages();
 
         //Listeners
         clothesButton.setOnClickListener(this);
@@ -101,6 +101,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         logInButton.setOnClickListener(this);
         cartButton.setOnClickListener(this);
         ordersButton.setOnClickListener(this);
+        stockButton.setOnClickListener(this);
 
         //Checking to see if user is logged in
         isLoggedIn();
@@ -116,33 +117,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void setUpView() {
-        Button addStockBtn = findViewById(R.id.stockBtn);
-        addStockBtn.setOnClickListener(this);
-        if(currentUser != null){
-            if(currentUser.isAdmin()){
-                addStockBtn.setVisibility(View.VISIBLE);
-            }
-        }else{
-            addStockBtn.setVisibility(View.INVISIBLE);
-        }
-
+        isLoggedIn();
         genderTab.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 int mSelectedPosition = genderTab.getSelectedTabPosition();
-                if(mSelectedPosition == 0) {
-                    ProductTypeController.setFemale(true);
-                }
-                else  {
-                    ProductTypeController.setFemale(false);
-                }
+                ProductTypeController.setFemale(mSelectedPosition == 0);
                 Log.d(LogTags.GENDER_TAB, "Gender tab female is "+ProductTypeController.isFemale());
             }
+
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
+                // Method required for TabLayout.OnTabSelectedListener interface
             }
+
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
+                // Method required for TabLayout.OnTabSelectedListener interface
             }
         });
     }
@@ -151,16 +142,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void isLoggedIn() {
         FirebaseUser user = mAuth.getCurrentUser();
         if(user != null) {
-            logInButton.setText(logout);
+            logInButton.setText(LOGOUT);
             ordersButton.setEnabled(true);
-            userDb.getUserDoc(user.getUid());
+            if(currentUser == null) {
+                userDb.getUserDoc(user.getUid());
+            }
         } else {
-            logInButton.setText(login);
+            logInButton.setText(LOGIN);
             ordersButton.setEnabled(false);
+            currentUser = null;
+            stockButton.setVisibility(View.INVISIBLE);
         }
     }
 
-    private void LoadImages(){
+    private void isAdmin() {
+        if(currentUser.isAdmin()) {
+            stockButton.setVisibility(View.VISIBLE);
+        }
+        else {
+            stockButton.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    private void loadImages(){
         //Load Image
         String clothesUrl = "https://firebasestorage.googleapis.com/v0/b/system-analysis-6716f.appspot.com/o/Product%20Pics%2FTops%2Fjeans.jpg?alt=media&token=670863da-1f9f-427f-833c-cfc1f2c4b6a9";
         String accUrl = "https://firebasestorage.googleapis.com/v0/b/system-analysis-6716f.appspot.com/o/Product%20Pics%2FTops%2Fhandbag.jpg?alt=media&token=c304abaf-fe0b-4703-8488-2e8140d9a78f";
@@ -171,7 +175,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     //Opens login fragment
-    public void goToLogIn(View v)
+    public void goToLogIn()
     {
         fragmentController.startFragment(new LogInFragment(), R.id.content, "login");
     }
@@ -184,9 +188,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void orderCallback(String result){
-        ArrayList<Order> orders = orderDb.getAllOrders();
+        List<Order> orders = orderDb.getAllOrders();
         Bundle bundle = new Bundle();
-        bundle.putSerializable("Orders", orders);
+        bundle.putSerializable("Orders", (Serializable) orders);
         fragmentController.startFragment(new ViewOrdersFragment() , R.id.contentWithToolbar, "viewOrders", bundle);
     }
 
@@ -195,6 +199,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         User user = userDb.getSingleUser();
         UserController.setUser(user);
         currentUser = UserController.getUser();
+        isAdmin();
         setUpView();
     }
 
@@ -208,7 +213,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void goToCart(){
         Cart cart = Cart.getInstance();
-        ArrayList<Product> products = cart.productArrayList(new ArrayList<Product>());
+        List<Product> products = new ArrayList<>();
+        products = cart.productArrayList(products);
         ArrayList<Product> alProd = new ArrayList<>(products.size());
         alProd.addAll(products);
         Bundle bundle = new Bundle();
@@ -227,8 +233,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         int i = v.getId();
         if (i == R.id.logInBtn) {
-            if(logInButton.getText().equals(login)) {
-                goToLogIn(v);
+            if(logInButton.getText().equals(LOGIN)) {
+                goToLogIn();
             } else {
                 //Signs user out
                 mAuth.signOut();
@@ -239,19 +245,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if(i == R.id.clothesButton){
             ProductTypeController.setType(ProductType.CLOTHES);
-            Log.d(LogTags.CHECK_CARD, "Card view selected " + ProductType.CLOTHES);
+            Log.d(LogTags.CHECK_CARD, CARDSELECTED + ProductType.CLOTHES);
             productDataC.getProductCollection();
         }
 
         if(i == R.id.accButton){
             ProductTypeController.setType(ProductType.ACCESSORIES);
-            Log.d(LogTags.CHECK_CARD, "Card view selected " + ProductType.ACCESSORIES);
+            Log.d(LogTags.CHECK_CARD, CARDSELECTED + ProductType.ACCESSORIES);
             productDataC.getProductCollection();
         }
 
         if(i == R.id.shoeButton) {
             ProductTypeController.setType(ProductType.SHOE);
-            Log.d(LogTags.CHECK_CARD, "Card view selected " + ProductType.SHOE);
+            Log.d(LogTags.CHECK_CARD, CARDSELECTED + ProductType.SHOE);
             productDataC.getProductCollection();
         }
 

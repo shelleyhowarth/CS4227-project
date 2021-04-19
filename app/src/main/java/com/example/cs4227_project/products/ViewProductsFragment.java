@@ -21,10 +21,11 @@ import com.example.cs4227_project.database.ProductDatabaseController;
 import com.example.cs4227_project.database.ProductReadListener;
 import com.example.cs4227_project.misc.FilterAttributes;
 import com.example.cs4227_project.misc.LogTags;
-import com.example.cs4227_project.products.abstractFactoryPattern.Product;
-import com.example.cs4227_project.products.facadePattern.AttributeManager;
+import com.example.cs4227_project.products.abstract_factory_pattern.Product;
+import com.example.cs4227_project.products.facade_pattern.AttributeManager;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,15 +38,14 @@ public class ViewProductsFragment extends Fragment implements AdapterView.OnItem
     private ProductDatabaseController db;
     private ArrayList<Product> products;
     private Map<FilterAttributes, Spinner> filterSpinners;
-    private static final String all = "All";
+    private static final String ALL = "All";
 
     public ViewProductsFragment() {
         // Required empty public constructor
     }
 
-    public static ViewProductsFragment newInstance(String param1, String param2) {
-        ViewProductsFragment fragment = new ViewProductsFragment();
-        return fragment;
+    public static ViewProductsFragment newInstance() {
+        return new ViewProductsFragment();
     }
 
     @Override
@@ -73,12 +73,12 @@ public class ViewProductsFragment extends Fragment implements AdapterView.OnItem
         recyclerView.setAdapter(adapter);
 
         //Loop through FilterAttributes and set up spinners for each filter
-        filterSpinners = new HashMap<>();
+        filterSpinners = new EnumMap<>(FilterAttributes.class);
         for(FilterAttributes attribute : FilterAttributes.values()) {
             Spinner spinner = view.findViewById(attributeManager.getSpinnerId(attribute));
             spinner.setOnItemSelectedListener(this);
             List<String> values = new ArrayList<>();
-            values.add(all);
+            values.add(ALL);
             values.addAll(attributeManager.getAttributes(attribute));
             spinner.setAdapter(initSpinner(values));
             filterSpinners.put(attribute, spinner);
@@ -120,8 +120,8 @@ public class ViewProductsFragment extends Fragment implements AdapterView.OnItem
         return view;
     }
 
-    private ArrayAdapter initSpinner(List<String> data) {
-        ArrayAdapter aa = new ArrayAdapter(getActivity(), android.R.layout.simple_spinner_item, data);
+    private ArrayAdapter<String> initSpinner(List<String> data) {
+        ArrayAdapter<String> aa = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, data);
         aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         return aa;
     }
@@ -147,7 +147,7 @@ public class ViewProductsFragment extends Fragment implements AdapterView.OnItem
         //updates the recycler view with the new list of products
         adapter = new ProductInterfaceAdapter(products);
         recyclerView.setAdapter(adapter);
-        if(products.size() == 0) {
+        if(products.isEmpty()) {
             Toast toast = Toast.makeText(getActivity(), "No products found", Toast.LENGTH_SHORT);
             toast.show();
         }

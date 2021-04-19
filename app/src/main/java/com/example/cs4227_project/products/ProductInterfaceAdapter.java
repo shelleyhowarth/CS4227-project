@@ -1,7 +1,7 @@
 package com.example.cs4227_project.products;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.content.ContextWrapper;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -30,17 +30,15 @@ import com.example.cs4227_project.database.StockDatabaseController;
 import com.example.cs4227_project.database.StockReadListener;
 import com.example.cs4227_project.misc.LogTags;
 import com.example.cs4227_project.R;
-import com.example.cs4227_project.order.commandPattern.Stock;
+import com.example.cs4227_project.order.command_pattern.Stock;
 import com.example.cs4227_project.order.Cart;
-import com.example.cs4227_project.order.commandPattern.UpdateStockFragment;
+import com.example.cs4227_project.order.command_pattern.UpdateStockFragment;
 import com.example.cs4227_project.user.UserController;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.example.cs4227_project.order.commandPattern.Stock;
-import com.example.cs4227_project.order.Cart;
-import com.example.cs4227_project.products.abstractFactoryPattern.Product;
+import com.example.cs4227_project.products.abstract_factory_pattern.Product;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -56,17 +54,17 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter implements Ada
     private ImageView imageViewProductPic;
     private CardView cardViewProduct;
     private Dialog productDialog;
-    private Button addBtn, addStock;
+    private Button addBtn;
+    private Button addStock;
     private String chosenSize;
-    private static final String all = "All";
-    private Spinner size;
+    private Spinner sizeSpinner;
     private Product product;
-    private HashMap<String, String> productSizeQuantities;
+    private Map<String, String> productSizeQuantities;
 
-    private StockDatabaseController stockDb;
+    private final StockDatabaseController stockDb;
     private  RecyclerView mRecyclerView;
 
-    public ProductInterfaceAdapter(ArrayList<Product> products) {
+    public ProductInterfaceAdapter(List<Product> products) {
         Log.d(LogTags.CHECK_CARD, products.toString());
         setProductList(products);
         stockDb = new StockDatabaseController(this);
@@ -97,12 +95,13 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter implements Ada
             addStock = itemView.findViewById(R.id.addStock);
         }
 
+        @SuppressLint("SetTextI18n")
         void bindView(int pos){
             final Product item = productList.get(pos);
             product = item;
-            Log.d("ProductInterfaceAdapter", "product: " + product.getId());
+            Log.d(LogTags.PRODUCT_INTERFACE_ADAPTER, "product: " + product.getId());
             textViewProductName.setText(item.getName());
-            textViewProductPrice.setText("€" + String.valueOf(item.getPrice()));
+            textViewProductPrice.setText("€" + item.getPrice());
             setPicture(imageViewProductPic, item);
 
             if(UserController.getUser() != null) {
@@ -117,37 +116,35 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter implements Ada
                 addStock.setVisibility(View.INVISIBLE);
             }
 
-            //Picasso.get().load(item.getImageURL()).fit().centerCrop().into(imageViewProductPic);
-
             productDialog.setContentView(R.layout.product_detail_page);
             productDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
             addBtn = productDialog.findViewById(R.id.addToCart);
 
             cardViewProduct.setOnClickListener(new View.OnClickListener() {
+                @SuppressLint("SetTextI18n")
                 @Override
                 public void onClick(View productView) {
                     stockDb.getStockDoc(item.getId());
-                    Log.d("ProductInterfaceAdapter", "getStockDoc: " + item.getId());
-                    TextView textViewProductName = productDialog.findViewById(R.id.productName);
-                    TextView textViewProductPrice = productDialog.findViewById(R.id.productPrice);
+                    Log.d(LogTags.PRODUCT_INTERFACE_ADAPTER, "getStockDoc: " + item.getId());
+                    textViewProductName = productDialog.findViewById(R.id.productName);
+                    textViewProductPrice = productDialog.findViewById(R.id.productPrice);
                     ImageView imageViewProductImage = productDialog.findViewById(R.id.productImage);
                     final EditText editQuantity = productDialog.findViewById(R.id.quantity);
 
                     addBtn = productDialog.findViewById(R.id.addToCart);
 
                     inCart(item);
-                    size = productDialog.findViewById(R.id.spinner);
-                    size.setOnItemSelectedListener(size.getOnItemSelectedListener());
+                    sizeSpinner = productDialog.findViewById(R.id.spinner);
+                    sizeSpinner.setOnItemSelectedListener(sizeSpinner.getOnItemSelectedListener());
                     textViewProductName.setText(item.getName());
-                    textViewProductPrice.setText("€" + String.valueOf(item.getPrice()));
+                    textViewProductPrice.setText("€" + item.getPrice());
                     setPicture(imageViewProductImage, item);
-                    //Picasso.get().load(item.getImageURL()).fit().centerCrop().into(imageViewProductImage);
 
                     addBtn.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View productView) {
-                            chosenSize = size.getSelectedItem().toString();
+                            chosenSize = sizeSpinner.getSelectedItem().toString();
                             if(!(cart.inCart(item))) {
                                 String quantity = editQuantity.getText().toString();
                                 HashMap<String, String> sizeQ = new HashMap<>();
@@ -168,7 +165,6 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter implements Ada
                                 Toast.makeText(productDialog.getContext(), "Removed the item from cart", Toast.LENGTH_SHORT).show();
                                 refreshInstance(item);
                             }
-                            //size.setAdapter(setUpSpinner());
                         }
                     });
 
@@ -183,7 +179,7 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter implements Ada
             storageReference.child(path).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                 @Override
                 public void onSuccess(Uri uri) {
-                    Log.d("PROFILE", "SUCESS" + uri);
+                    Log.d(LogTags.PRODUCT_INTERFACE_ADAPTER, "SUCCESS" + uri);
                     Picasso.get().load(uri).fit().centerCrop().into(image);
                 }
             }).addOnFailureListener(new OnFailureListener() {
@@ -197,9 +193,9 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter implements Ada
         @Override
         public void onClick(View v){
             int i = v.getId();
-            Log.d("CLICK", "In on click");
+            Log.d(LogTags.PRODUCT_INTERFACE_ADAPTER, "In on click");
             if(i == R.id.addStock){
-                Log.d("CLICK", "Add stock button clicked");
+                Log.d(LogTags.PRODUCT_INTERFACE_ADAPTER, "Add stock button clicked");
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("product", product);
                 UpdateStockFragment fragment = new UpdateStockFragment();
@@ -222,7 +218,7 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter implements Ada
         }
     }
 
-    public void setProductList(ArrayList<? extends Product> productList) {
+    public void setProductList(List<? extends Product> productList) {
         if (this.productList == null){
             this.productList = new ArrayList<>();
         }
@@ -253,7 +249,7 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter implements Ada
     }
 
     public void refreshInstance(Product item){
-        ArrayList<Product> products = new ArrayList<>(productList);
+        List<Product> products = new ArrayList<>(productList);
         ProductInterfaceAdapter adapter = new ProductInterfaceAdapter(products);
         mRecyclerView.setAdapter(adapter);
         stockDb.getStockDoc(product.getId());
@@ -276,7 +272,7 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter implements Ada
     }
 
     public void setUpSpinner(){
-        List<String> sizes = new ArrayList<String>();
+        List<String> sizes = new ArrayList<>();
 
         //Add each size from the stock of the product into the arraylist and set as adapter
         for(Map.Entry<String, String> entry : productSizeQuantities.entrySet()){
@@ -284,8 +280,8 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter implements Ada
             sizes.add(size);
         }
 
-        ArrayAdapter<String> aa = new ArrayAdapter(productDialog.getContext(), android.R.layout.simple_spinner_item, sizes);
+        ArrayAdapter<String> aa = new ArrayAdapter<>(productDialog.getContext(), android.R.layout.simple_spinner_item, sizes);
         aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        size.setAdapter(aa);
+        sizeSpinner.setAdapter(aa);
     }
 }

@@ -1,7 +1,11 @@
 package com.example.cs4227_project.user;
 
 public class UserController {
-    public static User user;
+    private static User user;
+
+    private UserController() {
+        throw new IllegalStateException("Utility class");
+    }
 
     public static void setUser(User u){ user = u;}
 
