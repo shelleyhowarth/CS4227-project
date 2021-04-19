@@ -31,7 +31,7 @@ import com.example.cs4227_project.order.Cart;
 import com.example.cs4227_project.order.ViewCartFragment;
 import com.example.cs4227_project.user.LogInFragment;
 import com.example.cs4227_project.user.User;
-import com.example.cs4227_project.user.UserController;
+import com.example.cs4227_project.util.UserController;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;

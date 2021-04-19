@@ -34,7 +34,7 @@ import com.example.cs4227_project.R;
 import com.example.cs4227_project.order.command_pattern.Stock;
 import com.example.cs4227_project.order.Cart;
 import com.example.cs4227_project.order.command_pattern.UpdateStockFragment;
-import com.example.cs4227_project.user.UserController;
+import com.example.cs4227_project.util.UserController;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
