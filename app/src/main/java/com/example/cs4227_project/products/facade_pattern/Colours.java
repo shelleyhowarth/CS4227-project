@@ -2,7 +2,7 @@ package com.example.cs4227_project.products.facade_pattern;
 
 import android.util.Log;
 
-import com.example.cs4227_project.misc.LogTags;
+import com.example.cs4227_project.util.LogTags;
 
 import java.util.List;
 import java.util.HashMap;

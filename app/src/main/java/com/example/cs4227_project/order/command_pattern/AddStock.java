@@ -2,8 +2,8 @@ package com.example.cs4227_project.order.command_pattern;
 
 import android.util.Log;
 
-import com.example.cs4227_project.database.StockDatabaseController;
-import com.example.cs4227_project.misc.LogTags;
+import com.example.cs4227_project.util.database_controllers.StockDatabaseController;
+import com.example.cs4227_project.util.LogTags;
 
 import java.util.Map;
 

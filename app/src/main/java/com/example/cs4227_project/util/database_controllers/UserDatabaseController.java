@@ -1,10 +1,12 @@
-package com.example.cs4227_project.database;
+package com.example.cs4227_project.util.database_controllers;
 
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.example.cs4227_project.misc.LogTags;
+import com.example.cs4227_project.database.Database;
+import com.example.cs4227_project.database.UserReadListener;
+import com.example.cs4227_project.util.LogTags;
 import com.example.cs4227_project.user.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;

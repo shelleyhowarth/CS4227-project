@@ -2,7 +2,7 @@ package com.example.cs4227_project.order.command_pattern;
 
 import android.util.Log;
 
-import com.example.cs4227_project.misc.LogTags;
+import com.example.cs4227_project.util.LogTags;
 import com.example.cs4227_project.order.memento_pattern.Memento;
 
 import java.util.Map;

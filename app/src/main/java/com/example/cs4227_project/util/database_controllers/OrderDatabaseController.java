@@ -1,15 +1,17 @@
-package com.example.cs4227_project.database;
+package com.example.cs4227_project.util.database_controllers;
 
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.example.cs4227_project.database.Database;
+import com.example.cs4227_project.database.OrderReadListener;
 import com.example.cs4227_project.order.builder_pattern.Address;
 import com.example.cs4227_project.order.builder_pattern.CardDetails;
 import com.example.cs4227_project.order.command_pattern.Stock;
 import com.example.cs4227_project.order.builder_pattern.CustomerOrderBuilder;
 import com.example.cs4227_project.order.Cart;
-import com.example.cs4227_project.misc.LogTags;
+import com.example.cs4227_project.util.LogTags;
 import com.example.cs4227_project.order.builder_pattern.Order;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;

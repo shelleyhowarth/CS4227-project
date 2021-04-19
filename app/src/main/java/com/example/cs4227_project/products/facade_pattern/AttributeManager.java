@@ -3,10 +3,10 @@ package com.example.cs4227_project.products.facade_pattern;
 import android.util.Log;
 
 import com.example.cs4227_project.R;
-import com.example.cs4227_project.database.AttributesDatabaseController;
+import com.example.cs4227_project.util.database_controllers.AttributesDatabaseController;
 import com.example.cs4227_project.database.AttributesReadListener;
-import com.example.cs4227_project.misc.FilterAttributes;
-import com.example.cs4227_project.misc.LogTags;
+import com.example.cs4227_project.util.FilterAttributes;
+import com.example.cs4227_project.util.LogTags;
 
 import java.util.Collections;
 import java.util.List;
