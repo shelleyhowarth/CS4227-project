@@ -15,35 +15,37 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 
 import com.example.cs4227_project.R;
-import com.example.cs4227_project.database.OrderDatabaseController;
-import com.example.cs4227_project.database.StockDatabaseController;
+import com.example.cs4227_project.util.database_controllers.OrderDatabaseController;
+import com.example.cs4227_project.util.database_controllers.StockDatabaseController;
 import com.example.cs4227_project.database.StockReadListener;
-import com.example.cs4227_project.interceptorPattern.dispatchers.PreMarshallDispatcher;
-import com.example.cs4227_project.interceptorPattern.InterceptorApplication;
-import com.example.cs4227_project.interceptorPattern.InterceptorContext;
-import com.example.cs4227_project.interceptorPattern.InterceptorFramework;
-import com.example.cs4227_project.interceptorPattern.Target;
-import com.example.cs4227_project.interceptorPattern.interceptors.LoggingInterceptor;
-import com.example.cs4227_project.misc.LogTags;
-import com.example.cs4227_project.order.builderPattern.Address;
-import com.example.cs4227_project.order.builderPattern.CardDetails;
-import com.example.cs4227_project.order.commandPattern.CommandControl;
-import com.example.cs4227_project.order.builderPattern.Order;
-import com.example.cs4227_project.order.commandPattern.SellStock;
-import com.example.cs4227_project.order.commandPattern.Stock;
-import com.example.cs4227_project.order.builderPattern.CustomerOrderBuilder;
-import com.example.cs4227_project.order.mementoPattern.CareTaker;
-import com.example.cs4227_project.order.mementoPattern.Memento;
-import com.example.cs4227_project.products.abstractFactoryPattern.Product;
+import com.example.cs4227_project.interceptor_pattern.dispatchers.PreMarshallDispatcher;
+import com.example.cs4227_project.interceptor_pattern.InterceptorApplication;
+import com.example.cs4227_project.interceptor_pattern.InterceptorContext;
+import com.example.cs4227_project.interceptor_pattern.InterceptorFramework;
+import com.example.cs4227_project.interceptor_pattern.Target;
+import com.example.cs4227_project.interceptor_pattern.interceptors.LoggingInterceptor;
+import com.example.cs4227_project.util.FragmentController;
+import com.example.cs4227_project.util.LogTags;
+import com.example.cs4227_project.order.builder_pattern.Address;
+import com.example.cs4227_project.order.builder_pattern.CardDetails;
+import com.example.cs4227_project.order.command_pattern.CommandControl;
+import com.example.cs4227_project.order.builder_pattern.Order;
+import com.example.cs4227_project.order.command_pattern.SellStock;
+import com.example.cs4227_project.order.command_pattern.Stock;
+import com.example.cs4227_project.order.builder_pattern.CustomerOrderBuilder;
+import com.example.cs4227_project.order.memento_pattern.CareTaker;
+import com.example.cs4227_project.order.memento_pattern.Memento;
+import com.example.cs4227_project.products.abstract_factory_pattern.Product;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,11 +57,13 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
     private final FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private final OrderDatabaseController orderDatabaseController = new OrderDatabaseController();
     private final StockDatabaseController stockDb = new StockDatabaseController(this);
-    private final HashMap<Product, Stock> cartMap = new HashMap<>();
+    private final Map<Product, Stock> cartMap = new HashMap<>();
     private InterceptorApplication interceptorApplication;
     private Stock originator;
     private CareTaker careTaker;
     private String orderId;
+
+    private static final String INVALID_ENTRY = "Invalid Entry";
 
     public ViewCheckoutInputFragment() {
         // Required empty public constructor
@@ -71,9 +75,10 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
         setUpInterceptor();
     }
 
+    @Deprecated
     @Override
     public void onAttach(Activity activity) {
-        myContext=(FragmentActivity) activity;
+        myContext= (FragmentActivity) activity;
         super.onAttach(activity);
     }
 
@@ -82,13 +87,13 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_checkout_input, container, false);
 
-        final ArrayList<EditText> texts = createTexts(view);
+        final List<EditText> texts = createTexts(view);
 
         Button nextButton = view.findViewById(R.id.submitButton);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ArrayList<String> inputtedTexts = new ArrayList<>();
+                List<String> inputtedTexts = new ArrayList<>();
                 for(EditText text : texts){
                     if(text.getText().toString().matches("")) {
                         Toast.makeText(getActivity(), "No input detected", Toast.LENGTH_SHORT).show();
@@ -123,14 +128,14 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
         return view;
     }
 
-    public void createOrder(ArrayList<String> texts) {
+    public void createOrder(List<String> texts) {
         Toast.makeText(getActivity(), "Your order has been confirmed", Toast.LENGTH_SHORT).show();
 
         double totalPrice = 0.0;
         ArrayList<Stock> productInfo = new ArrayList<>();
         for(Map.Entry<Product, Stock> entry: cart.getCart().entrySet()){
-            Log.d("ORDER", "Products to checkout =" + entry.getKey().toString());
-            HashMap<String, String> sizeQ = entry.getValue().getSizeQuantity();
+            Log.d(LogTags.ORDER, "Products to checkout =" + entry.getKey().toString());
+            Map<String, String> sizeQ = entry.getValue().getSizeQuantity();
             Map.Entry<String,String> sizeEntry = sizeQ.entrySet().iterator().next();
             int quantity = Integer.parseInt(sizeEntry.getValue());
             totalPrice += (entry.getKey().getPrice() * quantity);
@@ -138,7 +143,10 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
             productInfo.add(entry.getValue());
         }
 
-        Log.d("STOCKS", "Cart List" + cartMap.toString());
+        DecimalFormat df2 = new DecimalFormat("#####.##");
+        totalPrice = Double.parseDouble(df2.format(totalPrice));
+
+        Log.d(LogTags.ORDER, "Cart List" + cartMap.toString());
 
         Address address = new Address(texts.get(0), texts.get(1), texts.get(2));
         CardDetails cardDetails = new CardDetails(texts.get(4), texts.get(3), texts.get(6), texts.get(5));
@@ -164,11 +172,11 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
     /**
      * Gets a list of document ids needed from stock collection in database
      * @author Aine Reynolds
-     * @Description: Goes through user cart getting product ids then calls
+     * Goes through user cart getting product ids then calls
      * StockDatabaseController to retrieve docs from databse.
      */
     public void updateStock(){
-        Log.d("STOCKS", "Get Stock");
+        Log.d(LogTags.ORDER, "Get Stock");
         ArrayList<String> productIds = new ArrayList<>();
         for(Map.Entry<Product, Stock> entry: cartMap.entrySet()){
             String productId = entry.getKey().getId();
@@ -182,14 +190,13 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
     /**
      * When the StockDatabaseController has finished executing the getStockDocsCommand
      * @author Aine Reynolds
-     * @Description: Retrieves an arraylist of type stock using the StockDatabaseController.
+     * Retrieves an arraylist of type stock using the StockDatabaseController.
      * Then calls changeStock method.
      */
     @Override
     public void stockCallback(String result){
-        ArrayList<Stock> stock = new ArrayList<>();
-        stock = stockDb.getStockArray();
-        Log.d("STOCKS", "Stocks in database " + stock.toString());
+        List<Stock> stock = stockDb.getStockArray();
+        Log.d(LogTags.ORDER, "Stocks in database " + stock.toString());
         changeStock(stock);
     }
 
@@ -197,11 +204,11 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
      * Implements the Command DP
      * @author Aine Reynolds
      * @param stock - the arraylist of stock from the database.
-     * @Description: Goes through each item in the user cart and gets the size and quantity
+     * Goes through each item in the user cart and gets the size and quantity
      * that needs to be changed in the database. Finds that stock from the list of stock that was
      * just read in from the database and implements the SellStock Command.
      */
-    public void changeStock(ArrayList<Stock> stock){
+    public void changeStock(List<Stock> stock){
         CommandControl commandController = new CommandControl();
         originator = new Stock();
         careTaker = new CareTaker();
@@ -221,23 +228,22 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
             //Go through the stock retrieved from database that will be updated
             for(Stock s : stock){
                 if(s.getId().equals(productId)){
-                    //get original stock from database and the hashmap of its sizes and quantities
-                    Stock stockFromDb = s;
-                    HashMap<String,String> sizes = s.getSizeQuantity();
 
-                    //create a deep copy of the stock and hashmap to use with memento - deep copy so state doesn't change when sellStock called.
-                    final Stock tempStock = s;
+                    //get original stock from database and the hashmap of its sizes and quantities
+                    Map<String,String> sizes = s.getSizeQuantity();
+
+                    //create a deep copy of the stock and HashMap to use with memento - deep copy so state doesn't change when sellStock called.
                     final HashMap<String,String> tempSizes = new HashMap<>();
                     for(Map.Entry<String, String> item : sizes.entrySet()){
                         tempSizes.put(item.getKey(), item.getValue());
                     }
 
-                    SellStock sellStock= new SellStock(stockFromDb, quantity, size);
+                    SellStock sellStock= new SellStock(s, quantity, size);
                     commandController.addCommand(sellStock);
 
-                    //Set the hashmap of original sizes and quantities and pass to memento.
-                    tempStock.setSizeQuantity(tempSizes);
-                    originator.setState(tempStock);
+                    //Set the HashMap of original sizes and quantities and pass to memento.
+                    s.setSizeQuantity(tempSizes);
+                    originator.setState(s);
                     careTaker.add(originator.saveStateToMemento());
                 }
             }
@@ -245,7 +251,7 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
         commandController.executeCommands();
     }
 
-    public void createDialog(ArrayList<String> texts, double price) {
+    public void createDialog(List<String> texts, double price) {
         AlertDialog.Builder builder = new AlertDialog.Builder(myContext);
         builder.setCancelable(true);
         if (price == 0) {
@@ -288,8 +294,8 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
         dialog.show();
     }
 
-    public ArrayList<EditText> createTexts(View view){
-        ArrayList<EditText> texts = new ArrayList<>();
+    public List<EditText> createTexts(View view){
+        List<EditText> texts = new ArrayList<>();
         texts.add((EditText) view.findViewById(R.id.townInput));
         texts.add((EditText) view.findViewById(R.id.cityInput));
         texts.add((EditText) view.findViewById(R.id.countyInput));
@@ -302,10 +308,10 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
 
     public boolean queryCardNum(String x, EditText text){
         boolean valid = true;
-        if(!(x.length() == 16)) {
+        if(x.length() != 16) {
             Toast.makeText(getActivity(), "Card Number must be 16 digits in length", Toast.LENGTH_SHORT).show();
             text.requestFocus();
-            text.setError("Invalid Entry");
+            text.setError(INVALID_ENTRY);
             valid = false;
         }
         return valid;
@@ -313,10 +319,10 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
 
     public boolean queryCVV(String x, EditText text){
         boolean valid = true;
-        if(!(x.length() == 3)) {
+        if(x.length() != 3) {
             Toast.makeText(getActivity(), "CVV must be 3 digits in length", Toast.LENGTH_SHORT).show();
             text.requestFocus();
-            text.setError("Invalid Entry");
+            text.setError(INVALID_ENTRY);
             valid = false;
         }
         return valid;
@@ -325,25 +331,22 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
     public boolean queryExpiryDate(String x, EditText text){
         boolean valid = true;
         try {
-            Date expiryDate = parseMonth(x);
+            @SuppressLint("SimpleDateFormat") SimpleDateFormat format = new SimpleDateFormat("MM/yyyy");
+            format.setLenient(false);
+            format.parse(x);
         } catch (ParseException e) {
-            e.printStackTrace();
+            Log.d(LogTags.PARSE_ERROR, e.getMessage());
             Toast.makeText(getActivity(), "The expiry date format is wrong", Toast.LENGTH_SHORT).show();
             text.requestFocus();
-            text.setError("Invalid Entry");
+            text.setError(INVALID_ENTRY);
             valid = false;
         }
         return valid;
     }
 
-    Date parseMonth(String str) throws ParseException {
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat format = new SimpleDateFormat("MM/yyyy");
-        format.setLenient(false);
-        return format.parse(str);
-    }
-
     public void popBackToHome() {
-        myContext.getSupportFragmentManager().popBackStack(null, myContext.getSupportFragmentManager().POP_BACK_STACK_INCLUSIVE);
+        FragmentController fragmentController = FragmentController.getInstance();
+        fragmentController.getCurrentFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
 
     public void setUpInterceptor() {
@@ -357,6 +360,10 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
 
     @Override
     public void execute(InterceptorContext context) {
-
+        Log.d(LogTags.INTERCEPTOR, "executing target");
+        switch (context.getMessage()) {
+            default:
+                Log.d(LogTags.INTERCEPTOR, "no request found under \""+context.getMessage()+"\"");
+        }
     }
 }

@@ -1,6 +1,5 @@
 package com.example.cs4227_project.order;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,34 +9,31 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cs4227_project.R;
-import com.example.cs4227_project.interceptorPattern.dispatchers.PostMarshallDispatcher;
-import com.example.cs4227_project.interceptorPattern.InterceptorApplication;
-import com.example.cs4227_project.interceptorPattern.InterceptorContext;
-import com.example.cs4227_project.interceptorPattern.InterceptorFramework;
-import com.example.cs4227_project.interceptorPattern.Target;
-import com.example.cs4227_project.interceptorPattern.interceptors.LogInAuthenticationInterceptor;
-import com.example.cs4227_project.interceptorPattern.interceptors.LoggingInterceptor;
-import com.example.cs4227_project.misc.FragmentController;
-import com.example.cs4227_project.misc.LogTags;
-import com.example.cs4227_project.order.commandPattern.Stock;
-import com.example.cs4227_project.products.abstractFactoryPattern.Product;
+import com.example.cs4227_project.interceptor_pattern.dispatchers.PostMarshallDispatcher;
+import com.example.cs4227_project.interceptor_pattern.InterceptorApplication;
+import com.example.cs4227_project.interceptor_pattern.InterceptorContext;
+import com.example.cs4227_project.interceptor_pattern.InterceptorFramework;
+import com.example.cs4227_project.interceptor_pattern.Target;
+import com.example.cs4227_project.interceptor_pattern.interceptors.LogInAuthenticationInterceptor;
+import com.example.cs4227_project.interceptor_pattern.interceptors.LoggingInterceptor;
+import com.example.cs4227_project.util.FragmentController;
+import com.example.cs4227_project.util.LogTags;
+import com.example.cs4227_project.order.command_pattern.Stock;
+import com.example.cs4227_project.products.abstract_factory_pattern.Product;
 import com.example.cs4227_project.products.ProductInterfaceAdapter;
-import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ViewCartFragment extends Fragment implements Target {
     private final Cart cart = Cart.getInstance();
     private RecyclerView recyclerView;
     private ProductInterfaceAdapter adapter;
-    private FragmentActivity myContext;
-    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private InterceptorApplication interceptorApplication;
 
     public ViewCartFragment() {
@@ -45,14 +41,7 @@ public class ViewCartFragment extends Fragment implements Target {
     }
 
     public static ViewCartFragment newInstance() {
-        ViewCartFragment fragment = new ViewCartFragment();
-        return fragment;
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        myContext=(FragmentActivity) activity;
-        super.onAttach(activity);
+        return new ViewCartFragment();
     }
 
     @Override
@@ -77,12 +66,11 @@ public class ViewCartFragment extends Fragment implements Target {
         });
 
         Button checkoutBtn = view.findViewById(R.id.checkout);
-        final Button btn = view.findViewById(R.id.logInBtn);
         checkoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d(LogTags.CHECK_CARD, "Preparing to check out cart");
-                HashMap<Product, Stock> products = cart.getCart();
+                Map<Product, Stock> products = cart.getCart();
                 if (products.isEmpty()){
                     Toast.makeText(getActivity(), "There are no items in your cart", Toast.LENGTH_LONG).show();
                     Log.d(LogTags.CHECK_CARD, "Failed to check out. No items currently in cart");
@@ -115,11 +103,12 @@ public class ViewCartFragment extends Fragment implements Target {
 
     public void refreshCart(){
         //updates the recycler view with the empty cart
-        Cart cart = Cart.getInstance();
-        ArrayList<Product> products = cart.productArrayList(new ArrayList<Product>());
+        Cart newCart = Cart.getInstance();
+        List<Product> products = new ArrayList<>();
+        products = newCart.productArrayList(products);
         adapter = new ProductInterfaceAdapter(products);
         recyclerView.setAdapter(adapter);
-        if(products.size() == 0) {
+        if(products.isEmpty()) {
             Toast toast = Toast.makeText(getActivity(), "The cart has been emptied", Toast.LENGTH_SHORT);
             toast.show();
         }
@@ -137,6 +126,9 @@ public class ViewCartFragment extends Fragment implements Target {
         switch (context.getMessage()) {
             case "You must be logged-in to purchase products!":
                 goToCheckout();
+                break;
+            default:
+                Log.d(LogTags.INTERCEPTOR, "no request found under \""+context.getMessage()+"\"");
         }
     }
 }

@@ -9,7 +9,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
 import android.provider.MediaStore;
 import android.util.Log;
@@ -23,18 +22,15 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.example.cs4227_project.R;
-import com.example.cs4227_project.database.Database;
-import com.example.cs4227_project.database.ProductDatabaseController;
-import com.example.cs4227_project.database.StockDatabaseController;
-import com.example.cs4227_project.misc.ProductType;
-import com.example.cs4227_project.misc.LogTags;
-import com.example.cs4227_project.order.commandPattern.AddStock;
-import com.example.cs4227_project.order.commandPattern.CommandControl;
-import com.example.cs4227_project.order.commandPattern.Stock;
-import com.example.cs4227_project.products.abstractFactoryPattern.AbstractFactory;
-import com.example.cs4227_project.products.abstractFactoryPattern.FactoryProducer;
-import com.example.cs4227_project.products.abstractFactoryPattern.Product;
-import com.example.cs4227_project.products.ProductTypeController;
+import com.example.cs4227_project.util.database_controllers.ProductDatabaseController;
+import com.example.cs4227_project.util.ProductType;
+import com.example.cs4227_project.util.LogTags;
+import com.example.cs4227_project.order.command_pattern.AddStock;
+import com.example.cs4227_project.order.command_pattern.CommandControl;
+import com.example.cs4227_project.order.command_pattern.Stock;
+import com.example.cs4227_project.products.abstract_factory_pattern.AbstractFactory;
+import com.example.cs4227_project.products.abstract_factory_pattern.FactoryProducer;
+import com.example.cs4227_project.products.abstract_factory_pattern.Product;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
@@ -46,11 +42,9 @@ import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
-import java.util.ArrayList;
+import java.security.SecureRandom;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -64,21 +58,20 @@ public class AddStockFragment extends Fragment implements View.OnClickListener {
     private ImageView userPicture;
     private String path;
     private EditText pName, size1, q1, size2, q2, size3, q3, price, colour, brand, style;
-    private RadioGroup genderGroup, categoryGroup;
-    private AbstractFactory productFactory;
+    private RadioGroup genderGroup;
+    private RadioGroup categoryGroup;
     private boolean female;
     private ProductType pType;
 
-    private final int PICK_IMAGE_REQUEST = 22;
-    private final int REQUEST_IMAGE_CAPTURE = 1;
+    private static final int PICK_IMAGE_REQUEST = 22;
+    private static final int REQUEST_IMAGE_CAPTURE = 1;
 
     public AddStockFragment() {
         // Required empty public constructor
     }
 
     public static AddStockFragment newInstance() {
-        AddStockFragment fragment = new AddStockFragment();
-        return fragment;
+        return new AddStockFragment();
     }
 
     @Override
@@ -95,9 +88,9 @@ public class AddStockFragment extends Fragment implements View.OnClickListener {
         Button uploadPic = rootView.findViewById(R.id.uploadImage);
         Button submit = rootView.findViewById(R.id.finish);
 
-        Random rand = new Random();
-        int int_random = rand.nextInt(10000);
-        path = "images/" + int_random;
+        SecureRandom rand = new SecureRandom();
+        int randomInt = rand.nextInt(10000);
+        path = "images/" + randomInt;
 
         pName = rootView.findViewById(R.id.productName);
         size1 = rootView.findViewById(R.id.size1);
@@ -160,49 +153,36 @@ public class AddStockFragment extends Fragment implements View.OnClickListener {
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) throws NullPointerException {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null )
         {
             filePath = data.getData();
-            Log.d("Check",""+ filePath);
+            Log.d(LogTags.ADDSTOCK,""+ filePath);
             Picasso.get().load(filePath).centerCrop().fit().into(userPicture);
         }
 
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK){
-            Log.d("Check"," checking activity");
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK  && data != null){
+            Log.d(LogTags.ADDSTOCK," checking activity");
             Bundle extras = data.getExtras();
             Bitmap photo = (Bitmap) extras.get("data");
-            Log.d("Check"," " + photo);
+            Log.d(LogTags.ADDSTOCK," " + photo);
             userPicture.setImageBitmap(photo);
             Uri tempUri = getImageUri(getContext(), photo);
             filePath = tempUri;
-            Log.d("Check"," " + tempUri);
+            Log.d(LogTags.ADDSTOCK," " + tempUri);
         }
     }
 
     public Uri getImageUri(Context inContext, Bitmap inImage) {
-        Log.d("Check","get bitmap");
+        Log.d(LogTags.ADDSTOCK,"get bitmap");
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
-        return Uri.parse(path);
+        String imagePath = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(imagePath);
     }
 
-    public void validateInput(){
-        HashMap<String, String> sizeQuantities = new HashMap<>();
-        String productName = pName.getText().toString();
-        String cost = price.getText().toString();
-        String brandName = brand.getText().toString();
-        String color = colour.getText().toString();
-        String productStyle = style.getText().toString();
-        String s1 = size1.getText().toString();
-        String s2 = size2.getText().toString();
-        String s3 = size3.getText().toString();
-        String quant1 = q1.getText().toString();
-        String quant2 = q2.getText().toString();
-        String quant3 = q3.getText().toString();
-
+    public void validateGenderInput() {
         int genderId = genderGroup.getCheckedRadioButtonId();
         if(genderId == R.id.female) {
             Log.d(LogTags.COMMAND_DP, "Is female selected= " + female);
@@ -211,7 +191,9 @@ public class AddStockFragment extends Fragment implements View.OnClickListener {
             Log.d(LogTags.COMMAND_DP, "Is female selected= " + female);
             female=false;
         }
+    }
 
+    public void validateCategoryInput() {
         int checkedId = categoryGroup.getCheckedRadioButtonId();
         if(checkedId == R.id.clothes){
             pType = ProductType.CLOTHES;
@@ -220,8 +202,19 @@ public class AddStockFragment extends Fragment implements View.OnClickListener {
         }else if(checkedId == R.id.accessories){
             pType = ProductType.ACCESSORIES;
         }
-
         Log.d(LogTags.COMMAND_DP, "Product type" + pType.getValue());
+    }
+
+    public Map<String, String> validateProductQuantitiesInput() {
+        Map<String, String> sizeQuantities = new HashMap<>();
+        //get text from inputs
+        String s1 = size1.getText().toString();
+        String s2 = size2.getText().toString();
+        String s3 = size3.getText().toString();
+        String quant1 = q1.getText().toString();
+        String quant2 = q2.getText().toString();
+        String quant3 = q3.getText().toString();
+
         if(!s1.isEmpty() && !quant1.isEmpty()){
             sizeQuantities.put(s1, quant1);
         }
@@ -232,20 +225,34 @@ public class AddStockFragment extends Fragment implements View.OnClickListener {
             sizeQuantities.put(s3, quant3);
         }
 
+        return sizeQuantities;
+    }
+
+    public void validateInput(){
+        String productName = pName.getText().toString();
+        String cost = price.getText().toString();
+        String brandName = brand.getText().toString();
+        String color = colour.getText().toString();
+        String productStyle = style.getText().toString();
+
+        validateGenderInput();
+        validateCategoryInput();
+        Map<String, String> sizeQuantities = validateProductQuantitiesInput();
+
         if(productName.isEmpty()){
             pName.setError("Must have product name");
-        }else if(sizeQuantities.size() == 0){
+        } else if(sizeQuantities.size() == 0){
             Toast.makeText(getActivity(), "Product must contain stock", Toast.LENGTH_SHORT).show();
-        }else if(brandName == null || color == null || cost == null || productStyle == null){
+        } else if(brandName.equals("") || color.equals("") || cost.equals("") || productStyle.equals("")) {
             Toast.makeText(getActivity(), "All fields must be filled", Toast.LENGTH_SHORT).show();
         }else{
             createProduct(sizeQuantities, productName, color, brandName, cost, productStyle);
         }
     }
 
-    public void createProduct(HashMap<String, String> sizeQuantities, String productName, String color, String brandName, String cost, String style){
-        HashMap<String, Object> productData = new HashMap<>();
-        productFactory = FactoryProducer.getFactory(female);
+    public void createProduct(Map<String, String> sizeQuantities, String productName, String color, String brandName, String cost, String style){
+        Map<String, Object> productData = new HashMap<>();
+        AbstractFactory productFactory = FactoryProducer.getFactory(female);
 
         //Create Id to use as product id and for the stock id.
         String collection = pType.getValue() + female;
@@ -273,13 +280,13 @@ public class AddStockFragment extends Fragment implements View.OnClickListener {
         createStock(productId, sizeQuantities);
     }
 
-    public void createStock(String id, HashMap<String, String> sizeQ){
+    public void createStock(String id, Map<String, String> sizeQ){
         CommandControl commandController = new CommandControl();
         Stock stock = new Stock(id, sizeQ, pType.getValue(), female);
         AddStock addStock = new AddStock(stock);
         commandController.addCommand(addStock);
         commandController.executeCommands();
-        getFragmentManager().popBackStack();
+        getParentFragmentManager().popBackStack();
     }
 
     @Override

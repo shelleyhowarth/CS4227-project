@@ -4,7 +4,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.example.cs4227_project.misc.LogTags;
+import com.example.cs4227_project.util.LogTags;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
@@ -15,7 +15,7 @@ import java.util.Map;
 
 public class Database {
     private static Database instance = null;
-    private FirebaseFirestore db;
+    private final FirebaseFirestore db;
 
     //private constructor - singleton dp
     private Database() {
@@ -36,7 +36,7 @@ public class Database {
      * @param document - document to retreive
      * @return DocumentReference
      */
-    public DocumentReference GET(String collection, String document) {
+    public DocumentReference get(String collection, String document) {
         return db.collection(collection).document(document);
     }
 
@@ -46,7 +46,7 @@ public class Database {
      * @param collection - db collection to read
      * @return CollectionReference
      */
-    public CollectionReference GET(String collection) {
+    public CollectionReference get(String collection) {
         return db.collection(collection);
     }
 
@@ -56,7 +56,7 @@ public class Database {
      * @param collection - db collection to write to
      * @param data - data to write
      */
-    public void POST(String collection, Map<String, Object> data) {
+    public void post(String collection, Map<String, Object> data) {
         CollectionReference colRef = db.collection(collection);
         colRef.add(data)
             .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
@@ -76,10 +76,10 @@ public class Database {
     /**
      * Writes a specified Object to a collection in the db
      * @author Carla Warde
-     * @param collection
-     * @param data
+     * @param collection - db collection to write to
+     * @param data - data to write
      */
-    public void POST(String collection, Object data) {
+    public void post(String collection, Object data) {
         db.collection(collection)
             .add(data)
             .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
@@ -99,11 +99,11 @@ public class Database {
     /**
      * Overwrites an existing document or add sit if it doesn't exist
      * @author Carla Warde
-     * @param collection
-     * @param document
-     * @param data
+     * @param collection - db collection to write to
+     * @param document - db document to write to
+     * @param data - data to be written
      */
-    public void PUT(String collection, String document, Object data) {
+    public void put(String collection, String document, Object data) {
         Log.d(LogTags.DB_PUT, "Preparing to update document: "+document);
         db.collection(collection).document(document).set(data)
             .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -123,11 +123,11 @@ public class Database {
     /**
      * Deletes a specified document from a collection in the db
      * @author Carla Warde
-     * @param collection
-     * @param document
-     * @throws Exception
+     * @param collection - db collection to write to
+     * @param document - db document to write to
+     * @throws Exception - exception
      */
-    public void DELETE(String collection, String document) {
+    public void delete(String collection, String document) {
         Log.d(LogTags.DB_DELETE, "Preparing to delete document: "+document);
         db.collection(collection).document(document)
             .delete()
@@ -146,7 +146,7 @@ public class Database {
     }
 
     //Can update object in database
-    public void PATCH(String collection, String document, String field, Object value) {
+    public void patch(String collection, String document, String field, Object value) {
         Log.d(LogTags.DB_UPDATE, "Preparing to update "+field+" field in document "+document);
         db.collection(collection).document(document).update(field, value)
             .addOnSuccessListener(new OnSuccessListener<Void>() {

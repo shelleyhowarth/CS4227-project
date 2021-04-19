@@ -1,10 +1,14 @@
 package com.example.cs4227_project.products;
 
-import com.example.cs4227_project.misc.ProductType;
+import com.example.cs4227_project.util.ProductType;
 
 public class ProductTypeController {
     private static ProductType type = ProductType.CLOTHES;
     private static boolean female = true;
+
+    private ProductTypeController() {
+        throw new IllegalStateException("Utility class");
+    }
 
     public static boolean isFemale() {
         return female;
