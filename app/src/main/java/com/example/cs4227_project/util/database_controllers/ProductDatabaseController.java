@@ -11,7 +11,7 @@ import com.example.cs4227_project.products.abstract_factory_pattern.AbstractFact
 import com.example.cs4227_project.products.abstract_factory_pattern.FactoryProducer;
 import com.example.cs4227_project.products.abstract_factory_pattern.Product;
 import com.example.cs4227_project.util.ProductDatabaseFields;
-import com.example.cs4227_project.products.ProductTypeController;
+import com.example.cs4227_project.util.ProductTypeController;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;

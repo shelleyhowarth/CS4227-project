@@ -17,6 +17,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.cs4227_project.R;
+import com.example.cs4227_project.util.ProductTypeController;
 import com.example.cs4227_project.util.database_controllers.ProductDatabaseController;
 import com.example.cs4227_project.database.ProductReadListener;
 import com.example.cs4227_project.util.FilterAttributes;

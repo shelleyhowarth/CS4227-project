@@ -1,4 +1,4 @@
-package com.example.cs4227_project.products;
+package com.example.cs4227_project.util;
 
 import com.example.cs4227_project.util.ProductType;
 

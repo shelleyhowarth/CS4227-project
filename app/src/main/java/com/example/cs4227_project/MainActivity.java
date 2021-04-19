@@ -24,7 +24,7 @@ import com.example.cs4227_project.order.AddStockFragment;
 import com.example.cs4227_project.order.builder_pattern.Order;
 import com.example.cs4227_project.order.adapter_pattern.ViewOrdersFragment;
 import com.example.cs4227_project.products.abstract_factory_pattern.Product;
-import com.example.cs4227_project.products.ProductTypeController;
+import com.example.cs4227_project.util.ProductTypeController;
 import com.example.cs4227_project.products.ViewProductsFragment;
 import com.example.cs4227_project.products.facade_pattern.AttributeManager;
 import com.example.cs4227_project.order.Cart;

@@ -4,7 +4,7 @@ import android.util.Log;
 
 import com.example.cs4227_project.util.ProductType;
 import com.example.cs4227_project.util.LogTags;
-import com.example.cs4227_project.products.ProductTypeController;
+import com.example.cs4227_project.util.ProductTypeController;
 
 import java.util.HashMap;
 import java.util.List;
