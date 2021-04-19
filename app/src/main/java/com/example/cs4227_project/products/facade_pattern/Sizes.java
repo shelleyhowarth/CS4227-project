@@ -2,8 +2,8 @@ package com.example.cs4227_project.products.facade_pattern;
 
 import android.util.Log;
 
-import com.example.cs4227_project.misc.ProductType;
-import com.example.cs4227_project.misc.LogTags;
+import com.example.cs4227_project.util.ProductType;
+import com.example.cs4227_project.util.LogTags;
 import com.example.cs4227_project.products.ProductTypeController;
 
 import java.util.HashMap;

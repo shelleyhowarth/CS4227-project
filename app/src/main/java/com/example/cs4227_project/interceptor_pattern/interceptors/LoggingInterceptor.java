@@ -4,7 +4,7 @@ import android.util.Log;
 
 import com.example.cs4227_project.interceptor_pattern.Interceptor;
 import com.example.cs4227_project.interceptor_pattern.InterceptorContext;
-import com.example.cs4227_project.misc.LogTags;
+import com.example.cs4227_project.util.LogTags;
 
 public class LoggingInterceptor implements Interceptor {
     @Override

@@ -1,4 +1,4 @@
-package com.example.cs4227_project.misc;
+package com.example.cs4227_project.util;
 
 import android.os.Bundle;
 import android.util.Log;

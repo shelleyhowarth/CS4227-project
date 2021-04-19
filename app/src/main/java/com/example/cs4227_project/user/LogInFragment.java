@@ -14,8 +14,8 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.cs4227_project.database.UserDatabaseController;
-import com.example.cs4227_project.misc.LogTags;
+import com.example.cs4227_project.util.database_controllers.UserDatabaseController;
+import com.example.cs4227_project.util.LogTags;
 import com.example.cs4227_project.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;

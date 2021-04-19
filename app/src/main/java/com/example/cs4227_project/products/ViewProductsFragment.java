@@ -17,10 +17,10 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.cs4227_project.R;
-import com.example.cs4227_project.database.ProductDatabaseController;
+import com.example.cs4227_project.util.database_controllers.ProductDatabaseController;
 import com.example.cs4227_project.database.ProductReadListener;
-import com.example.cs4227_project.misc.FilterAttributes;
-import com.example.cs4227_project.misc.LogTags;
+import com.example.cs4227_project.util.FilterAttributes;
+import com.example.cs4227_project.util.LogTags;
 import com.example.cs4227_project.products.abstract_factory_pattern.Product;
 import com.example.cs4227_project.products.facade_pattern.AttributeManager;
 

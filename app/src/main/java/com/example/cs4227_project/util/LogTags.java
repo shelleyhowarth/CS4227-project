@@ -1,4 +1,4 @@
-package com.example.cs4227_project.misc;
+package com.example.cs4227_project.util;
 
 public class LogTags {
 
