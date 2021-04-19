@@ -1,4 +1,6 @@
-package com.example.cs4227_project.user;
+package com.example.cs4227_project.util.ui_controllers;
+
+import com.example.cs4227_project.user.User;
 
 public class UserController {
     private static User user;

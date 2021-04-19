@@ -23,7 +23,7 @@ import android.widget.Toast;
 
 import com.example.cs4227_project.R;
 import com.example.cs4227_project.util.database_controllers.ProductDatabaseController;
-import com.example.cs4227_project.util.ProductType;
+import com.example.cs4227_project.util.enums.ProductType;
 import com.example.cs4227_project.util.LogTags;
 import com.example.cs4227_project.order.command_pattern.AddStock;
 import com.example.cs4227_project.order.command_pattern.CommandControl;

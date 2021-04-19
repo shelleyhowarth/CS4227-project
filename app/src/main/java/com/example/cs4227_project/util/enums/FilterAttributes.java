@@ -1,4 +1,4 @@
-package com.example.cs4227_project.util;
+package com.example.cs4227_project.util.enums;
 
 public enum FilterAttributes {
     BRANDS("brands"),

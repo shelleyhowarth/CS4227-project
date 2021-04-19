@@ -1,7 +1,7 @@
 package com.example.cs4227_project.products.abstract_factory_pattern;
 
-import com.example.cs4227_project.util.ProductDatabaseFields;
-import com.example.cs4227_project.util.ProductType;
+import com.example.cs4227_project.util.enums.ProductDatabaseFields;
+import com.example.cs4227_project.util.enums.ProductType;
 
 import java.util.Map;
 
