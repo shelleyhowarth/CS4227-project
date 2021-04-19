@@ -1,6 +1,6 @@
 package com.example.cs4227_project.products.abstract_factory_pattern;
 
-import com.example.cs4227_project.misc.ProductType;
+import com.example.cs4227_project.util.ProductType;
 
 import java.util.Map;
 

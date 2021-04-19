@@ -1,10 +1,12 @@
-package com.example.cs4227_project.database;
+package com.example.cs4227_project.util.database_controllers;
 
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.example.cs4227_project.misc.LogTags;
+import com.example.cs4227_project.database.AttributesReadListener;
+import com.example.cs4227_project.database.Database;
+import com.example.cs4227_project.util.LogTags;
 import com.example.cs4227_project.products.facade_pattern.Attributes;
 import com.example.cs4227_project.products.facade_pattern.Brands;
 import com.example.cs4227_project.products.facade_pattern.Colours;

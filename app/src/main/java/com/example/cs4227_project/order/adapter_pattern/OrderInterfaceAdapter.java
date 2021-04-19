@@ -16,9 +16,9 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cs4227_project.R;
-import com.example.cs4227_project.database.OrderDatabaseController;
+import com.example.cs4227_project.util.database_controllers.OrderDatabaseController;
 import com.example.cs4227_project.database.OrderReadListener;
-import com.example.cs4227_project.misc.LogTags;
+import com.example.cs4227_project.util.LogTags;
 import com.example.cs4227_project.order.builder_pattern.Order;
 import com.example.cs4227_project.order.command_pattern.Stock;
 

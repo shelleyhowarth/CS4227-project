@@ -11,9 +11,9 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.example.cs4227_project.R;
-import com.example.cs4227_project.database.StockDatabaseController;
+import com.example.cs4227_project.util.database_controllers.StockDatabaseController;
 import com.example.cs4227_project.database.StockReadListener;
-import com.example.cs4227_project.misc.LogTags;
+import com.example.cs4227_project.util.LogTags;
 import com.example.cs4227_project.products.abstract_factory_pattern.Product;
 
 import java.util.HashMap;

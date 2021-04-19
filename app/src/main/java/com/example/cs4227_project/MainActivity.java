@@ -11,15 +11,15 @@ import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.cs4227_project.database.OrderDatabaseController;
+import com.example.cs4227_project.util.database_controllers.OrderDatabaseController;
 import com.example.cs4227_project.database.OrderReadListener;
-import com.example.cs4227_project.database.ProductDatabaseController;
+import com.example.cs4227_project.util.database_controllers.ProductDatabaseController;
 import com.example.cs4227_project.database.ProductReadListener;
-import com.example.cs4227_project.misc.FragmentController;
-import com.example.cs4227_project.database.UserDatabaseController;
+import com.example.cs4227_project.util.FragmentController;
+import com.example.cs4227_project.util.database_controllers.UserDatabaseController;
 import com.example.cs4227_project.database.UserReadListener;
-import com.example.cs4227_project.misc.ProductType;
-import com.example.cs4227_project.misc.LogTags;
+import com.example.cs4227_project.util.ProductType;
+import com.example.cs4227_project.util.LogTags;
 import com.example.cs4227_project.order.AddStockFragment;
 import com.example.cs4227_project.order.builder_pattern.Order;
 import com.example.cs4227_project.order.adapter_pattern.ViewOrdersFragment;
