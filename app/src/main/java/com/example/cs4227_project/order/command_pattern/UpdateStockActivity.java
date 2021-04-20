@@ -15,16 +15,19 @@ import android.widget.Toast;
 import com.example.cs4227_project.MainActivity;
 import com.example.cs4227_project.R;
 import com.example.cs4227_project.products.facade_pattern.AttributeManager;
+import com.example.cs4227_project.util.database_controllers.ProductDatabaseController;
 import com.example.cs4227_project.util.database_controllers.StockDatabaseController;
 import com.example.cs4227_project.database.StockReadListener;
 import com.example.cs4227_project.util.LogTags;
 import com.example.cs4227_project.products.abstract_factory_pattern.Product;
 import com.example.cs4227_project.util.enums.FilterAttributes;
+import com.example.cs4227_project.util.enums.ProductDatabaseFields;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 
 public class UpdateStockActivity extends AppCompatActivity implements View.OnClickListener, StockReadListener {
@@ -112,6 +115,7 @@ public class UpdateStockActivity extends AppCompatActivity implements View.OnCli
             Log.d(LogTags.COMMAND_DP, "Add stock values: quantity = " + quantity + " Size = " + size);
             AddStock addStock = new AddStock(stockToUpdate, quantity, size);
             controller.addCommand(addStock);
+            productOrganiseProductSizes(sizeQuantities.keySet());
         }
         controller.executeCommands();
         goToHome();
@@ -127,7 +131,7 @@ public class UpdateStockActivity extends AppCompatActivity implements View.OnCli
         stockToUpdate = stockDb.getStockItem();
     }
 
-    public void onClick(View v){
+    public void onClick(View v) {
         int i = v.getId();
         if(i == R.id.confirm){
             validateForm();
@@ -156,4 +160,26 @@ public class UpdateStockActivity extends AppCompatActivity implements View.OnCli
         filterSpinners.put(size2, FilterAttributes.SIZES);
         filterSpinners.put(size3, FilterAttributes.SIZES);
     }
+
+    private void productOrganiseProductSizes(Set<String> sizeSet) {
+        List<String> currentSizes = product.getSize();
+        List<String> newSizes = product.getSize();
+        boolean found = false;
+
+        for( String newSize : sizeSet) {
+            for( String currentSize : currentSizes) {
+                if(currentSize.equals(newSize)) {
+                    found = true;
+                    break;
+                }
+            }
+            if(!found) {
+                newSizes.add(newSize);
+            }
+        }
+
+        ProductDatabaseController productDatabaseController = new ProductDatabaseController();
+        productDatabaseController.updateProductField(product.getId(), ProductDatabaseFields.SIZES, newSizes);
+    }
+
 }
