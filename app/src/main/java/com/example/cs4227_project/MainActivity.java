@@ -123,6 +123,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onTabSelected(TabLayout.Tab tab) {
                 int mSelectedPosition = genderTab.getSelectedTabPosition();
                 ProductTypeController.setFemale(mSelectedPosition == 0);
+                loadImages();
                 Log.d(LogTags.GENDER_TAB, "Gender tab female is "+ProductTypeController.isFemale());
             }
 
@@ -166,12 +167,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void loadImages(){
         //Load Image
-        String clothesUrl = "https://firebasestorage.googleapis.com/v0/b/system-analysis-6716f.appspot.com/o/Product%20Pics%2FTops%2Fjeans.jpg?alt=media&token=670863da-1f9f-427f-833c-cfc1f2c4b6a9";
-        String accUrl = "https://firebasestorage.googleapis.com/v0/b/system-analysis-6716f.appspot.com/o/Product%20Pics%2FTops%2Fhandbag.jpg?alt=media&token=c304abaf-fe0b-4703-8488-2e8140d9a78f";
-        String shoeUrl = "https://firebasestorage.googleapis.com/v0/b/system-analysis-6716f.appspot.com/o/Product%20Pics%2FTops%2FAir%20Force.jpg?alt=media&token=fa2fcc3c-a1f4-446c-957e-e7711b131d41";
-        Picasso.get().load(clothesUrl).fit().centerCrop().into(clothesButton);
-        Picasso.get().load(accUrl).fit().centerCrop().into(accButton);
-        Picasso.get().load(shoeUrl).fit().centerCrop().into(shoeButton);
+        String femaleClothesUrl = "https://firebasestorage.googleapis.com/v0/b/system-analysis-6716f.appspot.com/o/Product%20Pics%2FTops%2Fjeans.jpg?alt=media&token=670863da-1f9f-427f-833c-cfc1f2c4b6a9";
+        String femaleAccUrl = "https://firebasestorage.googleapis.com/v0/b/system-analysis-6716f.appspot.com/o/Product%20Pics%2FTops%2Fhandbag.jpg?alt=media&token=c304abaf-fe0b-4703-8488-2e8140d9a78f";
+        String femaleShoeUrl = "https://firebasestorage.googleapis.com/v0/b/system-analysis-6716f.appspot.com/o/Product%20Pics%2FTops%2FAir%20Force.jpg?alt=media&token=fa2fcc3c-a1f4-446c-957e-e7711b131d41";
+        String maleClothesURL = "https://firebasestorage.googleapis.com/v0/b/system-analysis-6716f.appspot.com/o/adidasTop.JPG?alt=media&token=13224c37-f051-4c0f-ae4b-0e19343b5744";
+        String maleShoeURL = "https://firebasestorage.googleapis.com/v0/b/system-analysis-6716f.appspot.com/o/CKShoe.JPG?alt=media&token=bcd67e91-03de-48e9-bace-b0e4ffcc41ca";
+        String maleAccURL = "https://firebasestorage.googleapis.com/v0/b/system-analysis-6716f.appspot.com/o/GucciWatch.JPG?alt=media&token=3b7c309d-e7b8-41f9-9335-93b814c30955";
+
+        if(ProductTypeController.isFemale()){
+            Picasso.get().load(femaleClothesUrl).fit().centerCrop().into(clothesButton);
+            Picasso.get().load(femaleAccUrl).fit().centerCrop().into(accButton);
+            Picasso.get().load(femaleShoeUrl).fit().centerCrop().into(shoeButton);
+        }else{
+            Picasso.get().load(maleClothesURL).fit().centerCrop().into(clothesButton);
+            Picasso.get().load(maleAccURL).fit().centerCrop().into(accButton);
+            Picasso.get().load(maleShoeURL).fit().centerCrop().into(shoeButton);
+        }
+
     }
 
     //Opens login fragment
