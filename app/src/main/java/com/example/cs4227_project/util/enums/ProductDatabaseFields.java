@@ -5,8 +5,7 @@ public enum ProductDatabaseFields {
     ID("id"),
     IMAGEURL("imageURL"),
     PRICE("price"),
-    QUANTITIES("sizeQuantities"),
-    SIZES("sizes"),
+    SIZES("size"),
     BRAND("brand"),
     COLOUR("colour"),
     STYLE("style");
