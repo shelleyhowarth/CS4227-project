@@ -2,9 +2,13 @@ package com.example.cs4227_project.order.command_pattern;
 
 import android.util.Log;
 
+import com.example.cs4227_project.util.database_controllers.ProductDatabaseController;
 import com.example.cs4227_project.util.database_controllers.StockDatabaseController;
 import com.example.cs4227_project.util.LogTags;
+import com.example.cs4227_project.util.enums.ProductDatabaseFields;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class AddStock implements Command {
@@ -23,11 +27,13 @@ public class AddStock implements Command {
             val = 0;
         }
         int q = val + quantity;
-        Log.d(LogTags.COMMAND_DP, "New quantity = " + q);
+
         sizesQ.put(size, Integer.toString(q));
         abcStock.setSizeQuantity(sizesQ);
         Log.d(LogTags.COMMAND_DP, "Size quantity = " + sizesQ.toString());
+
         stockDb.updateStock(abcStock.getId(), "sizeQuantity", sizesQ);
+        updateProductSizes();
     }
 
     public AddStock(Stock abcStock){
@@ -37,5 +43,16 @@ public class AddStock implements Command {
 
     public void execute() {
         abcStock.addStock();
+    }
+
+    public void updateProductSizes(){
+        Map<String, String> sizesQ = abcStock.getSizeQuantity();
+        List<String> productSize = new ArrayList<>();
+        for(Map.Entry<String, String> entry : sizesQ.entrySet()){
+            productSize.add(entry.getKey());
+        }
+
+        ProductDatabaseController productDb = new ProductDatabaseController();
+        productDb.updateProductField(abcStock.getId(), ProductDatabaseFields.SIZES, productSize);
     }
 }

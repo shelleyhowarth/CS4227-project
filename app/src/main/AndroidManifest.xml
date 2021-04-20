@@ -16,5 +16,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name="com.example.cs4227_project.order.command_pattern.UpdateStockActivity"/>
     </application>
 </manifest>

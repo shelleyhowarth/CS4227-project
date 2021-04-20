@@ -1,5 +1,8 @@
 package com.example.cs4227_project.products.abstract_factory_pattern;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class WomensClothes implements Product {
     private String id = "";
     private String name = "";
@@ -7,6 +10,7 @@ public class WomensClothes implements Product {
     private String brand = "";
     private String colour = "";
     private String style = "";
+    private List<String> size = new ArrayList<>();
     private String imageURL = "";
 
     WomensClothes() { }
@@ -20,13 +24,14 @@ public class WomensClothes implements Product {
         this.imageURL = imageUrl;
     }
 
-    WomensClothes(String id, String name, double price, String brand, String colour, String style, String imageUrl){
+    WomensClothes(String id, String name, double price, String brand, String colour, String style, List<String> size, String imageUrl){
         this.id = id;
         this.name = name;
         this.price = price;
         this.brand = brand;
         this.colour = colour;
         this.style = style;
+        this.size = size;
         this.imageURL = imageUrl;
     }
 
@@ -67,6 +72,10 @@ public class WomensClothes implements Product {
     public void setStyle(String style) {
         this.style = style;
     }
+
+    public List<String> getSize() { return size;}
+
+    public void setSize(List<String> size) { this.size = size; }
 
     public void setImageURL(String imageURL) {
         this.imageURL = imageURL;
