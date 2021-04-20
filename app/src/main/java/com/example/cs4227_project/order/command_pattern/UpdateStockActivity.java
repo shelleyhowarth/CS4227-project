@@ -7,16 +7,19 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.example.cs4227_project.MainActivity;
 import com.example.cs4227_project.R;
-import com.example.cs4227_project.util.database_controllers.ProductDatabaseController;
+import com.example.cs4227_project.products.facade_pattern.AttributeManager;
 import com.example.cs4227_project.util.database_controllers.StockDatabaseController;
 import com.example.cs4227_project.database.StockReadListener;
 import com.example.cs4227_project.util.LogTags;
 import com.example.cs4227_project.products.abstract_factory_pattern.Product;
-import com.example.cs4227_project.util.enums.ProductDatabaseFields;
+import com.example.cs4227_project.util.enums.FilterAttributes;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,8 +29,10 @@ import java.util.Map;
 
 public class UpdateStockActivity extends AppCompatActivity implements View.OnClickListener, StockReadListener {
 
-    private EditText size1, size2, size3, q1, q2, q3;
+    private Spinner size1, size2, size3;
+    private EditText q1, q2, q3;
     private HashMap<String,String> sizeQuantities;
+    private Map<Spinner, FilterAttributes> filterSpinners;
     Product product;
     Stock stockToUpdate;
     StockDatabaseController stockDb;
@@ -59,12 +64,15 @@ public class UpdateStockActivity extends AppCompatActivity implements View.OnCli
         q3= findViewById(R.id.quantity3);
 
         findViewById(R.id.confirm).setOnClickListener(this);
+
+        putSpinnersInMap();
+        populateSpinners();
     }
 
     public void validateForm(){
-        String s1 = size1.getText().toString();
-        String s2 = size2.getText().toString();
-        String s3 = size3.getText().toString();
+        String s1 = size1.getSelectedItem().toString();
+        String s2 = size2.getSelectedItem().toString();
+        String s3 = size3.getSelectedItem().toString();
         String quant1 = q1.getText().toString();
         String quant2 = q2.getText().toString();
         String quant3 = q3.getText().toString();
@@ -87,6 +95,9 @@ public class UpdateStockActivity extends AppCompatActivity implements View.OnCli
 
         if(sizeQuantities.size() > 0){
             updateStock();
+        }
+        else {
+            Toast.makeText(this, "You must fill out at least one quantity to update the stock!",Toast.LENGTH_SHORT);
         }
     }
 
@@ -121,5 +132,28 @@ public class UpdateStockActivity extends AppCompatActivity implements View.OnCli
         if(i == R.id.confirm){
             validateForm();
         }
+    }
+
+    public void populateSpinners() {
+        AttributeManager attributeManager = AttributeManager.getInstance();
+        for(Map.Entry<Spinner, FilterAttributes> entry : filterSpinners.entrySet()) {
+            List<String> values = new ArrayList<>();
+            values.addAll(attributeManager.getAttributes(entry.getValue()));
+            entry.getKey().setAdapter(initSpinner(values));
+            Log.d(LogTags.SET_UP_FILTERS, "Set up "+entry.getValue()+" spinner");
+        }
+    }
+
+    private ArrayAdapter<String> initSpinner(List<String> data) {
+        ArrayAdapter<String> aa = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, data);
+        aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        return aa;
+    }
+
+    private void putSpinnersInMap() {
+        filterSpinners = new HashMap<>();
+        filterSpinners.put(size1, FilterAttributes.SIZES);
+        filterSpinners.put(size2, FilterAttributes.SIZES);
+        filterSpinners.put(size3, FilterAttributes.SIZES);
     }
 }
