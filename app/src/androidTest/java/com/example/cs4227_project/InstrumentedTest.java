@@ -49,7 +49,6 @@ public class InstrumentedTest {
     private final static int LONG_WAIT = 1000;
     private final static int MED_WAIT = 500;
     private final static int SHORT_WAIT = 250;
-    private String orderTotal = "Total: ";
     private String orderTime = "Date purchased: ";
 
     @Rule
@@ -172,7 +171,6 @@ public class InstrumentedTest {
                 onView(withId(R.id.heading)).check(matches(withText("Order Summary")));
 
                 //Check that the information displayed matches the order time and order total variables in buyItem()
-                onView(withId(R.id.orderTotal)).check(matches(withSubstring((orderTotal))));
                 onView(withId(R.id.orderTime)).check(matches(withSubstring((orderTime))));
                 onView(isRoot()).perform(pressBack());
 
@@ -203,7 +201,6 @@ public class InstrumentedTest {
         onView(withId(R.id.recycler_view)).check(matches(isDisplayed())).perform(actionOnItemAtPosition(0,click()));
         Thread.sleep(LONG_WAIT);
         TextView cost = activityRule.getActivity().findViewById(R.id.productPrice);
-        orderTotal += cost.getText().toString();
 
         //Input quantity
         onView(withId(R.id.quantity)).perform(typeText("1"), closeSoftKeyboard());
@@ -254,7 +251,6 @@ public class InstrumentedTest {
             onView(withId(R.id.heading)).check(matches(withText("Order Summary")));
 
             //Check that the time and total are different to the time and total in buyItem()
-            onView(withId(R.id.orderTotal)).check(matches(not(withSubstring((orderTotal)))));
             onView(withId(R.id.orderTime)).check(matches(not(withSubstring((orderTime)))));
         }
     }
@@ -278,7 +274,6 @@ public class InstrumentedTest {
             onView(withId(R.id.recycler_view)).check(matches(isDisplayed())).perform(actionOnItemAtPosition(0, click()));
             Thread.sleep(LONG_WAIT);
             TextView cost = activityRule.getActivity().findViewById(R.id.productPrice);
-            orderTotal = cost.getText().toString();
 
             //Input quantity and add item cart
             onView(withId(R.id.quantity)).perform(typeText("1"), closeSoftKeyboard());
@@ -382,6 +377,7 @@ public class InstrumentedTest {
         for(int i = 1; i < items; i++) {
             //Clicks spinner and selects size
             onView(withId(R.id.sizeSpinner)).check(matches(isDisplayed())).perform(click());
+            Thread.sleep(MED_WAIT);
             onData(anything()).atPosition(i).perform(click());
 
             //Clicks filter
