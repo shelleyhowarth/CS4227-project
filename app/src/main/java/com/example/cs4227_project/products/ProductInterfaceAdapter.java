@@ -192,7 +192,7 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter implements Ada
         }
 
         @Override
-        public void onClick(View v){
+        public void onClick(View v) {
             int i = v.getId();
             Log.d(LogTags.PRODUCT_INTERFACE_ADAPTER, "In on click");
             if(i == R.id.addStock){

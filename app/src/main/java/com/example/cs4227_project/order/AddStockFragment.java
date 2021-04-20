@@ -15,14 +15,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.cs4227_project.R;
+import com.example.cs4227_project.products.facade_pattern.AttributeManager;
 import com.example.cs4227_project.util.database_controllers.ProductDatabaseController;
+import com.example.cs4227_project.util.enums.FilterAttributes;
 import com.example.cs4227_project.util.enums.ProductType;
 import com.example.cs4227_project.util.LogTags;
 import com.example.cs4227_project.order.command_pattern.AddStock;
@@ -31,6 +36,7 @@ import com.example.cs4227_project.order.command_pattern.Stock;
 import com.example.cs4227_project.products.abstract_factory_pattern.AbstractFactory;
 import com.example.cs4227_project.products.abstract_factory_pattern.FactoryProducer;
 import com.example.cs4227_project.products.abstract_factory_pattern.Product;
+import com.example.cs4227_project.util.ui_controllers.ProductTypeController;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
@@ -43,7 +49,9 @@ import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static android.app.Activity.RESULT_OK;
@@ -57,11 +65,16 @@ public class AddStockFragment extends Fragment implements View.OnClickListener {
 
     private ImageView userPicture;
     private String path;
-    private EditText pName, size1, q1, size2, q2, size3, q3, price, colour, brand, style;
+    private EditText pName, q1, q2, q3, price;
+    private Spinner size1, size2, size3, colour, brand, style;
+    private Map<Spinner, FilterAttributes> filterSpinners;
     private RadioGroup genderGroup;
     private RadioGroup categoryGroup;
     private boolean female;
     private ProductType pType;
+
+    private boolean genderSelected = false;
+    private boolean categorySelected = false;
 
     private static final int PICK_IMAGE_REQUEST = 22;
     private static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -92,20 +105,47 @@ public class AddStockFragment extends Fragment implements View.OnClickListener {
         int randomInt = rand.nextInt(10000);
         path = "images/" + randomInt;
 
+        //initialise UI objects
         pName = rootView.findViewById(R.id.productName);
-        size1 = rootView.findViewById(R.id.size1);
-        size2 = rootView.findViewById(R.id.size2);
-        size3 = rootView.findViewById(R.id.size3);
         q1 = rootView.findViewById(R.id.quantity1);
         q2 = rootView.findViewById(R.id.quantity2);
         q3 = rootView.findViewById(R.id.quantity3);
         price = rootView.findViewById(R.id.price);
+
+        size1 = rootView.findViewById(R.id.size1);
+        size2 = rootView.findViewById(R.id.size2);
+        size3 = rootView.findViewById(R.id.size3);
         colour = rootView.findViewById(R.id.colour);
         brand = rootView.findViewById(R.id.brand);
         style = rootView.findViewById(R.id.style);
 
+        putSpinnersInMap();
+
+        //set up radio groups and listeners
         genderGroup = rootView.findViewById(R.id.genderGroup);
+        genderGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                //populate spinners based on selected button
+                validateGenderInput();
+                genderSelected = true;
+                if(genderSelected && categorySelected) {
+                    populateSpinners();
+                }
+            }
+        });
         categoryGroup = rootView.findViewById(R.id.categoryGroup);
+        categoryGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                //populate spinners based on selected button
+                validateCategoryInput();
+                categorySelected = true;
+                if(genderSelected && categorySelected) {
+                    populateSpinners();
+                }
+            }
+        });
 
         uploadPic.setOnClickListener(this);
         submit.setOnClickListener(this);
@@ -187,9 +227,11 @@ public class AddStockFragment extends Fragment implements View.OnClickListener {
         if(genderId == R.id.female) {
             Log.d(LogTags.COMMAND_DP, "Is female selected= " + female);
             female=true;
+            ProductTypeController.setFemale(true);
         } else if(genderId == R.id.male) {
             Log.d(LogTags.COMMAND_DP, "Is female selected= " + female);
             female=false;
+            ProductTypeController.setFemale(false);
         }
     }
 
@@ -202,15 +244,16 @@ public class AddStockFragment extends Fragment implements View.OnClickListener {
         }else if(checkedId == R.id.accessories){
             pType = ProductType.ACCESSORIES;
         }
+        ProductTypeController.setType(pType);
         Log.d(LogTags.COMMAND_DP, "Product type" + pType.getValue());
     }
 
     public Map<String, String> validateProductQuantitiesInput() {
         Map<String, String> sizeQuantities = new HashMap<>();
         //get text from inputs
-        String s1 = size1.getText().toString();
-        String s2 = size2.getText().toString();
-        String s3 = size3.getText().toString();
+        String s1 = size1.getSelectedItem().toString();
+        String s2 = size2.getSelectedItem().toString();
+        String s3 = size3.getSelectedItem().toString();
         String quant1 = q1.getText().toString();
         String quant2 = q2.getText().toString();
         String quant3 = q3.getText().toString();
@@ -231,9 +274,9 @@ public class AddStockFragment extends Fragment implements View.OnClickListener {
     public void validateInput(){
         String productName = pName.getText().toString();
         String cost = price.getText().toString();
-        String brandName = brand.getText().toString();
-        String color = colour.getText().toString();
-        String productStyle = style.getText().toString();
+        String brandName = brand.getSelectedItem().toString();
+        String color = colour.getSelectedItem().toString();
+        String productStyle = style.getSelectedItem().toString();
 
         validateGenderInput();
         validateCategoryInput();
@@ -245,7 +288,7 @@ public class AddStockFragment extends Fragment implements View.OnClickListener {
             Toast.makeText(getActivity(), "Product must contain stock", Toast.LENGTH_SHORT).show();
         } else if(brandName.equals("") || color.equals("") || cost.equals("") || productStyle.equals("")) {
             Toast.makeText(getActivity(), "All fields must be filled", Toast.LENGTH_SHORT).show();
-        }else{
+        }else {
             createProduct(sizeQuantities, productName, color, brandName, cost, productStyle);
         }
     }
@@ -295,9 +338,35 @@ public class AddStockFragment extends Fragment implements View.OnClickListener {
         if(i == R.id.uploadImage){
             selectImage();
         }
-        if(i == R.id.finish){
+        if(i == R.id.finish) {
             validateInput();
             uploadPic();
         }
+    }
+
+    public void populateSpinners() {
+        AttributeManager attributeManager = AttributeManager.getInstance();
+        for(Map.Entry<Spinner, FilterAttributes> entry : filterSpinners.entrySet()) {
+            List<String> values = new ArrayList<>();
+            values.addAll(attributeManager.getAttributes(entry.getValue()));
+            entry.getKey().setAdapter(initSpinner(values));
+            Log.d(LogTags.SET_UP_FILTERS, "Set up "+entry.getValue()+" spinner");
+        }
+    }
+
+    private ArrayAdapter<String> initSpinner(List<String> data) {
+        ArrayAdapter<String> aa = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, data);
+        aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        return aa;
+    }
+
+    private void putSpinnersInMap() {
+        filterSpinners = new HashMap<>();
+        filterSpinners.put(size1, FilterAttributes.SIZES);
+        filterSpinners.put(size2, FilterAttributes.SIZES);
+        filterSpinners.put(size3, FilterAttributes.SIZES);
+        filterSpinners.put(colour, FilterAttributes.COLOURS);
+        filterSpinners.put(brand, FilterAttributes.BRANDS);
+        filterSpinners.put(style, FilterAttributes.STYLES);
     }
 }
