@@ -234,6 +234,7 @@ public class InstrumentedTest {
     @Test
     public void mementoPattern() throws InterruptedException {
         //Buy an item and click 'undo order' in confirm order dialog
+        logInUser();
         buyItem();
         onView(withText("Undo Order")).perform(click());
 
