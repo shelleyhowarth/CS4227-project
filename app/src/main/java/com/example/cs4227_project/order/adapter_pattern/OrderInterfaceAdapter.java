@@ -134,7 +134,7 @@ public class OrderInterfaceAdapter extends RecyclerView.Adapter implements Adapt
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         String item = adapterView.getItemAtPosition(i).toString();
-        Log.d(LogTags.SELECTED_SIZE, "Selected:" +item);
+        Log.d(LogTags.SELECTED_SIZE, "Selected:" + item);
     }
 
     @Override
