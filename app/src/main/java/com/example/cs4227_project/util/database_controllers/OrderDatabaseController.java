@@ -105,7 +105,7 @@ public class OrderDatabaseController {
         builder.setDetails(details);
         builder.setEmail((String)order.get("email"));
         builder.setPrice((double)order.get("price"));
-        builder.setTime();
+        builder.setTime((String)order.get("time"));
 
         return builder.getOrder();
     }

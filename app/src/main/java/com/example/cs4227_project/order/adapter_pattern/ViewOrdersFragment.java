@@ -14,7 +14,13 @@ import com.example.cs4227_project.R;
 import com.example.cs4227_project.order.builder_pattern.Order;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -67,6 +73,22 @@ public class ViewOrdersFragment extends Fragment {
                 filtered.add(o);
             }
         }
+
+        Collections.sort(filtered, new Comparator<Order>() {
+            @Override
+            public int compare(Order o1, Order o2) {
+                SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy");
+                Date date1 = null;
+                Date date2 = null;
+                try {
+                    date1 = format.parse(o1.getTime());
+                    date2 = format.parse(o2.getTime());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                return date2.compareTo(date1);
+            }
+        });
         return filtered;
     }
 }
