@@ -1,26 +1,30 @@
 package com.example.cs4227_project.order.command_pattern;
 
+import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.AppCompatActivity;
 
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 
+import com.example.cs4227_project.MainActivity;
 import com.example.cs4227_project.R;
+import com.example.cs4227_project.util.database_controllers.ProductDatabaseController;
 import com.example.cs4227_project.util.database_controllers.StockDatabaseController;
 import com.example.cs4227_project.database.StockReadListener;
 import com.example.cs4227_project.util.LogTags;
 import com.example.cs4227_project.products.abstract_factory_pattern.Product;
+import com.example.cs4227_project.util.enums.ProductDatabaseFields;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
-public class UpdateStockFragment extends Fragment implements View.OnClickListener, StockReadListener {
+public class UpdateStockActivity extends AppCompatActivity implements View.OnClickListener, StockReadListener {
 
     private EditText size1, size2, size3, q1, q2, q3;
     private HashMap<String,String> sizeQuantities;
@@ -28,40 +32,33 @@ public class UpdateStockFragment extends Fragment implements View.OnClickListene
     Stock stockToUpdate;
     StockDatabaseController stockDb;
 
-    public UpdateStockFragment() {
+    public UpdateStockActivity() {
         // Required empty public constructor
     }
     
-    public static UpdateStockFragment newInstance() {
-        return new UpdateStockFragment();
+    public static UpdateStockActivity newInstance() {
+        return new UpdateStockActivity();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        stockDb = new StockDatabaseController(this);
-    }
+        setContentView(R.layout.activity_update_stock);
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_update_stock, container, false);
-        product = (Product)getArguments().getSerializable("product");
+        stockDb = new StockDatabaseController(this);
+        product = (Product)getIntent().getSerializableExtra("product");
 
         stockDb.getStockDoc(product.getId());
 
         sizeQuantities = new HashMap<>();
-        size1 = rootView.findViewById(R.id.size1);
-        size2 = rootView.findViewById(R.id.size2);
-        size3 = rootView.findViewById(R.id.size3);
-        q1 = rootView.findViewById(R.id.quantity1);
-        q2 = rootView.findViewById(R.id.quantity2);
-        q3= rootView.findViewById(R.id.quantity3);
+        size1 = findViewById(R.id.size1);
+        size2 = findViewById(R.id.size2);
+        size3 = findViewById(R.id.size3);
+        q1 = findViewById(R.id.quantity1);
+        q2 = findViewById(R.id.quantity2);
+        q3= findViewById(R.id.quantity3);
 
-        rootView.findViewById(R.id.confirm).setOnClickListener(this);
-
-        return rootView;
+        findViewById(R.id.confirm).setOnClickListener(this);
     }
 
     public void validateForm(){
@@ -95,15 +92,23 @@ public class UpdateStockFragment extends Fragment implements View.OnClickListene
 
     public void updateStock(){
         CommandControl controller = new CommandControl();
-        for(Map.Entry<String, String> entry : sizeQuantities.entrySet()){
+        List<String> productSize = new ArrayList<>();
+        Log.d(LogTags.COMMAND_DP, "Stock to update  = "+ stockToUpdate.getId());
+        for(Map.Entry<String, String> entry : sizeQuantities.entrySet()) {
             String size = entry.getKey();
+            productSize.add(size);
             int quantity = Integer.parseInt(entry.getValue());
             Log.d(LogTags.COMMAND_DP, "Add stock values: quantity = " + quantity + " Size = " + size);
             AddStock addStock = new AddStock(stockToUpdate, quantity, size);
             controller.addCommand(addStock);
         }
         controller.executeCommands();
-        getParentFragmentManager().popBackStack();
+        goToHome();
+    }
+
+    public void goToHome(){
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 
     @Override
