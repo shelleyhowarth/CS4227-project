@@ -355,7 +355,7 @@ public class AddStockFragment extends Fragment implements View.OnClickListener {
             List<String> values = new ArrayList<>();
             values.addAll(attributeManager.getAttributes(entry.getValue()));
             entry.getKey().setAdapter(initSpinner(values));
-            Log.d(LogTags.SET_UP_FILTERS, "Set up "+entry.getValue()+" spinner");
+            Log.d(LogTags.SET_UP_FILTERS, "Set up "+entry.getValue().getValue()+" spinner");
         }
     }
 
