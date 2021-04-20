@@ -63,16 +63,16 @@ public class AttributesDatabaseController {
         Log.d(LogTags.DB_GET, "Document id: " + id);
         Attributes a = null;
         switch (id) {
-            case "brands":
+            case "brand":
                 a = new Brands(document.getData());
                 break;
-            case "colours":
+            case "colour":
                 a = new Colours(document.getData());
                 break;
-            case "sizes":
+            case "size":
                 a = new Sizes(document.getData());
                 break;
-            case "styles":
+            case "style":
                 a = new Styles(document.getData());
                 break;
             default:

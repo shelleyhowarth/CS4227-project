@@ -25,7 +25,7 @@ import java.util.Map;
 
 public class ProductDatabaseController {
     private Database db = Database.getInstance();
-    private ArrayList<Product> data = new ArrayList<>();
+    private List<Product> data = new ArrayList<>();
     private ProductReadListener myEventL;
     private AbstractFactory productFactory;
 

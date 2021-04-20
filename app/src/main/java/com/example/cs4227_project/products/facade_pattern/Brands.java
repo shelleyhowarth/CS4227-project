@@ -51,6 +51,6 @@ public class Brands implements Attributes {
 
     @Override
     public String findProductType() {
-        return "brands";
+        return "brand";
     }
 }
