@@ -2,6 +2,7 @@ package com.example.cs4227_project.products;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -20,12 +21,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.cs4227_project.util.ui_controllers.FragmentController;
 import com.example.cs4227_project.util.ui_controllers.ProductTypeController;
 import com.example.cs4227_project.util.database_controllers.StockDatabaseController;
 import com.example.cs4227_project.database.StockReadListener;
@@ -33,7 +32,7 @@ import com.example.cs4227_project.util.LogTags;
 import com.example.cs4227_project.R;
 import com.example.cs4227_project.order.command_pattern.Stock;
 import com.example.cs4227_project.order.Cart;
-import com.example.cs4227_project.order.command_pattern.UpdateStockFragment;
+import com.example.cs4227_project.order.command_pattern.UpdateStockActivity;
 import com.example.cs4227_project.util.ui_controllers.UserController;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -93,50 +92,56 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter implements Ada
             textViewProductPrice = itemView.findViewById(R.id.productPrice);
             imageViewProductPic = itemView.findViewById(R.id.productViewImage);
             cardViewProduct = itemView.findViewById(R.id.productCard);
-            addStock = itemView.findViewById(R.id.addStock);
         }
 
         @SuppressLint("SetTextI18n")
         void bindView(int pos){
             final Product item = productList.get(pos);
-            product = item;
-            Log.d(LogTags.PRODUCT_INTERFACE_ADAPTER, "product: " + product.getId());
+
+            Log.d(LogTags.PRODUCT_INTERFACE_ADAPTER, "product: " + item.getId());
+
             textViewProductName.setText(item.getName());
             textViewProductPrice.setText("€" + item.getPrice());
             setPicture(imageViewProductPic, item);
 
-            if(UserController.getUser() != null) {
-                if(UserController.getUser().isAdmin()){
-                    addStock.setVisibility(View.VISIBLE);
-                }else{
-                    addStock.setVisibility(View.INVISIBLE);
-                }
-                Log.d("CLICK", "Listener set");
-                addStock.setOnClickListener(this);
-            }else{
-                addStock.setVisibility(View.INVISIBLE);
-            }
-
             productDialog.setContentView(R.layout.product_detail_page);
             productDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
+            sizeSpinner = productDialog.findViewById(R.id.spinner);
             addBtn = productDialog.findViewById(R.id.addToCart);
+            addStock = productDialog.findViewById(R.id.aS);
+
+            textViewProductName = productDialog.findViewById(R.id.productName);
+            textViewProductPrice = productDialog.findViewById(R.id.productPrice);
+
+            addStock.setOnClickListener(this);
 
             cardViewProduct.setOnClickListener(new View.OnClickListener() {
                 @SuppressLint("SetTextI18n")
                 @Override
                 public void onClick(View productView) {
                     stockDb.getStockDoc(item.getId());
+                    product = item;
+
                     Log.d(LogTags.PRODUCT_INTERFACE_ADAPTER, "getStockDoc: " + item.getId());
-                    textViewProductName = productDialog.findViewById(R.id.productName);
-                    textViewProductPrice = productDialog.findViewById(R.id.productPrice);
+
+                    if(UserController.getUser() != null) {
+                        if(UserController.getUser().isAdmin()){
+                            addStock.setVisibility(View.VISIBLE);
+                        }else{
+                            addStock.setVisibility(View.INVISIBLE);
+                        }
+                        Log.d("CLICK", "Listener set");
+
+                    }else{
+                        addStock.setVisibility(View.INVISIBLE);
+                    }
+
                     ImageView imageViewProductImage = productDialog.findViewById(R.id.productImage);
                     final EditText editQuantity = productDialog.findViewById(R.id.quantity);
 
-                    addBtn = productDialog.findViewById(R.id.addToCart);
-
                     inCart(item);
-                    sizeSpinner = productDialog.findViewById(R.id.spinner);
+
                     sizeSpinner.setOnItemSelectedListener(sizeSpinner.getOnItemSelectedListener());
                     textViewProductName.setText(item.getName());
                     textViewProductPrice.setText("€" + item.getPrice());
@@ -195,17 +200,11 @@ public class ProductInterfaceAdapter extends RecyclerView.Adapter implements Ada
         public void onClick(View v){
             int i = v.getId();
             Log.d(LogTags.PRODUCT_INTERFACE_ADAPTER, "In on click");
-            if(i == R.id.addStock){
+            if(i == R.id.aS){
                 Log.d(LogTags.PRODUCT_INTERFACE_ADAPTER, "Add stock button clicked");
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("product", product);
-                UpdateStockFragment fragment = new UpdateStockFragment();
-                fragment.setArguments(bundle);
-                AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                FragmentManager fm = activity.getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fm.beginTransaction().replace(R.id.content, fragment);
-                fragmentTransaction.addToBackStack("updateStock");
-                fragmentTransaction.commit();
+                Intent intent = new Intent(v.getContext(), UpdateStockActivity.class);
+                intent.putExtra("product", product);
+                v.getContext().startActivity(intent);
             }
         }
     }

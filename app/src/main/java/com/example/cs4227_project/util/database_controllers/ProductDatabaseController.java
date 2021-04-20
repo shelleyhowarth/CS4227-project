@@ -144,7 +144,13 @@ public class ProductDatabaseController {
      * @param newValue - the new value
      */
     public void updateProductField(String productId, ProductDatabaseFields field, Object newValue) {
-        db.patch(ProductTypeController.getType().getValue(), productId, field.getValue(), newValue);
+        String collection = "";
+        if(ProductTypeController.isFemale()){
+            collection = ProductTypeController.getType().getValue() + "true";
+        }else{
+            collection = ProductTypeController.getType().getValue() + "false";
+        }
+        db.patch(collection, productId, field.getValue(), newValue);
     }
 
     /**

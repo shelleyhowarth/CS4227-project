@@ -43,7 +43,9 @@ import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static android.app.Activity.RESULT_OK;
@@ -65,6 +67,8 @@ public class AddStockFragment extends Fragment implements View.OnClickListener {
 
     private static final int PICK_IMAGE_REQUEST = 22;
     private static final int REQUEST_IMAGE_CAPTURE = 1;
+
+    private List<String> size = new ArrayList<>();
 
     public AddStockFragment() {
         // Required empty public constructor
@@ -207,6 +211,7 @@ public class AddStockFragment extends Fragment implements View.OnClickListener {
 
     public Map<String, String> validateProductQuantitiesInput() {
         Map<String, String> sizeQuantities = new HashMap<>();
+
         //get text from inputs
         String s1 = size1.getText().toString();
         String s2 = size2.getText().toString();
@@ -217,14 +222,16 @@ public class AddStockFragment extends Fragment implements View.OnClickListener {
 
         if(!s1.isEmpty() && !quant1.isEmpty()){
             sizeQuantities.put(s1, quant1);
+            size.add(s1);
         }
         if(!s2.isEmpty() && !quant2.isEmpty()){
             sizeQuantities.put(s2, quant2);
+            size.add(s2);
         }
         if(!s3.isEmpty() && !quant3.isEmpty()){
             sizeQuantities.put(s3, quant3);
+            size.add(s3);
         }
-
         return sizeQuantities;
     }
 
@@ -267,6 +274,7 @@ public class AddStockFragment extends Fragment implements View.OnClickListener {
         productData.put("brand", brandName);
         productData.put("colour", color);
         productData.put("style", style);
+        productData.put("size", size);
         productData.put("imageURL", path);
 
 
