@@ -37,7 +37,7 @@ public class CustomerOrderBuilder implements OrderBuilder {
 
     public void setTime(){
         Date timeNow = new Date();
-        SimpleDateFormat sfd = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy ", Locale.getDefault());
+        SimpleDateFormat sfd = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy", Locale.getDefault());
         order.time = sfd.format(timeNow);
     }
 
