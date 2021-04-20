@@ -17,6 +17,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 import static androidx.test.espresso.matcher.ViewMatchers.*;
 import static androidx.test.espresso.assertion.ViewAssertions.*;
 import static androidx.test.espresso.action.ViewActions.*;
@@ -27,6 +31,8 @@ import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.core.StringContains.containsString;
+
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -39,6 +45,8 @@ public class InstrumentedTest {
     private final static int LONG_WAIT = 1000;
     private final static int MED_WAIT = 500;
     private final static int SHORT_WAIT = 250;
+    private String orderTotal = "";
+    private String orderTime = "";
 
     @Rule
     public ActivityTestRule<MainActivity> activityRule =
@@ -96,58 +104,23 @@ public class InstrumentedTest {
         }
     }
 
-    //PASSING
+    //PASSING BUT NEED TO CHANGE THREAD SLEEPS
     @Test
     public void builderPattern() throws InterruptedException {
         try {
-            //Checks and clicks on 'Clothes'
-            onView(withId(R.id.clothesButton)).check(matches(isDisplayed())).perform(click());
-            Thread.sleep(LONG_WAIT);
-
-            //Clicks on first product in recycler view
-            onView(withId(R.id.recycler_view)).check(matches(isDisplayed())).perform(RecyclerViewActions.actionOnItemAtPosition(0,click()));
-            TextView item = activityRule.getActivity().findViewById(R.id.productName);
-            TextView cost = activityRule.getActivity().findViewById(R.id.productPrice);
-            String itemName = item.getText().toString();
-            String orderTotal = item.getText().toString();
-
-            //Input quantity
-            onView(withId(R.id.quantity)).perform(typeText("1"), closeSoftKeyboard());
-
-            //Add item to cart
-            onView(withId(R.id.addToCart)).check(matches(isDisplayed())).perform(click());
-            onView(isRoot()).perform(pressBack());
-
-            //Go to cart fragment
-            onView(withId(R.id.cartBtn)).check(matches(isDisplayed())).perform(click());
-
-            //Click checkout
-            onView(withId(R.id.checkout)).check(matches(isDisplayed())).perform(click());
-
-            //Input address and card details
-            onView(withId(R.id.townInput)).check(matches(isDisplayed())).perform(click(), typeText("Annagh"), closeSoftKeyboard());
-            onView(withId(R.id.cityInput)).check(matches(isDisplayed())).perform(click(), typeText("Tralee"), closeSoftKeyboard());
-            onView(withId(R.id.countyInput)).check(matches(isDisplayed())).perform(click(), typeText("Co. Kerry"), closeSoftKeyboard());
-
-            //enter test card details
-            onView(withId(R.id.cardNameInput)).check(matches(isDisplayed())).perform(click(), typeText("Shelley Howarth"), closeSoftKeyboard());
-            onView(withId(R.id.cardNumInput)).check(matches(isDisplayed())).perform(click(), typeText("1234567812345678"), closeSoftKeyboard());
-            onView(withId(R.id.expiryDateInput)).check(matches(isDisplayed())).perform(click(), typeText("12/2021"), closeSoftKeyboard());
-            onView(withId(R.id.cvvInput)).perform(click());
-            onView(withId(R.id.cvvInput)).check(matches(isDisplayed())).perform(click(), typeText("123"), closeSoftKeyboard());
-
-            //click order button
-            onView(withId(R.id.submitButton)).check(matches(isDisplayed())).perform(click());
+            buyItem();
             onView(withText("Ok")).perform(click());
 
             //Check that order has been placed
             onView(withId(R.id.ordersBtn)).check(matches(isDisplayed())).perform(click());
+            Thread.sleep(LONG_WAIT);
             onView(withId(R.id.simpleRecyclerView)).perform(RecyclerViewActions.actionOnItemAtPosition(0,click()));
-            Thread.sleep(SHORT_WAIT);
+            Thread.sleep(LONG_WAIT);
             onView(withId(R.id.layout)).check(matches(isDisplayed()));
             onView(withId(R.id.heading)).check(matches(withText("Order Summary")));
-            onView(withId(R.id.orderItems)).check(matches(withText(itemName)));
-            onView(withId(R.id.orderTotal)).check(matches(withText(orderTotal)));
+            onView(withId(R.id.orderTotal)).check(matches(withSubstring((orderTotal))));
+            onView(withId(R.id.orderTime)).check(matches(withSubstring((orderTime))));
+
 
         } catch(NoMatchingViewException e) { //If not on home page
             //Click back
@@ -159,61 +132,53 @@ public class InstrumentedTest {
     }
 
     @Test
-    public void mementoPattern() throws InterruptedException {
+    public void buyItem() throws InterruptedException {
         //Checks and clicks on 'Clothes'
+        Thread.sleep(LONG_WAIT);
         onView(withId(R.id.clothesButton)).check(matches(isDisplayed())).perform(click());
         Thread.sleep(LONG_WAIT);
+
         //Clicks on first product in recycler view
-        onView(withId(R.id.recycler_view)).perform(RecyclerViewActions.actionOnItemAtPosition(0,click()));
-        Thread.sleep(SHORT_WAIT);
-        //Getting name of item
-        TextView item = activityRule.getActivity().findViewById(R.id.productName);
-        String itemName = item.getText().toString();
+        onView(withId(R.id.recycler_view)).check(matches(isDisplayed())).perform(RecyclerViewActions.actionOnItemAtPosition(0,click()));
+        Thread.sleep(LONG_WAIT);
+        TextView cost = activityRule.getActivity().findViewById(R.id.productPrice);
+        orderTotal = cost.getText().toString();
 
         //Input quantity
-        int itemQuantity = 1;
-        onView(withId(R.id.quantity)).perform(typeText("1"));
-        Thread.sleep(SHORT_WAIT);
-        onView(isRoot()).perform(pressBack());
-        Thread.sleep(SHORT_WAIT);
+        onView(withId(R.id.quantity)).perform(typeText("1"), closeSoftKeyboard());
+
         //Add item to cart
         onView(withId(R.id.addToCart)).check(matches(isDisplayed())).perform(click());
         onView(isRoot()).perform(pressBack());
-        Thread.sleep(SHORT_WAIT);
+
         //Go to cart fragment
         onView(withId(R.id.cartBtn)).check(matches(isDisplayed())).perform(click());
+
         //Click checkout
         onView(withId(R.id.checkout)).check(matches(isDisplayed())).perform(click());
+
         //Input address and card details
-        onView(withId(R.id.townInput)).check(matches(isDisplayed())).perform(click());
-        onView(withId(R.id.townInput)).perform(typeText("Annagh"));
-        Thread.sleep(SHORT_WAIT);
-        onView(withId(R.id.cityInput)).perform(click());
-        onView(withId(R.id.cityInput)).perform(typeText("Tralee"));
-        Thread.sleep(SHORT_WAIT);
-        onView(withId(R.id.countyInput)).perform(click());
-        onView(withId(R.id.countyInput)).perform(typeText("Co. Kerry"));
+        onView(withId(R.id.townInput)).check(matches(isDisplayed())).perform(click(), typeText("Annagh"), closeSoftKeyboard());
+        onView(withId(R.id.cityInput)).check(matches(isDisplayed())).perform(click(), typeText("Tralee"), closeSoftKeyboard());
+        onView(withId(R.id.countyInput)).check(matches(isDisplayed())).perform(click(), typeText("Co. Kerry"), closeSoftKeyboard());
+
         //enter test card details
-        Thread.sleep(SHORT_WAIT);
-        onView(withId(R.id.cardNameInput)).perform(click());
-        onView(withId(R.id.cardNameInput)).perform(typeText("Shelley Howarth"));
-        onView(isRoot()).perform(pressBack());
-        Thread.sleep(SHORT_WAIT);
-        onView(withId(R.id.cardNumInput)).perform(click());
-        onView(withId(R.id.cardNumInput)).perform(typeText("1234567812345678"));
-        onView(isRoot()).perform(pressBack());
-        Thread.sleep(SHORT_WAIT);
-        onView(withId(R.id.expiryDateInput)).perform(click());
-        onView(withId(R.id.expiryDateInput)).perform(typeText("12/2021"));
-        onView(isRoot()).perform(pressBack());
-        Thread.sleep(SHORT_WAIT);
+        onView(withId(R.id.cardNameInput)).check(matches(isDisplayed())).perform(click(), typeText("Shelley Howarth"), closeSoftKeyboard());
+        onView(withId(R.id.cardNumInput)).check(matches(isDisplayed())).perform(click(), typeText("1234567812345678"), closeSoftKeyboard());
+        onView(withId(R.id.expiryDateInput)).check(matches(isDisplayed())).perform(click(), typeText("12/2021"), closeSoftKeyboard());
         onView(withId(R.id.cvvInput)).perform(click());
-        onView(withId(R.id.cvvInput)).perform(typeText("123"));
-        onView(isRoot()).perform(pressBack());
-        Thread.sleep(SHORT_WAIT);
+        onView(withId(R.id.cvvInput)).check(matches(isDisplayed())).perform(click(), typeText("123"), closeSoftKeyboard());
+
         //click order button
-        onView(withId(R.id.submitButton)).perform(click());
-        Thread.sleep(LONG_WAIT);
+        onView(withId(R.id.submitButton)).check(matches(isDisplayed())).perform(click());
+        Date timeNow = new Date();
+        SimpleDateFormat sfd = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy ", Locale.getDefault());
+        orderTime = sfd.format(timeNow);
+    }
+
+    @Test
+    public void mementoPattern() throws InterruptedException {
+        buyItem();
         //Click confirm order
         onView(withText("Undo")).perform(click());
     }
