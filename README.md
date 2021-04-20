@@ -1,4 +1,4 @@
-# CS4227 Group 32 Shopping app
+# CS4227 Group 20 Shopping app
 <h2>Info:</h2>
 <p><b>Title: </b>Shopping App</p>
 <p><b>Description: </b>Allows users to view, filter and buy products using an android app</p>
