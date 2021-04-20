@@ -100,6 +100,7 @@ public class OrderInterfaceAdapter extends RecyclerView.Adapter implements Adapt
                     textViewOrderName.setText("Name: " + item.getDetails().getCardName());
                     textViewOrderTotal.setText("Total: " + "€" + item.getPrice());
                     textViewOrderTime.setText("Date purchased: " + item.getTime());
+
                     int count = 1;
                     StringBuilder builder = new StringBuilder();
                     for(String s: products) {
@@ -109,7 +110,6 @@ public class OrderInterfaceAdapter extends RecyclerView.Adapter implements Adapt
                     descriptionText = builder.toString();
                     textViewOrderItems.setText("Products purchased: \n" + descriptionText);
                     textViewOrderAddress.setText("Address: " + item.getAddress());
-
                     orderDialog.show();
                 }
             });
@@ -134,7 +134,7 @@ public class OrderInterfaceAdapter extends RecyclerView.Adapter implements Adapt
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         String item = adapterView.getItemAtPosition(i).toString();
-        Log.d(LogTags.SELECTED_SIZE, "Selected:" +item);
+        Log.d(LogTags.SELECTED_SIZE, "Selected:" + item);
     }
 
     @Override
