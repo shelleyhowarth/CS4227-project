@@ -59,7 +59,7 @@ public class InstrumentedTest {
     public ActivityTestRule<MainActivity> activityRule =
             new ActivityTestRule<>(MainActivity.class);
 
-    //FAILING - ADD A WAIT FOR THE RECYCLER VIEW TO BE DISPLAYED
+    //PASSING - ADD A WAIT FOR THE RECYCLER VIEW TO BE DISPLAYED
     @Test
     public void adapterPattern() throws InterruptedException {
         Button b = activityRule.getActivity().findViewById(R.id.logInBtn);
@@ -69,9 +69,11 @@ public class InstrumentedTest {
         if(loginText.equals("Log Out")) {
             //Go to orders fragment
             onView(withId(R.id.ordersBtn)).check(matches(isDisplayed())).perform(click());
-
+            Thread.sleep(LONG_WAIT);
             //Count items in recycler view
             RecyclerView recyclerView = activityRule.getActivity().findViewById(R.id.simpleRecyclerView);
+            Thread.sleep(LONG_WAIT);
+
             int originalItemCount = recyclerView.getChildCount();
             //If there are orders
             if(originalItemCount > 0) {
@@ -150,6 +152,7 @@ public class InstrumentedTest {
                 onView(withId(R.id.orderTime)).check(matches(withSubstring((orderTime))));
             } else {
                 logInUser();
+                builderPattern();
             }
 
         } catch(NoMatchingViewException e) { //If not on home page
@@ -301,8 +304,4 @@ public class InstrumentedTest {
                         hasDescendant(withText("Jeans"))
                 ));
     }
-
-    
-
-
 }
