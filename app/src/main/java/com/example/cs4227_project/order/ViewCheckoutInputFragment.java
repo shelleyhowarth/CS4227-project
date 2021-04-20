@@ -75,6 +75,9 @@ public class ViewCheckoutInputFragment extends Fragment implements StockReadList
         setUpInterceptor();
     }
 
+    /**
+     * @deprecated Needs to be refactored in the future to fit new guidelines for android studio.
+     */
     @Deprecated
     @Override
     public void onAttach(Activity activity) {

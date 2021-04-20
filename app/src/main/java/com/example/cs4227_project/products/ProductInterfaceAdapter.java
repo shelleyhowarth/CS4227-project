@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,7 +23,6 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.cs4227_project.util.ui_controllers.FragmentController;
 import com.example.cs4227_project.util.ui_controllers.ProductTypeController;
 import com.example.cs4227_project.util.database_controllers.StockDatabaseController;
 import com.example.cs4227_project.database.StockReadListener;
