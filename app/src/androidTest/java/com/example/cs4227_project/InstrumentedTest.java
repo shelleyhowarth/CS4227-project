@@ -1,26 +1,18 @@
 package com.example.cs4227_project;
 
-import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.test.espresso.NoMatchingViewException;
-import androidx.test.espresso.action.ViewActions;
-import androidx.test.espresso.assertion.ViewAssertions;
-import androidx.test.espresso.contrib.RecyclerViewActions;
-import androidx.test.espresso.matcher.ViewMatchers;
+import androidx.test.espresso.matcher.BoundedMatcher;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
-import com.example.cs4227_project.products.facade_pattern.Attributes;
-import com.example.cs4227_project.util.database_controllers.AttributesDatabaseController;
-
-import junit.framework.AssertionFailedError;
-
+import org.hamcrest.Description;
 import org.hamcrest.Matcher;
-import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,7 +20,6 @@ import org.junit.runner.RunWith;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import java.util.Map;
 
 import static androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition;
 import static androidx.test.espresso.matcher.RootMatchers.isPlatformPopup;
@@ -58,40 +49,48 @@ public class InstrumentedTest {
     private final static int LONG_WAIT = 1000;
     private final static int MED_WAIT = 500;
     private final static int SHORT_WAIT = 250;
-    private String orderTotal = "";
+    private String orderTotal = "Total: ";
     private String orderTime = "Date purchased: ";
 
     @Rule
     public ActivityTestRule<MainActivity> activityRule =
             new ActivityTestRule<>(MainActivity.class);
 
+    //Tests to see if order cards and order dialogs display
     @Test
     public void adapterPattern() throws InterruptedException {
+        //Get text of log in button
         Button b = activityRule.getActivity().findViewById(R.id.logInBtn);
         String loginText = (String) b.getText();
 
         //Check if logged in
         if(loginText.equals("Log Out")) {
+
             //Go to orders fragment
             onView(withId(R.id.ordersBtn)).check(matches(isDisplayed())).perform(click());
             Thread.sleep(LONG_WAIT);
+
             //Count items in recycler view
             RecyclerView recyclerView = activityRule.getActivity().findViewById(R.id.simpleRecyclerView);
-            Thread.sleep(LONG_WAIT);
-
             int originalItemCount = recyclerView.getChildCount();
+
             //If there are orders
             if(originalItemCount > 0) {
+
+                //Click the order
                 onView(withId(R.id.simpleRecyclerView)).perform(actionOnItemAtPosition(0,click()));
                 Thread.sleep(SHORT_WAIT);
+
+                //Check if order dialog is displayed
                 onView(withId(R.id.layout)).check(matches(isDisplayed()));
                 onView(withId(R.id.heading)).check(matches(withText("Order Summary")));
-                //If there are no orders
+            //If there are no orders
             } else {
                 //builderPattern to create an order and recall adapterPattern()
                 builderPattern();
                 adapterPattern();
             }
+
         //If logged out
         } else {
             //Log in and recall adapterPattern()
@@ -100,106 +99,133 @@ public class InstrumentedTest {
         }
     }
 
-    //PASSING
+    //Test to log in regular user
     @Test
     public void logInUser() throws InterruptedException {
+        //Get text of log in button
         Button b = activityRule.getActivity().findViewById(R.id.logInBtn);
         String loginText = (String) b.getText();
+
+        //If logged out
         if(loginText.equals("Log In")) {
+
+            //Go to log in fragment and input credentials
             onView(withId(R.id.logInBtn)).check(matches(isDisplayed())).perform(click());
             onView(withId(R.id.fieldEmail)).check(matches(isDisplayed())).perform(click());
             onView(withId(R.id.fieldEmail)).perform(typeText("testuser@gmail.com"), closeSoftKeyboard());
             onView(withId(R.id.fieldPassword)).check(matches(isDisplayed())).perform(click());
             onView(withId(R.id.fieldPassword)).perform(typeText("password"), closeSoftKeyboard());
             onView(withId(R.id.signIn)).check(matches(isDisplayed())).perform(click());
+        //If logged in
         } else {
+            //Press log out and call logInUser() again
             onView(withId(R.id.logInBtn)).check(matches(isDisplayed())).perform(click());
             logInUser();
         }
     }
 
+    //Test to log in admin user
     @Test
     public void logInAdmin() throws InterruptedException {
+        //Get text from log in button
         Button b = activityRule.getActivity().findViewById(R.id.logInBtn);
         String loginText = (String) b.getText();
+
+        //If logged out
         if(loginText.equals("Log In")) {
+
+            //Go to log in fragment and input credentials
             onView(withId(R.id.logInBtn)).check(matches(isDisplayed())).perform(click());
             onView(withId(R.id.fieldEmail)).check(matches(isDisplayed())).perform(click());
             onView(withId(R.id.fieldEmail)).perform(typeText("testadmin@gmail.com"), closeSoftKeyboard());
             onView(withId(R.id.fieldPassword)).check(matches(isDisplayed())).perform(click());
             onView(withId(R.id.fieldPassword)).perform(typeText("password"), closeSoftKeyboard());
             onView(withId(R.id.signIn)).check(matches(isDisplayed())).perform(click());
+        //If logged in
         } else {
+            //Press log out and call logInAdmin() again
             onView(withId(R.id.logInBtn)).check(matches(isDisplayed())).perform(click());
             logInAdmin();
         }
     }
 
+    //Test to place an order and make sure its displaying in the order's fragment
     @Test
     public void builderPattern() throws InterruptedException {
         try {
+            //Get text from log in button
             Button b = activityRule.getActivity().findViewById(R.id.logInBtn);
             String loginText = (String) b.getText();
 
+            //If the user is logged in
             if(loginText.equals("Log Out")) {
+                //Purchase item and press 'ok' on order confirmation dialog
                 buyItem();
                 onView(withText("Ok")).perform(click());
 
-                //Check that order has been placed
+                //Click on most recent order
                 onView(withId(R.id.ordersBtn)).check(matches(isDisplayed())).perform(click());
                 Thread.sleep(LONG_WAIT);
                 onView(withId(R.id.simpleRecyclerView)).perform(actionOnItemAtPosition(0, click()));
                 Thread.sleep(LONG_WAIT);
                 onView(withId(R.id.layout)).check(matches(isDisplayed()));
                 onView(withId(R.id.heading)).check(matches(withText("Order Summary")));
+
+                //Check that the information displayed matches the order time and order total variables in buyItem()
                 onView(withId(R.id.orderTotal)).check(matches(withSubstring((orderTotal))));
                 onView(withId(R.id.orderTime)).check(matches(withSubstring((orderTime))));
                 onView(isRoot()).perform(pressBack());
+
+            //If logged out
             } else {
+                //Log in and call builderPattern()
                 logInUser();
                 builderPattern();
             }
 
-        } catch(NoMatchingViewException e) { //If not on home page
-            //Click back
+            //Catch if not on homepage
+        } catch(NoMatchingViewException e) {
+            //Click back and recall builderPattern()
             onView(isRoot()).perform(pressBack());
             Thread.sleep(SHORT_WAIT);
-            //Recall builderPattern
             builderPattern();
         }
     }
 
-    //PASSING BUT NEED TO CHANGE THREAD SLEEPS
     @Test
     public void buyItem() throws InterruptedException {
         //Checks and clicks on 'Clothes'
         Thread.sleep(LONG_WAIT);
         onView(withId(R.id.clothesButton)).check(matches(isDisplayed())).perform(click());
         Thread.sleep(LONG_WAIT);
+
         //Clicks on first product in recycler view
         onView(withId(R.id.recycler_view)).check(matches(isDisplayed())).perform(actionOnItemAtPosition(0,click()));
         Thread.sleep(LONG_WAIT);
         TextView cost = activityRule.getActivity().findViewById(R.id.productPrice);
-        orderTotal = cost.getText().toString();
+        orderTotal += cost.getText().toString();
+
         //Input quantity
         onView(withId(R.id.quantity)).perform(typeText("1"), closeSoftKeyboard());
+
         //Add item to cart
         onView(withId(R.id.addToCart)).check(matches(isDisplayed())).perform(click());
         onView(isRoot()).perform(pressBack());
-        //Go to cart fragment
+
+        //Go to cart fragment and click 'checkout'
         onView(withId(R.id.cartBtn)).check(matches(isDisplayed())).perform(click());
-        //Click checkout
         onView(withId(R.id.checkout)).check(matches(isDisplayed())).perform(click());
-        //Input address and card details
+
+        //Input values into form fields
         onView(withId(R.id.townInput)).check(matches(isDisplayed())).perform(click(), typeText("Annagh"), closeSoftKeyboard());
         onView(withId(R.id.cityInput)).check(matches(isDisplayed())).perform(click(), typeText("Tralee"), closeSoftKeyboard());
         onView(withId(R.id.countyInput)).check(matches(isDisplayed())).perform(click(), typeText("Co. Kerry"), closeSoftKeyboard());
-        //enter test card details
         onView(withId(R.id.cardNameInput)).check(matches(isDisplayed())).perform(click(), typeText("Shelley Howarth"), closeSoftKeyboard());
         onView(withId(R.id.cardNumInput)).check(matches(isDisplayed())).perform(click(), typeText("1234567812345678"), closeSoftKeyboard());
         onView(withId(R.id.expiryDateInput)).check(matches(isDisplayed())).perform(click(), typeText("12/2021"), closeSoftKeyboard());
         onView(withId(R.id.cvvInput)).perform(click());
         onView(withId(R.id.cvvInput)).check(matches(isDisplayed())).perform(click(), typeText("123"), closeSoftKeyboard());
+
         //click order button
         Date timeNow = new Date();
         onView(withId(R.id.submitButton)).check(matches(isDisplayed())).perform(click());
@@ -207,68 +233,84 @@ public class InstrumentedTest {
         orderTime += sfd.format(timeNow);
     }
 
+    //Test to undo an order
     @Test
     public void mementoPattern() throws InterruptedException {
+        //Buy an item and click 'undo order' in confirm order dialog
         buyItem();
-        //Click confirm order
         onView(withText("Undo Order")).perform(click());
 
-        //Check that order hasn't been placed
+        //Go to most recent order in orders fragment
         onView(withId(R.id.ordersBtn)).check(matches(isDisplayed())).perform(click());
         Thread.sleep(LONG_WAIT);
-
         RecyclerView recyclerView = activityRule.getActivity().findViewById(R.id.simpleRecyclerView);
-        Thread.sleep(LONG_WAIT);
         int originalItemCount = recyclerView.getChildCount();
+
+        //If orders exist
         if(originalItemCount > 0) {
             onView(withId(R.id.simpleRecyclerView)).perform(actionOnItemAtPosition(0,click()));
             Thread.sleep(LONG_WAIT);
             onView(withId(R.id.layout)).check(matches(isDisplayed()));
             onView(withId(R.id.heading)).check(matches(withText("Order Summary")));
-            onView(withId(R.id.orderTotal)).check(matches(withSubstring((orderTotal))));
+
+            //Check that the time and total are different to the time and total in buyItem()
+            onView(withId(R.id.orderTotal)).check(matches(not(withSubstring((orderTotal)))));
             onView(withId(R.id.orderTime)).check(matches(not(withSubstring((orderTime)))));
         }
     }
 
+    //Test that log in fragment displays when logged out user reaches checkout
     @Test
     public void interceptorPattern() throws InterruptedException {
+        //Get text from log in button
         Button b = activityRule.getActivity().findViewById(R.id.logInBtn);
         String loginText = (String) b.getText();
+
+        //If logged out
         if(loginText.equals("Log In")) {
+
             //Checks and clicks on 'Clothes'
             Thread.sleep(LONG_WAIT);
             onView(withId(R.id.clothesButton)).check(matches(isDisplayed())).perform(click());
             Thread.sleep(LONG_WAIT);
+
             //Clicks on first product in recycler view
             onView(withId(R.id.recycler_view)).check(matches(isDisplayed())).perform(actionOnItemAtPosition(0, click()));
             Thread.sleep(LONG_WAIT);
             TextView cost = activityRule.getActivity().findViewById(R.id.productPrice);
             orderTotal = cost.getText().toString();
-            //Input quantity
+
+            //Input quantity and add item cart
             onView(withId(R.id.quantity)).perform(typeText("1"), closeSoftKeyboard());
-            //Add item to cart
             onView(withId(R.id.addToCart)).check(matches(isDisplayed())).perform(click());
             onView(isRoot()).perform(pressBack());
-            //Go to cart fragment
+
+            //Go to cart fragment and click checkout
             onView(withId(R.id.cartBtn)).check(matches(isDisplayed())).perform(click());
-            //Click checkout
             onView(withId(R.id.checkout)).check(matches(isDisplayed())).perform(click());
+
             //Check if log in screen appears
             onView(withId(R.id.fragment_log_in)).check(matches(isDisplayed()));
 
+        //If logged in
         } else {
+            //Log out and call interceptorPattern()
             onView(withId(R.id.logInBtn)).check(matches(isDisplayed())).perform(click());
             interceptorPattern();
         }
     }
 
+    //Test to add stock to the store and check that it displays
     @Test
     public void commandPattern() throws InterruptedException {
-        /*
+        //Get text from log in button
         Button b = activityRule.getActivity().findViewById(R.id.logInBtn);
         String loginText = (String) b.getText();
+
+        //If logged out, log in admin
         if(loginText.equals("Log In")) {
             logInAdmin();
+        //If logged in, log out and log in admin
         } else {
             onView(withId(R.id.logInBtn)).check(matches(isDisplayed())).perform(click());
             logInAdmin();
@@ -277,55 +319,80 @@ public class InstrumentedTest {
         Thread.sleep(LONG_WAIT);
         onView(withId(R.id.stockBtn)).check(matches(isDisplayed())).perform(click());
         Thread.sleep(LONG_WAIT);
+
         //Fill in form
         onView(withId(R.id.productName)).check(matches(isDisplayed())).perform(click(), typeText("Crew Neck"), closeSoftKeyboard());
         onView(withId(R.id.price)).check(matches(isDisplayed())).perform(click(), typeText("17.50"), closeSoftKeyboard());
         onView(withId(R.id.female)).check(matches(isDisplayed())).perform(click());
         onView(withId(R.id.clothes)).check(matches(isDisplayed())).perform(click());
         onView(withId(R.id.quantity1)).check(matches(isDisplayed())).perform(click(), typeText("10"), closeSoftKeyboard());
+
+        //Submit
         onView(withId(R.id.finish)).perform(scrollTo()).check(matches(isDisplayed())).perform(click());
         Thread.sleep(LONG_WAIT);
 
+        //Go back to clothes
         onView(withId(R.id.clothesButton)).check(matches(isDisplayed())).perform(click());
         Thread.sleep(LONG_WAIT);
         onView(isRoot()).perform(pressBack());
-         */
         Thread.sleep(LONG_WAIT);
 
+        //Check if new product is displayed
         onView(withId(R.id.clothesButton)).check(matches(isDisplayed())).perform(click());
         Thread.sleep(LONG_WAIT);
-        Thread.sleep(LONG_WAIT);
-        RecyclerView recyclerView = activityRule.getActivity().findViewById(R.id.recycler_view);
-        int originalItemCount = recyclerView.getChildCount();
-
-        Log.d("tests", "count: " + originalItemCount);
-        onView(ViewMatchers.withId(R.id.recycler_view))
-                // scrollTo will fail the test if no item matches.
-                .perform(RecyclerViewActions.scrollTo(
-                        hasDescendant(withText("f"))
-                ));
-
+        onView(withId(R.id.recycler_view)).check(matches(hasItem(hasDescendant(withText("Crew Neck")))));
     }
 
+    //Method to check for children in recycler view
+    public static Matcher<View> hasItem(final Matcher<View> matcher) {
+        return new BoundedMatcher<View, RecyclerView>(RecyclerView.class) {
+
+            @Override public void describeTo(Description description) {
+                description.appendText("has item: ");
+                matcher.describeTo(description);
+            }
+
+            @Override protected boolean matchesSafely(RecyclerView view) {
+                RecyclerView.Adapter adapter = view.getAdapter();
+                for (int position = 0; position < adapter.getItemCount(); position++) {
+                    int type = adapter.getItemViewType(position);
+                    RecyclerView.ViewHolder holder = adapter.createViewHolder(view, type);
+                    adapter.onBindViewHolder(holder, position);
+                    if (matcher.matches(holder.itemView)) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        };
+    }
+
+    //Test filters
     @Test
     public void facadePattern() throws InterruptedException {
         //Click into clothes
         onView(withId(R.id.clothesButton)).check(matches(isDisplayed())).perform(click());
         Thread.sleep(LONG_WAIT);
+
+        //Get spinner items
         Spinner sizeSpinner = activityRule.getActivity().findViewById(R.id.sizeSpinner);
         int items = sizeSpinner.getCount();
+
         //Loop through all the spinner options
         for(int i = 1; i < items; i++) {
-            //Clicks spinner
+            //Clicks spinner and selects size
             onView(withId(R.id.sizeSpinner)).check(matches(isDisplayed())).perform(click());
-            //Selects size
             onData(anything()).atPosition(i).perform(click());
+
             //Clicks filter
             onView(withId(R.id.filter)).check(matches(isDisplayed())).perform(click());
+
+            //Get items in recycler view
             RecyclerView recyclerView = activityRule.getActivity().findViewById(R.id.recycler_view);
             Thread.sleep(LONG_WAIT);
             int originalItemCount = recyclerView.getChildCount();
             String size = sizeSpinner.getSelectedItem().toString();
+
             //If product appears, check the size
             if(originalItemCount > 0) {
                 onView(withId(R.id.recycler_view)).check(matches(isDisplayed())).perform(actionOnItemAtPosition(0, click()));
