@@ -6,7 +6,7 @@ import android.util.Log;
 import com.example.cs4227_project.R;
 import com.example.cs4227_project.interceptor_pattern.InterceptorContext;
 import com.example.cs4227_project.interceptor_pattern.Interceptor;
-import com.example.cs4227_project.util.FragmentController;
+import com.example.cs4227_project.util.ui_controllers.FragmentController;
 import com.example.cs4227_project.util.LogTags;
 import com.example.cs4227_project.user.LogInFragment;
 import com.google.firebase.auth.FirebaseAuth;

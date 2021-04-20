@@ -1,10 +1,10 @@
-package com.example.cs4227_project.util;
+package com.example.cs4227_project.util.enums;
 
 public enum FilterAttributes {
-    BRANDS("brands"),
-    COLOURS("colours"),
-    SIZES("sizes"),
-    STYLES("styles");
+    BRANDS("brand"),
+    COLOURS("colour"),
+    SIZES("size"),
+    STYLES("style");
 
     private final String stringValue;
 

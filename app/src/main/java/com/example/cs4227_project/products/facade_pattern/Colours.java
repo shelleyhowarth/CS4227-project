@@ -51,6 +51,6 @@ public class Colours implements Attributes {
 
     @Override
     public String findProductType() {
-        return "colours";
+        return "colour";
     }
 }

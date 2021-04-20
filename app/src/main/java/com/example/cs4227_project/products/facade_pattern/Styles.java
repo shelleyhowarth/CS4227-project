@@ -3,7 +3,7 @@ package com.example.cs4227_project.products.facade_pattern;
 import android.util.Log;
 
 import com.example.cs4227_project.util.LogTags;
-import com.example.cs4227_project.products.ProductTypeController;
+import com.example.cs4227_project.util.ui_controllers.ProductTypeController;
 
 import java.util.HashMap;
 import java.util.List;

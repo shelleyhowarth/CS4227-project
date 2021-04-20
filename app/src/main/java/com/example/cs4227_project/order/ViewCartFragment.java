@@ -20,7 +20,7 @@ import com.example.cs4227_project.interceptor_pattern.InterceptorFramework;
 import com.example.cs4227_project.interceptor_pattern.Target;
 import com.example.cs4227_project.interceptor_pattern.interceptors.LogInAuthenticationInterceptor;
 import com.example.cs4227_project.interceptor_pattern.interceptors.LoggingInterceptor;
-import com.example.cs4227_project.util.FragmentController;
+import com.example.cs4227_project.util.ui_controllers.FragmentController;
 import com.example.cs4227_project.util.LogTags;
 import com.example.cs4227_project.order.command_pattern.Stock;
 import com.example.cs4227_project.products.abstract_factory_pattern.Product;
