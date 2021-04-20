@@ -6,17 +6,18 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.cs4227_project.R;
 import com.example.cs4227_project.order.builder_pattern.Order;
+import com.example.cs4227_project.util.LogTags;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -25,20 +26,14 @@ import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link ViewOrdersFragment#newInstance} factory method to
- * create an instance of this fragment.
  */
 public class ViewOrdersFragment extends Fragment {
 
-    private ArrayList<Order> allOrders;
+    private List<Order> allOrders;
     private String userEmail;
 
     public ViewOrdersFragment() {
         // Required empty public constructor
-    }
-
-    public static ViewOrdersFragment newInstance() {
-        return new ViewOrdersFragment();
     }
 
     @Override
@@ -78,13 +73,13 @@ public class ViewOrdersFragment extends Fragment {
             @Override
             public int compare(Order o1, Order o2) {
                 SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy");
-                Date date1 = null;
-                Date date2 = null;
+                Date date1 = new Date();
+                Date date2 = new Date();
                 try {
                     date1 = format.parse(o1.getTime());
                     date2 = format.parse(o2.getTime());
                 } catch (ParseException e) {
-                    e.printStackTrace();
+                    Log.d(LogTags.PARSE_ERROR, e.getMessage());
                 }
                 return date2.compareTo(date1);
             }
