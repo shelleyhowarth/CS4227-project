@@ -5,14 +5,21 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.test.espresso.NoMatchingViewException;
+import androidx.test.espresso.UiController;
+import androidx.test.espresso.ViewAction;
+import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.espresso.matcher.BoundedMatcher;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
+import com.google.android.material.tabs.TabLayout;
+
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
+import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -54,6 +61,36 @@ public class InstrumentedTest {
     @Rule
     public ActivityTestRule<MainActivity> activityRule =
             new ActivityTestRule<>(MainActivity.class);
+
+    @Test
+    public void verifyViewProductsUseCase() throws InterruptedException {
+        Thread.sleep(LONG_WAIT);
+        //go to view clothes
+        checkViewProductsType(R.id.clothesButton);
+        onView(isRoot()).perform(pressBack());
+        Thread.sleep(LONG_WAIT);
+        //go to view shoes
+        checkViewProductsType(R.id.shoeButton);
+        onView(isRoot()).perform(pressBack());
+        Thread.sleep(LONG_WAIT);
+        //go to view accessories
+        checkViewProductsType(R.id.accButton);
+        onView(isRoot()).perform(pressBack());
+        Thread.sleep(LONG_WAIT);
+        onView(withId(R.id.genderTab)).check(matches(isDisplayed())).perform(selectTabAtPosition(1));
+        Thread.sleep(MED_WAIT);
+        Thread.sleep(LONG_WAIT);
+        //go to view clothes
+        checkViewProductsType(R.id.clothesButton);
+        onView(isRoot()).perform(pressBack());
+        Thread.sleep(LONG_WAIT);
+        //go to view shoes
+        checkViewProductsType(R.id.shoeButton);
+        onView(isRoot()).perform(pressBack());
+        Thread.sleep(LONG_WAIT);
+        //go to view accessories
+        checkViewProductsType(R.id.accButton);
+    }
 
     //Tests to see if order cards and order dialogs display
     @Test
@@ -399,5 +436,91 @@ public class InstrumentedTest {
                 onView(isRoot()).perform(pressBack());
             }
         }
+    }
+
+    @Test
+    public void testUpdateStock() throws InterruptedException {
+        //Get text from log in button
+        Button b = activityRule.getActivity().findViewById(R.id.logInBtn);
+        String loginText = (String) b.getText();
+
+        //If logged out, log in admin
+        if(loginText.equals("Log In")) {
+            logInAdmin();
+            //If logged in, log out and log in admin
+        } else {
+            onView(withId(R.id.logInBtn)).check(matches(isDisplayed())).perform(click());
+            logInAdmin();
+        }
+
+        //Checks and clicks on 'Clothes'
+        Thread.sleep(LONG_WAIT);
+        onView(withId(R.id.clothesButton)).check(matches(isDisplayed())).perform(click());
+        Thread.sleep(LONG_WAIT);
+
+        //Clicks on first product in recycler view
+        onView(withId(R.id.recycler_view)).check(matches(isDisplayed())).perform(actionOnItemAtPosition(0,click()));
+        Thread.sleep(LONG_WAIT);
+
+        onView(withId(R.id.aS)).check(matches(isDisplayed())).perform(click());
+        Thread.sleep(LONG_WAIT);
+
+        onView(withText("UpdateStock")).check(matches(isDisplayed()));
+        onView(withId(R.id.size1)).check(matches(isDisplayed())).perform(click());
+        Thread.sleep(MED_WAIT);
+        onData(anything()).atPosition(0).perform(click());
+        onView(withId(R.id.quantity1)).check(matches(isDisplayed())).perform(click());
+        onView(withId(R.id.quantity1)).check(matches(isDisplayed())).perform(click(), typeText("40"), closeSoftKeyboard());
+
+        onView(withId(R.id.size2)).check(matches(isDisplayed())).perform(click());
+        Thread.sleep(MED_WAIT);
+        onData(anything()).atPosition(1).perform(click());
+        onView(withId(R.id.quantity2)).check(matches(isDisplayed())).perform(click());
+        onView(withId(R.id.quantity2)).check(matches(isDisplayed())).perform(click(), typeText("55"), closeSoftKeyboard());
+
+        onView(withId(R.id.size3)).check(matches(isDisplayed())).perform(click());
+        Thread.sleep(MED_WAIT);
+        onData(anything()).atPosition(2).perform(click());
+        onView(withId(R.id.quantity3)).check(matches(isDisplayed())).perform(click());
+        onView(withId(R.id.quantity3)).check(matches(isDisplayed())).perform(click(), typeText("80"), closeSoftKeyboard());
+
+        onView(withId(R.id.confirm)).check(matches(isDisplayed())).perform(click());
+    }
+
+    public void checkViewProductsType(int buttonId) throws InterruptedException {
+        //go to selected view
+        onView(withId(buttonId)).check(matches(isDisplayed()));
+        onView(withId(buttonId)).perform(click());
+        Thread.sleep(LONG_WAIT);
+        //check if recycler view is displayed and populated with data
+        onView(withId(R.id.recycler_view)).check(matches(isDisplayed()));
+        onView(withId(R.id.recycler_view)).check(matches(hasMinimumChildCount(1)));
+    }
+
+    @NonNull
+    private static ViewAction selectTabAtPosition(final int position) {
+        return new ViewAction() {
+            @Override
+            public Matcher<View> getConstraints() {
+                return allOf(isDisplayed(), isAssignableFrom(TabLayout.class));
+            }
+
+            @Override
+            public String getDescription() {
+                return "with tab at index" + String.valueOf(position);
+            }
+
+            @Override
+            public void perform(UiController uiController, View view) {
+                if (view instanceof TabLayout) {
+                    TabLayout tabLayout = (TabLayout) view;
+                    TabLayout.Tab tab = tabLayout.getTabAt(position);
+
+                    if (tab != null) {
+                        tab.select();
+                    }
+                }
+            }
+        };
     }
 }
