@@ -61,7 +61,16 @@
                 android:textAlignment="center"
                 android:textColor="@android:color/white"
                 android:textSize="24sp" />
+
         </LinearLayout>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/quantity"
+            android:hint="Quantity"
+            android:inputType="number"
+            android:textSize="14sp"/>
 
         <Button
             android:id="@+id/addToCart"
@@ -70,6 +79,12 @@
             android:layout_marginTop="10dp"
             android:text="Add to Cart" />
 
+        <Button
+            android:id="@+id/aS"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Add Stock" />
     </LinearLayout>
 
     <ImageView

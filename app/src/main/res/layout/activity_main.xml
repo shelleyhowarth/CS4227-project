@@ -31,13 +31,37 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:text="Orders"/>
+  <Button
+      android:id="@+id/stockBtn"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="Add Stock"/>
  </androidx.appcompat.widget.Toolbar>
+
+ <com.google.android.material.tabs.TabLayout
+     android:id="@+id/genderTab"
+     android:layout_width="match_parent"
+     android:layout_height="wrap_content"
+     android:layout_below="@+id/homeToolbar">
+
+  <com.google.android.material.tabs.TabItem
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:id="@+id/womenTab"
+      android:text="Womens" />
+
+  <com.google.android.material.tabs.TabItem
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:id="@+id/menTab"
+      android:text="Mens" />
+ </com.google.android.material.tabs.TabLayout>
 
  <TextView
      android:id="@+id/clothesTV"
      android:layout_width="wrap_content"
      android:layout_height="wrap_content"
-     android:layout_below="@+id/homeToolbar"
+     android:layout_below="@+id/genderTab"
      android:layout_centerHorizontal="true"
      android:layout_marginTop="30dp"
      android:layout_marginBottom="5dp"
@@ -51,7 +75,7 @@
      android:layout_height="150dp"
      android:layout_below="@+id/clothesTV"
      android:layout_centerHorizontal="true"
-     android:layout_marginBottom="30dp"
+     android:layout_marginBottom="10dp"
      app:srcCompat="@drawable/fui_ic_twitter_bird_white_24dp" />
 
  <TextView
@@ -71,7 +95,7 @@
      android:layout_height="150dp"
      android:layout_below="@+id/shoeTV"
      android:layout_centerHorizontal="true"
-     android:layout_marginBottom="30dp"
+     android:layout_marginBottom="10dp"
      app:srcCompat="@drawable/fui_ic_twitter_bird_white_24dp" />
 
  <TextView
