@@ -1,10 +1,10 @@
-# CS4125 Group 32 Shopping app
+# CS4227 Group 32 Shopping app
 <h2>Info:</h2>
 <p><b>Title: </b>Shopping App</p>
 <p><b>Description: </b>Allows users to view, filter and buy products using an android app</p>
 <p><b>Last Updated: </b>14/12/2020</p>
 <p><b>Author(s): </b>Aine Reynolds, Carla Warde, Shelley Howarth, Vincent Kiely</p>
-<p><b>Utilised: </b>Java Android, Firebase, Junit, Espresso</p>
+<p><b>Utilised: </b>Java Android, Firebase, Junit, Espresso, SonarQube</p>
 
 <h2>Instructions:</h2>
 <ol>
