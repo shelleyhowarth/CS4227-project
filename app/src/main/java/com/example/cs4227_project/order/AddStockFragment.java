@@ -19,7 +19,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -239,7 +238,7 @@ public class AddStockFragment extends Fragment implements View.OnClickListener {
 
     public void validateCategoryInput() {
         int checkedId = categoryGroup.getCheckedRadioButtonId();
-        if(checkedId == R.id.clothes){
+        if(checkedId == R.id.clothes) {
             pType = ProductType.CLOTHES;
         }else if(checkedId == R.id.shoes){
             pType = ProductType.SHOE;
